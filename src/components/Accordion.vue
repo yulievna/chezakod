@@ -6,7 +6,7 @@ const questions = reactive([
   {
     title: 'Что такое квесты в реальности?',
     answer: 'Квесты в реальности - развлечение необычного формата, набравшее популярность во всех городах России и за ее пределами. Это настоящая лихорадка - стоит только начать, и остановиться уже невозможно! Принцип игры: следуя определенному сюжету, вас и вашу команду запирают в комнате, из которой вам нужно выбраться, решая все загадки и логические цепочки, подготовленные создателями. Решение всех головоломок квеста приведут вас к выходу.',
-    isExpanded: false // Initial value
+    isExpanded: false 
   },
   {
     title: 'Какие правила игры?',
@@ -86,21 +86,43 @@ function handleAccordion(selectedIndex) {
 </script>
 
 <template>
-  <div class="accordion" v-for="(question, index) in questions" :key="question.title">
-    <button @click="handleAccordion(index)">
-      {{ question.title }}
-    </button>
-    <Collapse :when="questions[index].isExpanded">
-      <p>
-        {{ question.answer }}
-      </p>
-    </Collapse>
+  <div class="accordion-container">
+    <div class="accordion-column">
+      <div class="accordion" v-for="(question, index) in questions.slice(0, Math.ceil(questions.length / 2))" :key="index">
+        <button @click="handleAccordion(index)">
+          {{ question.title }}
+          <span class="arrow" :class="{ 'arrow-down': question.isExpanded }"></span>
+        </button>
+        <Collapse :when="question.isExpanded">
+          <p>{{ question.answer }}</p>
+        </Collapse>
+      </div>
+    </div>
+    <div class="accordion-column">
+      <div class="accordion" v-for="(question, index) in questions.slice(Math.ceil(questions.length / 2))" :key="index + Math.ceil(questions.length / 2)">
+        <button @click="handleAccordion(index + Math.ceil(questions.length / 2))">
+          {{ question.title }}
+          <span class="arrow" :class="{ 'arrow-down': question.isExpanded }"></span>
+        </button>
+        <Collapse :when="question.isExpanded">
+          <p>{{ question.answer }}</p>
+        </Collapse>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.accordion-container {
+  display: flex;
+  gap: 20px; /* Расстояние между колонками */
+}
 
-button{
+.accordion-column {
+  flex: 1; /* Равномерное распределение пространства */
+}
+
+button {
   width: 100%;
   height: 60px;
   border: none;
@@ -111,10 +133,48 @@ button{
   border-radius: 5px;
   padding: 10px 25px;
   color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
 }
-p{
+
+p {
   font-size: 16px;
   color: #fff;
   padding: 25px;
+  border-radius: 5px;
+  margin-top: -10px;
+}
+
+.arrow {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+  transition: transform 0.3s ease;
+}
+
+.arrow-down {
+  transform: rotate(45deg);
+}
+@media (max-width: 430px) {
+  .accordion-container {
+    flex-direction: column; /* Один столбец на мобильных устройствах */
+    gap: 10px; /* Уменьшаем расстояние между элементами */
+  }
+
+  button {
+    height: 50px; /* Уменьшаем высоту кнопки */
+    font-size: 16px; /* Уменьшаем размер шрифта */
+    padding: 10px 15px; /* Уменьшаем отступы */
+  }
+
+  p {
+    font-size: 14px; /* Уменьшаем размер шрифта */
+    padding: 15px; /* Уменьшаем отступы */
+  }
 }
 </style>

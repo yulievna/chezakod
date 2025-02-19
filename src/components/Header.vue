@@ -16,8 +16,6 @@
               <li><router-link to="/#">Шоу программы</router-link></li>
             </ul>
           </li>
-
-          <!-- Мероприятия -->
           <li class="navigation-item dropdown">
             <router-link to="#">Мероприятия</router-link>
             <ul class="dropdown-menu">
@@ -26,14 +24,14 @@
               <li class="graduate"><router-link to="/#">Выпускной 2025</router-link></li>
             </ul>
           </li>
-
           <li class="navigation-item graduate"><router-link to="#">Выпускной 2025</router-link></li>
           <li class="navigation-item"><router-link to="#">Расписание</router-link></li>
           <li class="navigation-item"><router-link to="#">Сертификаты</router-link></li>
           <li class="navigation-item"><router-link to="#">Акции</router-link></li>
+          <li class="navigation-item"><router-link to="#">О нас</router-link></li>
         </ul>
         <div class="header-buttons">
-          <button class="book-btn" @click="scrollToForm">Забронировать</button>
+          <button class="book-btn" @click="togglePopup">Забронировать</button>
           <div class="contacts-btn-wrapper">
             <button class="contacts-btn">Контакты</button>
             <ul class="contacts-dropdown">
@@ -46,21 +44,25 @@
       </nav>
     </div>
   </header>
+  
+  <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
+    <div class="popup">
+      <button class="popup-close" @click="togglePopup">&times;</button>
+      <Form></Form>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  methods: {
-    scrollToForm() {
-      const formSection = document.getElementById("form");
-      if (formSection) {
-        formSection.scrollIntoView({ behavior: "smooth" });
-      }
-    },
-  },
+<script setup>
+import { ref } from "vue";
+import Form from "@/components/Form.vue";
+
+const isPopupOpen = ref(false);
+
+const togglePopup = () => {
+  isPopupOpen.value = !isPopupOpen.value;
 };
 </script>
-
 <style scoped>
 .header {
   background-color: #ffffff;
@@ -232,4 +234,39 @@ export default {
     justify-content: space-between;
   }
 }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  height: 60%;
+  position: relative;
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #cf1034;
+}
+
 </style>

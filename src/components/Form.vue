@@ -198,8 +198,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 260px;
   color: #fff;
+  height: 100%;
 }
 
 /* Карточка */
@@ -208,9 +208,8 @@ export default {
   color: #000;
   border-radius: 7.5px;
   padding: 20px;
-  width: 792px;
+  width: 100%;
   text-align: left;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
 }
 

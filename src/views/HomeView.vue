@@ -10,7 +10,7 @@
       <div class="container">
         <ul class="servises__list">
           <li class="servises__el main-slider"><ImgSlider></ImgSlider></li>
-          <li class="servises__el quests" style="background-image: url('src/assets/logovo-velikana.jpg');"><router-link to="/quests"></router-link></li>
+          <router-link to="/quests"><li class="servises__el quests" style="background-image: url('src/assets/logovo-velikana.jpg');"></li></router-link>
           <li class="servises__el karaoke" style="background-image: url('src/assets/party.jpg');"><a href="#"></a></li>
           <li class="servises__el acrion-games" style="background-image: url('src/assets/action.jpg');"><a href="#"></a></li>
           <li class="servises__el karting" style="background-image: url('src/assets/chego.jpg');"><a href="#"></a></li>
@@ -24,58 +24,37 @@
   <section class="about-container">
     <div class="about-stats">
       <div class="stat-card">
-        <h3 class="stat-number">10+</h3>
+        <h3 class="stat-number">10</h3>
         <p class="stat-text">Лет опыта</p>
       </div>
 
       <div class="stat-card">
-        <h3 class="stat-number">10+</h3>
+        <h3 class="stat-number">32</h3>
         <p class="stat-text">Квестов и мероприятий</p>
       </div>
 
       <div class="stat-card">
-        <h3 class="stat-number">5000+</h3>
-        <p class="stat-text">Довольных клиентов</p>
+        <h3 class="stat-number">28 296</h3>
+        <p class="stat-text">Проведено квестов и мероприятий</p>
       </div>
 
       <div class="stat-card">
         <h3 class="stat-number">100%</h3>
         <p class="stat-text">Гарантия веселья</p>
       </div>
+
+      <div class="stat-card">
+        <h3 class="stat-number">17 354</h3>
+        <p class="stat-text">Подписчиков в ВК</p>
+      </div>
     </div>
   </section>
 
-    <VideoCarousel></VideoCarousel>
+    <VideoSlider></VideoSlider>
   
     <section class="slider">
         <div class="container slider-container">
         </div>
-    </section>
-  
-    <!-- FORM SECTION -->
-  
-    <section class="form" id="form">
-      <div class="container">
-        <Form></Form>
-        <!-- <div class="form__content">
-          <div class="form__head">
-            <div class="form__head-title">Question 1</div>
-            <div class="form__head-progress">1/8</div>
-          </div>
-          <div class="form__body">
-            <ul class="form__list">
-              <li class="form__list-el"><input type="radio"></input><label for="">Answer 1</label></li>
-              <li class="form__list-el"><input type="radio"></input><label for="">Answer 2</label></li>
-              <li class="form__list-el"><input type="radio"></input><label for="">Answer 3</label></li>
-              <li class="form__list-el"><input type="radio"></input><label for="">Answer 4</label></li>
-            </ul>
-            <div class="form__buttons">
-              <button class="form__button form__button-pre">Назад</button>
-              <button class="form__button form__button-next">Вперед</button>
-            </div>
-          </div>
-        </div> -->
-      </div>
     </section>
   
     <!-- FQA SECTION -->
@@ -117,6 +96,7 @@
   import ImgSlider from '@/components/ImgSlider.vue';
   import Form from '@/components/Form.vue';
   import Review from '@/components/Review.vue';
+  import VideoSlider from "@/components/VideoSlider.vue";
   // import axios from 'axios';
   
   // let data = $ref(null);
@@ -160,10 +140,7 @@
     overflow: hidden;
     background-size: cover;
     background-position: center;
-  }
-  .servises__el img{
-    min-width: 100%;
-    min-height: 100%;
+    
   }
   .servises__el:hover{
     transform: scale(1.15);
@@ -259,11 +236,10 @@
   }
   .about-container {
   text-align: center;
-  padding: 50px 20px;
+  padding: 30px 20px;
   border-radius: 10px;
   margin: 50px auto;
-  width: 80%;
-  max-width: 900px;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -284,7 +260,7 @@
   background: #fff;
   padding: 20px;
   border-radius: 10px;
-  width: 180px;
+  width: 200px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
   text-align: center;
@@ -306,10 +282,5 @@
   color: #333;
 }
 /* Адаптация */
-@media (max-width: 768px) {
-  .about-stats {
-    flex-direction: column;
-    align-items: center;
-  }
-}
+
   </style>
