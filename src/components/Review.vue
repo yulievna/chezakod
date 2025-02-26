@@ -289,9 +289,15 @@ export default {
 @media (max-width: 768px) {
   .review-card {
     width: 50%;
-    flex: 0 0 50%;
+    flex: 0 0 100%;
   }
-
+  .reviews-container {
+    height: 50%;
+  }
+  .reviews-title {
+    display: block;
+    font-size: 18px;
+  }
   .arrow {
     font-size: 24px;
   }

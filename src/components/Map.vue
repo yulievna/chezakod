@@ -254,51 +254,54 @@ export default {
 </script>
 
 <style >
- .address-item {
-          font-size: 10px;
-          font-weight: 400;
-          color: black;
-          text-align: center;
-      }
-      .address-item .btn-close {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 26px;
-          height: 26px;
-          background-image: url('images/button_close-min.png');
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: contain;
-      }
-      .address-item .address-text {
-          font-size: 12px;
-          font-weight: bold;
-          margin-top: 5px;
-      }
-      .address-item .note {
-          margin: 10px 0;
-      }
-      .address-item .btn-quest-box {
-          text-align: center;
-      }
-      .address-item .btn-quest-box .btn-red {
-          font-size: 12px;
-          margin: 2px auto;
-      }
+.address-item {
+  font-size: 10px;
+  font-weight: 400;
+  color: black;
+  text-align: center;
+}
+.address-item .btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  background-image: url('images/button_close-min.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.address-item .address-text {
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+.address-item .note {
+  margin: 10px 0;
+}
+.address-item .btn-quest-box {
+  text-align: center;
+}
+.address-item .btn-quest-box .btn-red {
+  font-size: 12px;
+  margin: 2px auto;
+}
 
 .btn-red {
-    display: inline-block;
-    background-color: #ce1034;
-    font-size: 16px;
-    font-weight: 400;
-    color: white;
-    padding: 6px 18px;
-    -webkit-border-radius: 18px;
-    border-radius: 18px;
-    border-width: 0;
-    margin: 10px 0;
-    }
+  display: inline-block;
+  background-color: #ce1034;
+  font-size: 16px;
+  font-weight: 400;
+  color: white;
+  padding: 6px 18px;
+  -webkit-border-radius: 18px;
+  border-radius: 18px;
+  border-width: 0;
+  margin: 10px 0;
+  }
+@media (max-width: 768px) {
+
+}
 </style>
 
 <!-- <template>

@@ -151,8 +151,8 @@ p {
   display: inline-block;
   width: 10px;
   height: 10px;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
+  border-right: 3px solid #fff;
+  border-bottom: 3px solid #fff;
   transform: rotate(-45deg);
   transition: transform 0.3s ease;
 }
@@ -160,10 +160,10 @@ p {
 .arrow-down {
   transform: rotate(45deg);
 }
-@media (max-width: 430px) {
+@media (max-width: 450px) {
   .accordion-container {
     flex-direction: column; /* Один столбец на мобильных устройствах */
-    gap: 10px; /* Уменьшаем расстояние между элементами */
+    gap: 0px; /* Уменьшаем расстояние между элементами */
   }
 
   button {

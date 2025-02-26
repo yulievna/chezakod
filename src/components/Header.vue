@@ -44,7 +44,7 @@
       </nav>
     </div>
   </header>
-  
+
   <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
     <div class="popup">
       <button class="popup-close" @click="togglePopup">&times;</button>
@@ -220,20 +220,6 @@ const togglePopup = () => {
   color: white;
   border-radius: 5px;
 }
-@media (min-width: 769px) {
-  .navigation {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  .navigation-list {
-    display: flex;
-    flex-direction: row;
-  }
-  .header-buttons {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-}
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -268,5 +254,18 @@ const togglePopup = () => {
   cursor: pointer;
   color: #cf1034;
 }
-
+@media (max-width: 450px) {
+  .navigation {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .navigation-list {
+    display: flex;
+    flex-direction: row;
+  }
+  .header-buttons {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
 </style>

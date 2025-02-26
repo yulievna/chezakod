@@ -283,4 +283,21 @@
 }
 /* Адаптация */
 
-  </style>
+@media (max-width: 450px) {
+  .container{
+    width: 380px;
+    margin: 0 auto;
+  }
+  .servises__list{
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 120px);
+    grid-template-areas:
+      "slider slider"
+      "slider slider"
+      "programs programs"
+      "quests games"
+      "karting karaoke"
+      "adult kids";
+  }
+}
+</style>
