@@ -30,6 +30,8 @@
         { src: "https://chezakod.ru/upload/video/5.mp4" },
         { src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4" },
         { src: "https://chezakod.ru/kiosk/video/partykod/00Башня_Джу_Экшн.mp4" },
+        { src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4" },
+        { src: "https://chezakod.ru/kiosk/video/partykod/00Башня_Джу_Экшн.mp4" },
       ]);
   
       onMounted(async () => {

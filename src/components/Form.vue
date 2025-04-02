@@ -1,6 +1,7 @@
 <template>
   <div class="quiz-container">
     <transition name="fade" mode="out-in">
+      <!-- Блок с вопросами -->
       <div v-if="currentQuestion < questions.length" :key="currentQuestion" class="question-card">
         <!-- Заголовок -->
         <div class="question-header">
@@ -19,7 +20,7 @@
         <!-- Варианты ответа (radio) -->
         <ul v-if="questions[currentQuestion].type === 'radio'">
           <li v-for="(answer, index) in questions[currentQuestion].answers" :key="index">
-              <input type="radio" :value="answer" v-model="selectedAnswers[currentQuestion]" @change="autoNext()" />
+            <input type="radio" :value="answer" v-model="selectedAnswers[currentQuestion]" @change="autoNext()" />
             <label> {{ answer }} </label>
           </li>
         </ul>
@@ -39,9 +40,24 @@
           <input type="text" v-model="selectedAnswers[currentQuestion]" placeholder="Введите ваш ответ" />
         </div>
 
+        <!-- Ввод телефона с маской -->
+        <div v-else-if="questions[currentQuestion].type === 'phone'">
+          <input
+              type="text"
+              v-model="selectedAnswers[currentQuestion]"
+
+              placeholder="+7 (___) ___-__-__"
+          />
+        </div>
+
         <!-- Ввод даты -->
         <div v-else-if="questions[currentQuestion].type === 'date'">
-          <input type="date" v-model="selectedAnswers[currentQuestion]" />
+          <input
+              type="date"
+              v-model="selectedAnswers[currentQuestion]"
+              @click="openDatePicker"
+              ref="dateInput"
+          />
         </div>
 
         <!-- Кнопки навигации -->
@@ -51,14 +67,21 @@
           <button v-if="isLastQuestion" @click="submitForm">Завершить</button>
         </div>
       </div>
+
+      <!-- Блок с благодарностью -->
+      <div v-else class="thank-you-card">
+        <h1>Спасибо за вашу заявку!</h1>
+        <p>Мы свяжемся с вами в ближайшее время.</p>
+      </div>
     </transition>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-
+// import { VueMaskDirective  } from "v-mask";
 export default {
+  // directives: { VueMaskDirective  },
   data() {
     return {
       currentQuestion: 0,
@@ -94,7 +117,7 @@ export default {
         },
         {
           question: "Введите ваш контактный номер",
-          type: "text",
+          type: "phone", // Новый тип для телефона
         },
         {
           question: "Как с вами связаться?",
@@ -127,12 +150,18 @@ export default {
         }, 300);
       }
     },
+    openDatePicker() {
+      this.$refs.dateInput.showPicker(); // Открываем календарь
+    },
     async submitForm() {
       try {
-        const response = await axios.post("https://your-backend.com/api/submit", this.selectedAnswers);
+        // const response = await axios.post("https://www.google.com/", {
+        //   answers: this.selectedAnswers,
+        // });
         console.log("Ответ успешно отправлен!", response.data);
-        alert("Форма успешно отправлена!");
-      } catch (error) {
+        this.currentQuestion++; // Переход к блоку с благодарностью
+      }
+      catch (error) {
         console.error("Ошибка при отправке данных", error);
         alert("Ошибка при отправке формы!");
       }

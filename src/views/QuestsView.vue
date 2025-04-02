@@ -1,112 +1,193 @@
 <template>
-    <Header></Header>
-    <section class="quests">
-      <div class="container">
-        <h1 class="title">Квесты</h1>
-        <ul class="quests__list">
-          <li class="quests__el" style="background-image: url('src/assets/quest__1.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__2.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__3.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__4.gif');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__5.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__6.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__7.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__8.jpg');"></li>
-          <li class="quests__el" style="background-image: url('src/assets/quest__9.jpg');"></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="schedule">
-      <div class="container">
-        <h1 class="title">Расписание</h1>
-        <iframe src="https://chezakod.ru/quest/11519850/timetable/" width="100%" height="1820" style="border: none;" ref="iframeRef" scrolling="no" @load="onIframeLoad" ></iframe>
-      </div>
-    </section>
-
-    <section class="lounge">
-      <div class="container">
-        <h1 class="title">Лаундж зоны</h1>
-        <ul class="lounge__list">
-          <li class="lounge__el" style="background-image: url('src/assets/lounge__1.jpg');"></li>
-          <li class="lounge__el" style="background-image: url('src/assets/lounge__2.jpg');"></li>
-          <li class="lounge__el" style="background-image: url('src/assets/lounge__3.jpg');"></li>
-          <li class="lounge__el" style="background-image: url('src/assets/lounge__4.jpg');"></li>
-          <li class="lounge__el" style="background-image: url('src/assets/lounge__5.jpg');"></li>
-          <li class="lounge__el" style="background-image: url('src/assets/lounge__6.jpg');"></li>
-        </ul>
-      </div>
-    </section>
-
-        <!-- MAP SECTION -->
-    <section class="map">
-      <Map></Map>
-    </section>
-
-    <!-- FOOTER SECTION -->
-    <Footer></Footer>
+  <Header />
+  <h1 class="title">Квесты</h1>
+  <Quests :quests="quests" />
+  <section class="schedule">
+    <div class="container">
+      <h1 class="title">Расписание</h1>
+      <iframe src="https://chezakod.ru/quest/11519850/timetable/" width="100%" height="1820" style="border: none;" ref="iframeRef" scrolling="no" @load="onIframeLoad" ></iframe>
+    </div>
+  </section>
+  <Lounge :lounges="lounges" />
+  <Map />
+  <Footer />
 </template>
 
 <script setup>
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Map from '@/components/Map.vue';
-// import { ref } from 'vue';
+import Quests from '@/components/Quests.vue';
+import Lounge from '@/components/Lounge.vue';
 
-// const iframeRef = ref(null);
+const quests = [
+  {
+    id: 1,
+    name: 'Башня Франкенштейна',
+    age: '12+',
+    images: ['src/assets/quest__1.jpg', 'src/assets/quest__1(2).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Робеспьера, 1',
+  },
+  {
+    id: 2,
+    name: 'Корабль-Призрак',
+    age: '12+',
+    images: ['src/assets/quest__2.jpg', 'src/assets/quest__2(2).jpg', 'src/assets/quest__2(3).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
+  },
+  {
+    id: 3,
+    name: 'Станция "Логос"',
+    age: '14+',
+    images: ['src/assets/quest__3.jpg', 'src/assets/quest__3(2).jpg', 'src/assets/quest__3(3).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Сложный',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Алексеева, 113',
+  },
+  {
+    id: 4,
+    name: 'Афера века',
+    age: '12+',
+    images: ['src/assets/quest__4.gif', 'src/assets/quest__4(2).gif', 'src/assets/quest__4(3).gif'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Робеспьера, 1 ',
+  },
+  {
+    id: 5,
+    name: 'Петля времени',
+    age: '14+',
+    images: ['src/assets/quest__5.jpg', 'src/assets/quest__5(2).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Алексеева, 113',
+  },
+  {
+    id: 6,
+    name: 'Логово Великана',
+    age: '12+',
+    images: ['src/assets/quest__6.jpg', 'src/assets/quest__6(2).jpg', 'src/assets/quest__6(3).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
+  },
+  {
+    id: 7,
+    name: 'Мумия. В поисках артефакта',
+    age: '12+',
+    images: ['src/assets/quest__7.jpg', 'src/assets/quest__7(2).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
+  },
+  {
+    id: 8,
+    name: 'Семейка Аддамс',
+    age: '12+',
+    images: ['src/assets/quest__8.jpg', 'src/assets/quest__8(2).jpg', 'src/assets/quest__8(3).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
+  },
+  {
+    id: 9,
+    name: 'Джуманджи',
+    age: '12+',
+    images: ['src/assets/quest__9.jpg', 'src/assets/quest__9(2).jpg', 'src/assets/quest__9(3).jpg'],
+    players: '2-6 игрока',
+    time: '60 минут',
+    difficulty: 'Средний',
+    contact: '+7 (391) 269-92-23',
+    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
+  },
+];
 
-// const onIframeLoad = () => {
-//   const iframe = iframeRef.value;
-//   const iframeWindow = iframe.contentWindow;
-//   contentWindow.scrollTo(50, 1000);
-// };
+const lounges = [
+  {
+    id: 1,
+    image: 'src/assets/lounge__1.jpg',
+    address: 'ул. Алексеева, 113',
+    price: 'от 1500 ₽/час',
+    players: '2-6',
+  },
+  {
+    id: 2,
+    image: 'src/assets/lounge__2.jpg',
+    address: 'ул. Ленина, 45',
+    price: 'от 2000 ₽/час',
+    players: '4-8',
+  },
+  {
+    id: 3,
+    image: 'src/assets/lounge__3.jpg',
+    address: 'ул. Пушкина, 10',
+    price: 'от 1800 ₽/час',
+    players: '3-5',
+  },
+  {
+    id: 4,
+    image: 'src/assets/lounge__4.jpg',
+    address: 'ул. Пушкина, 10',
+    price: 'от 1800 ₽/час',
+    players: '3-5',
+  },
+  {
+    id: 5,
+    image: 'src/assets/lounge__5.jpg',
+    address: 'ул. Пушкина, 10',
+    price: 'от 1800 ₽/час',
+    players: '3-5',
+  },
+  {
+    id: 6,
+    image: 'src/assets/lounge__6.jpg',
+    address: 'ул. Пушкина, 10',
+    price: 'от 1800 ₽/час',
+    players: '3-5',
+  },
+  // Добавьте остальные лаундж-зоны
+];
 </script>
 
-<style scoped>
-.title{
-    margin: 60px auto;
-    width: fit-content;
-    font-size: 32px;
-    color: #fff;
+<style>
+:root {
+  --primary-color: #CF1034;
+  --text-color: #fff;
+  --border-radius: 40px;
+  --transition-duration: 0.5s;
 }
-.quests__list{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  /* margin: 60px auto; */
+
+.title {
+  margin: 60px auto;
+  width: fit-content;
+  font-size: 32px;
+  color: var(--text-color);
 }
-.quests__el{
-  background-color: #CF1034;
-  color: #000;
-  min-height: 500px;
-  font-size: 36px;
-  border-radius: 40px;
-  transition: 0.5s ease;
-  /* background-image: url('../assets/lounge__1.jpg'); */
-  background-size: cover;
-  background-position: center;
-}
-.quests__el:hover{
-  /* transform: scale(1.15); */
-  opacity: 0.4;
-}
-.lounge__list{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-.lounge__el{
-  background-color: #CF1034;
-  color: #000;
-  min-height: 300px;
-  font-size: 36px;
-  border-radius: 40px;
-  /* transition: transform 0.5s ease; */
-  transition: 0.5s ease; 
-  background-size: cover;
-  background-position: center;
-}
-.lounge__el:hover{
-  opacity: 0.4;
+
+@media (max-width: 450px) {
+  .container {
+    width: 380px;
+    margin: 0 auto;
+  }
 }
 </style>

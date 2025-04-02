@@ -1,6 +1,6 @@
 <template>
-  <div ref="carouselRef" class="owl-carousel owl-theme">
-    <div v-for="(image, index) in images" :key="index" class="item">
+  <div :ref="setCarouselRef" :class="`owl-carousel owl-theme carousel-${uniqueId}`">
+    <div v-for="(image, index) in images" :key="index" class="quest-item">
       <img :src="image" :alt="'Image ' + (index + 1)">
     </div>
   </div>
@@ -64,7 +64,7 @@ onMounted(() => {
   height: 100%; /* Занимает всю высоту контейнера */
 }
 
-.owl-carousel .item {
+.owl-carousel .quest-item {
   width: 100%; /* Занимает всю ширину слайдера */
   height: 100%; /* Занимает всю высоту слайдера */
   display: flex;
@@ -72,27 +72,11 @@ onMounted(() => {
   justify-content: center;
 }
 
-.owl-carousel img {
+.quest-item img {
   width: 100%; /* Картинка занимает всю ширину контейнера */
-  height: 100%; /* Картинка занимает всю высоту контейнера */
+  height: 500px; /* Картинка занимает всю высоту контейнера */
   object-fit: cover; /* Картинка заполняет контейнер без искажений */
-  border-radius: 10px;
-}
-
-.owl-carousel{
-  height: fit-content;
-  object-fit: cover;
-}
-.owl-carousel .item {
-  text-align: center;
-  width: 100%;
-  height: fit-content;
-}
-
-.owl-carousel img {
-  max-width: 100%;
-  min-height: 176px;
-  border-radius: 10px;
+  border-radius: 0px;
 }
 
 .owl-theme .owl-dots {
@@ -100,14 +84,12 @@ onMounted(() => {
   position: absolute;
   top: -10px;
   left: 0;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
   grid-auto-rows: 1fr; /* Все строки одинаковой высоты */
   width: 100%;
   height: 100%;
-  border-radius: 10px;
   opacity: 0;
-  border-radius: 10px;
-
+  z-index: 10;
 }
 
 .owl-theme .owl-dots .owl-dot {
@@ -117,8 +99,6 @@ onMounted(() => {
   -webkit-backface-visibility: visible;
   transition: opacity 200ms ease;
   padding-top: 70px;
-  border-radius: 10px;
-
 }
 
 .owl-theme .owl-dots .owl-dot span:hover {

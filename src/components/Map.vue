@@ -253,7 +253,7 @@ export default {
 };
 </script>
 
-<style >
+<style scoped>
 .address-item {
   font-size: 10px;
   font-weight: 400;

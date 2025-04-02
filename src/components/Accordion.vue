@@ -114,6 +114,7 @@ function handleAccordion(selectedIndex) {
 
 <style scoped>
 .accordion-container {
+  margin-top: 90px;
   display: flex;
   gap: 20px; /* Расстояние между колонками */
 }

@@ -27,6 +27,7 @@
             </span>
           </div>
           <p class="review-text">{{ review.text }}</p>
+          <a class="review-link" href="#">Отзыв на 2GIS</a>
         </div>
       </div>
 
@@ -211,7 +212,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
-
+.review-link{
+  align-self: start;
+  color: #869791;
+  margin-top: auto;
+}
 .reviews-wrapper {
   display: flex;
   gap: 15px;
@@ -222,6 +227,8 @@ export default {
 }
 
 .review-card {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   padding: 15px;
   border-radius: 10px;
@@ -256,6 +263,7 @@ export default {
   margin-top: 8px;
   font-size: 14px;
   color: #333;
+  margin-bottom: 20px;
 }
 
 /* Стрелки */

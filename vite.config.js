@@ -10,7 +10,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
-  base: "./", // Устанавливаем относительные пути
+  base: "/yulya/", // Устанавливаем относительные пути
   build: {
     outDir: "dist", // Папка для сборки
     assetsDir: "assets", // Каталог для CSS/JS

@@ -9,25 +9,28 @@
     <section class="main">
       <div class="container">
         <ul class="servises__list">
-          <li class="servises__el main-slider"><ImgSlider></ImgSlider></li>
-          <router-link to="/quests"><li class="servises__el quests" style="background-image: url('src/assets/logovo-velikana.jpg');"></li></router-link>
-          <li class="servises__el karaoke" style="background-image: url('src/assets/party.jpg');"><a href="#"></a></li>
-          <li class="servises__el acrion-games" style="background-image: url('src/assets/action.jpg');"><a href="#"></a></li>
-          <li class="servises__el karting" style="background-image: url('src/assets/chego.jpg');"><a href="#"></a></li>
-          <li class="servises__el programs" style="background-image: url('src/assets/jmurki.jpg');"><a href="#"></a></li>
-          <li class="servises__el kids-party" style="background-image: url('src/assets/children.jpg');"><a href="#"></a></li>
-          <li class="servises__el adult-party"style="background-image: url('src/assets/korporativ.jpg');"><a href="#"></a></li>
+          <li class="main-slider"><ImgSlider :images="imageUrls"></ImgSlider></li>
+          <li class="serviсes__el quests" style="background-image: url('src/assets/logovo-velikana.jpg');"><router-link class="overlay" to="/quests">Квесты</router-link></li>
+          <li class="serviсes__el karaoke" style="background-image: url('src/assets/party.jpg');"><router-link class="overlay" to="/">Квесты</router-link></li>
+          <li class="serviсes__el action-games" style="background-image: url('src/assets/action.jpg');"><router-link class="overlay" to="/">Экшн-игры</router-link></li>
+          <li class="serviсes__el karting" style="background-image: url('src/assets/chego.jpg');"><router-link class="overlay" to="/">Картинг</router-link></li>
+          <li class="programs"><ImgSlider :images="imagePrograms"></ImgSlider></li>
+          <li class="serviсes__el kids-party" style="background-image: url('src/assets/children.jpg');"><router-link class="overlay" to="/">Детские праздники</router-link></li>
+          <li class="serviсes__el adult-party" style="background-image: url('src/assets/korporativ.jpg');"><router-link class="overlay" to="/">Корпоративы</router-link></li>
         </ul>
       </div>
     </section>
   
-  <section class="about-container">
+  <section class="container">
     <div class="about-stats">
       <div class="stat-card">
-        <h3 class="stat-number">10</h3>
-        <p class="stat-text">Лет опыта</p>
+        <h3 class="stat-number">C 2015</h3>
+        <p class="stat-text">Года работаем</p>
       </div>
-
+      <div class="stat-card">
+        <h3 class="stat-number">C 2015</h3>
+        <p class="stat-text">Года работаем</p>
+      </div>
       <div class="stat-card">
         <h3 class="stat-number">32</h3>
         <p class="stat-text">Квестов и мероприятий</p>
@@ -52,8 +55,9 @@
 
     <VideoSlider></VideoSlider>
   
-    <section class="slider">
-        <div class="container slider-container">
+    <section class="form">
+        <div class="container">
+          <Form></Form>
         </div>
     </section>
   
@@ -88,27 +92,25 @@
   
   <script setup>
   import Accordion from '../components/Accordion.vue';
-  // import Slider from '../components/Slider.vue';
-  import VideoCarousel from '@/components/VideoCarousel.vue';
   import Header from '@/components/Header.vue';
   import Footer from '@/components/Footer.vue';
   import Map from '@/components/Map.vue';
   import ImgSlider from '@/components/ImgSlider.vue';
-  import Form from '@/components/Form.vue';
   import Review from '@/components/Review.vue';
   import VideoSlider from "@/components/VideoSlider.vue";
-  // import axios from 'axios';
-  
-  // let data = $ref(null);
-  
-  // async function fetchData() {
-  //   try {
-  //     const response = await axios.get('http://127.0.0.1:8000/category/list');
-  //     data = response.data;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  import Form from "@/components/Form.vue";
+
+  const imageUrls = [
+    'src/assets/korporativ.jpg',
+    'src/assets/sl2.jpg',
+    'src/assets/sl3.jpg',
+  ];
+
+  const imagePrograms = [
+    'src/assets/discount1.jpg',
+    'src/assets/discount2.jpg',
+    'src/assets/discount3.jpg',
+  ];
   </script>
   
   
@@ -126,12 +128,12 @@
     grid-template-rows: repeat(3, 176px);
     gap: 20px;
     margin: 60px auto;
-    grid-template-areas: 
+    grid-template-areas:
       "slider slider slider quests games"
       "slider slider slider karting karaoke"
       "programs programs programs adult kids";
   }
-  .servises__el{
+  .serviсes__el{
     background-color: #CF1034;
     color: #fff;
     font-size: 36px;
@@ -140,9 +142,13 @@
     overflow: hidden;
     background-size: cover;
     background-position: center;
-    
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
   }
-  .servises__el:hover{
+  .serviсes__el:hover{
     transform: scale(1.15);
   }
   .programs:hover, .main-slider:hover{
@@ -150,8 +156,11 @@
   }
   .main-slider{
     grid-area: slider;
+    overflow: hidden;
+    transition: transform 0.5s ease;
+    border-radius: 10px;
   }
-  .acrion-games{
+  .action-games{
     grid-area: games;
   }
   .quests{
@@ -165,6 +174,9 @@
   }
   .programs{
     grid-area: programs;
+    overflow: hidden;
+    transition: transform 0.5s ease;
+    border-radius: 10px;
   }
   .adult-party{
     grid-area: adult;
@@ -175,6 +187,12 @@
   /* --------------------------------- */
   .slider-container{
     position: relative;
+  }
+  .overlay {
+    color: #fff;
+    font-size: 24px;
+    background: radial-gradient(#000, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.0) );
+    padding: 20px;
   }
   /* --------------------------------- */
   .form{
@@ -234,14 +252,7 @@
   .review{
     margin-bottom: 60px;
   }
-  .about-container {
-  text-align: center;
-  padding: 30px 20px;
-  border-radius: 10px;
-  margin: 50px auto;
-  width: 100%;
-  overflow: hidden;
-}
+
 
 .about-title {
   font-size: 24px;
@@ -251,9 +262,10 @@
 
 .about-stats {
   display: flex;
-  justify-content: center;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 10px;
   flex-wrap: wrap;
+  margin-bottom: 60px;
 }
 
 .stat-card {
@@ -285,9 +297,10 @@
 
 @media (max-width: 450px) {
   .container{
-    width: 380px;
+    width: 100%;
     margin: 0 auto;
   }
+
   .servises__list{
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(6, 120px);

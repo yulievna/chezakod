@@ -2,16 +2,28 @@
   <header class="header">
     <div class="container header-container">
       <nav class="navigation">
-        <router-link to="/">
+        <!-- Бургер-меню -->
+        <div class="burger" @click="toggleMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <!-- Логотип -->
+        <router-link to="/" class="logo-wrapper">
           <img class="logo" src="../assets/logo.png" alt="Logo" />
         </router-link>
-        <ul class="navigation-list">
+
+
+
+        <!-- Меню -->
+        <ul class="navigation-list" :class="{ active: isMenuOpen }">
           <li class="navigation-item dropdown">
             <router-link to="#">Развлечения</router-link>
             <ul class="dropdown-menu">
               <li><router-link to="/quests">Квесты</router-link></li>
               <li><router-link to="/#">Экшн игры</router-link></li>
-              <li><router-link to="/#">Каринг</router-link></li>
+              <li><router-link to="/#">Картинг</router-link></li>
               <li><router-link to="/#">Караоке</router-link></li>
               <li><router-link to="/#">Шоу программы</router-link></li>
             </ul>
@@ -30,6 +42,7 @@
           <li class="navigation-item"><router-link to="#">Акции</router-link></li>
           <li class="navigation-item"><router-link to="#">О нас</router-link></li>
         </ul>
+        <!-- Кнопки -->
         <div class="header-buttons">
           <button class="book-btn" @click="togglePopup">Забронировать</button>
           <div class="contacts-btn-wrapper">
@@ -45,6 +58,7 @@
     </div>
   </header>
 
+  <!-- Попап -->
   <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
     <div class="popup">
       <button class="popup-close" @click="togglePopup">&times;</button>
@@ -52,15 +66,19 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref } from "vue";
 import Form from "@/components/Form.vue";
 
 const isPopupOpen = ref(false);
+const isMenuOpen = ref(false);
 
 const togglePopup = () => {
   isPopupOpen.value = !isPopupOpen.value;
+};
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
 };
 </script>
 <style scoped>
@@ -68,9 +86,8 @@ const togglePopup = () => {
   background-color: #ffffff;
   padding: 26px 0;
   position: sticky;
-  top: 0;
-  z-index: 2;
-  text-align: justify;
+  top: 0px;
+  z-index: 10;
 }
 .navigation {
   display: flex;
@@ -79,14 +96,27 @@ const togglePopup = () => {
   gap: 60px;
 }
 
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+}
+
 .navigation-list {
   display: flex;
   gap: 20px;
   list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
+
 .navigation-item {
   position: relative;
 }
+
 .navigation-item a {
   text-decoration: none;
   font-size: 16px;
@@ -94,41 +124,33 @@ const togglePopup = () => {
   padding: 0 0.1em;
   white-space: nowrap;
 }
-.navigation-item:last-child {
-  padding-right: 0;
-}
+
 .graduate a {
   color: #cf1034;
-  max-width: fit-content;
 }
 
 .header-buttons {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   background-color: #000;
   border-radius: 5px;
   padding: 3px;
 }
 
+.book-btn,
 .contacts-btn {
   font-size: 16px;
   color: #fff;
   border: none;
   padding: 7px 25px;
-  background-color: #cf1034;
-  border-radius: 5px;
-}
-
-.book-btn {
-  font-size: 16px;
-  color: #fff;
-  border: none;
-  padding: 7px 35px;
-  background-color: #000000;
+  background-color: #000;
   border-radius: 5px;
   cursor: pointer;
 }
 
+.contacts-btn {
+  background-color: #cf1034;
+}
 
 .contacts-btn-wrapper {
   position: relative;
@@ -169,14 +191,6 @@ const togglePopup = () => {
   border-radius: 5px;
 }
 
-.navigation-list {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-}
-
-/* Выпадающее меню */
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -189,21 +203,18 @@ const togglePopup = () => {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   min-width: 180px;
   z-index: 10;
-
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Показываем меню при наведении */
 .dropdown:hover .dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-/* Ссылки внутри выпадающего меню */
 .dropdown-menu li {
   margin: 5px 0;
 }
@@ -220,6 +231,7 @@ const togglePopup = () => {
   color: white;
   border-radius: 5px;
 }
+
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -254,18 +266,65 @@ const togglePopup = () => {
   cursor: pointer;
   color: #cf1034;
 }
+
+/* Бургер-меню */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.burger span {
+  width: 25px;
+  height: 3px;
+  background-color: #000;
+}
+
+/* Адаптивность */
 @media (max-width: 450px) {
+  .header {
+    padding: 16px 0;
+  }
   .navigation {
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
-  .navigation-list {
-    display: flex;
-    flex-direction: row;
+
+  .logo-wrapper {
+    width: 100%;
+    margin: 0 25%;
   }
+
   .header-buttons {
-    flex-direction: row;
-    justify-content: space-between;
+    align-self: center;
+    width: 100%;
+    gap: 50px;
+    padding-left: 48px;
+  }
+
+  .burger {
+    display: flex;
+    position: absolute;
+    top: 35px;
+  }
+
+  .navigation-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 10;
+  }
+
+  .navigation-list.active {
+    display: flex;
   }
 }
 </style>
