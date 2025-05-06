@@ -10,23 +10,19 @@
       <div class="container">
         <ul class="servises__list">
           <li class="main-slider"><ImgSlider :images="imageUrls"></ImgSlider></li>
-          <li class="serviсes__el quests" style="background-image: url('src/assets/logovo-velikana.jpg');"><router-link class="overlay" to="/quests">Квесты</router-link></li>
-          <li class="serviсes__el karaoke" style="background-image: url('src/assets/party.jpg');"><router-link class="overlay" to="/">Квесты</router-link></li>
-          <li class="serviсes__el action-games" style="background-image: url('src/assets/action.jpg');"><router-link class="overlay" to="/">Экшн-игры</router-link></li>
-          <li class="serviсes__el karting" style="background-image: url('src/assets/chego.jpg');"><router-link class="overlay" to="/">Картинг</router-link></li>
-          <li class="programs"><ImgSlider :images="imagePrograms"></ImgSlider></li>
-          <li class="serviсes__el kids-party" style="background-image: url('src/assets/children.jpg');"><router-link class="overlay" to="/">Детские праздники</router-link></li>
-          <li class="serviсes__el adult-party" style="background-image: url('src/assets/korporativ.jpg');"><router-link class="overlay" to="/">Корпоративы</router-link></li>
+          <li class="serviсes__el quests" style="background-image: url('src/assets/images/logovo-velikana.jpg');"><router-link class="overlay" to="/quests">Квесты</router-link></li>
+          <li class="serviсes__el karaoke" style="background-image: url('src/assets/images/party.jpg');"><router-link class="overlay" to="/">Квесты</router-link></li>
+          <li class="serviсes__el action-games" style="background-image: url('src/assets/images/action.jpg');"><router-link class="overlay" to="/action-games">Экшн-игры</router-link></li>
+          <li class="serviсes__el karting" style="background-image: url('src/assets/images/chego.jpg');"><router-link class="overlay" to="/">Картинг</router-link></li>
+          <li class="programs"><ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider></li>
+          <li class="serviсes__el kids-party" style="background-image: url('src/assets/images/children.jpg');"><router-link class="overlay" to="/">Детские праздники</router-link></li>
+          <li class="serviсes__el adult-party" style="background-image: url('src/assets/images/korporativ.jpg');"><router-link class="overlay" to="/">Корпоративы</router-link></li>
         </ul>
       </div>
     </section>
   
   <section class="container">
     <div class="about-stats">
-      <div class="stat-card">
-        <h3 class="stat-number">C 2015</h3>
-        <p class="stat-text">Года работаем</p>
-      </div>
       <div class="stat-card">
         <h3 class="stat-number">C 2015</h3>
         <p class="stat-text">Года работаем</p>
@@ -53,7 +49,7 @@
     </div>
   </section>
 
-    <VideoSlider></VideoSlider>
+    <VideoSlider :videos="videos"></VideoSlider>
   
     <section class="form">
         <div class="container">
@@ -101,16 +97,62 @@
   import Form from "@/components/Form.vue";
 
   const imageUrls = [
-    'src/assets/korporativ.jpg',
-    'src/assets/sl2.jpg',
-    'src/assets/sl3.jpg',
+    'src/assets/images/korporativ.jpg',
+    'src/assets/images/sl2.jpg',
+    'src/assets/images/sl3.jpg',
   ];
 
+
   const imagePrograms = [
-    'src/assets/discount1.jpg',
-    'src/assets/discount2.jpg',
-    'src/assets/discount3.jpg',
+    {
+      src: 'src/assets/images/discount1.jpg',
+      alt: 'Легкий четверг',
+      id: 'easy-thursday'
+    },
+    {
+      src: 'src/assets/images/discount2.jpg',
+      alt: 'Программа лояльности',
+      id: 'loyalty-program'
+    },
+    {
+      src: 'src/assets/images/discount3.jpg',
+      alt: 'Билет',
+      id: 'ticket'
+    },
+    {
+      src: 'src/assets/images/discount4.jpg',
+      alt: 'Скидка в день рождения',
+      id: 'birthday'
+    },
+    {
+      src: 'src/assets/images/discount5.jpg',
+      alt: 'Акции Party KOD',
+      id: 'party-kod'
+    },
+    {
+      src: 'src/assets/images/discount6.jpg',
+      alt: 'Жмурки',
+      id: 'zhmurki'
+    },
+    {
+      src: 'src/assets/images/discount7.jpg',
+      alt: 'Классным руководителям',
+      id: 'teachers'
+    }
   ];
+
+  const videos = [
+    {
+      src: "https://chezakod.ru/upload/video/5.mp4"
+    },
+    {
+      src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"
+    },
+    {
+      src: "https://chezakod.ru/kiosk/video/partykod/00Башня_Джу_Экшн.mp4"
+    }
+  ];
+
   </script>
   
   
@@ -118,7 +160,7 @@
   <style>
   /* --------------------------------- */
   .container{
-    width: 1280px;
+    width: 1200px;
     margin: 0 auto;
   }
   /* --------------------------------- */
@@ -288,7 +330,9 @@
   font-weight: bold;
   color: #cf1034;
 }
-
+.stat-number::selection{
+  color: #fff;
+}
 .stat-text {
   font-size: 16px;
   color: #333;

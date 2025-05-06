@@ -2,20 +2,30 @@
   <section class="reviews-container">
     <div class="reviews-title">
       <h2>Отзывы наших клиентов на </h2>
-      <img class="gis" src="/src/assets/Light_ENG2x.png" alt="">
+      <img class="gis" src="/src/assets/images/Light_ENG2x.png" alt="2GIS" loading="lazy" />
     </div>
 
     <div class="carousel-container">
-      <button class="arrow left" @click="prevReview">❮</button>
+      <button class="arrow left" @click="prevReview" aria-label="Previous review">
+        <span class="arrow-icon">❮</span>
+      </button>
 
       <div class="reviews-wrapper" ref="carousel">
         <div
           class="review-card"
           v-for="(review, index) in duplicatedReviews"
           :key="index"
+          :class="{ 'active': currentIndex === index }"
+          @click="selectReview(index)"
         >
           <div class="review-header">
-            <span class="review-name">{{ review.name }}</span>
+            <div class="review-avatar">
+              {{ review.name.charAt(0) }}
+            </div>
+            <div class="review-info">
+              <span class="review-name">{{ review.name }}</span>
+              <span class="review-date">{{ getRandomDate() }}</span>
+            </div>
             <span class="review-rating">
               <span
                 v-for="star in 5"
@@ -27,11 +37,27 @@
             </span>
           </div>
           <p class="review-text">{{ review.text }}</p>
-          <a class="review-link" href="#">Отзыв на 2GIS</a>
+          <a class="review-link" href="#" @click.prevent="open2GIS">
+            <span class="link-icon">📍</span>
+            Отзыв на 2GIS
+          </a>
         </div>
       </div>
 
-      <button class="arrow right" @click="nextReview">❯</button>
+      <button class="arrow right" @click="nextReview" aria-label="Next review">
+        <span class="arrow-icon">❯</span>
+      </button>
+    </div>
+
+    <div class="carousel-dots">
+      <button
+        v-for="(_, index) in reviews"
+        :key="index"
+        class="dot"
+        :class="{ active: currentIndex === index }"
+        @click="goToReview(index)"
+        :aria-label="'Go to review ' + (index + 1)"
+      ></button>
     </div>
   </section>
 </template>
@@ -85,17 +111,16 @@ export default {
       },
     ]);
 
-    // Дублируем отзывы для бесконечной карусели
     const duplicatedReviews = ref([...reviews.value, ...reviews.value]);
-
     const currentIndex = ref(0);
     const carousel = ref(null);
     let startX = 0;
     let isDragging = false;
     let currentTranslate = 0;
+    let autoplayInterval = null;
 
     const updateTranslate = () => {
-      const itemWidth = carousel.value.clientWidth / 2.2; // 40% боковых
+      const itemWidth = carousel.value.clientWidth / 2.2;
       currentTranslate = -currentIndex.value * itemWidth;
       carousel.value.style.transform = `translateX(${currentTranslate}px)`;
     };
@@ -130,9 +155,20 @@ export default {
       }
     };
 
+    const goToReview = (index) => {
+      currentIndex.value = index;
+      carousel.value.style.transition = "transform 0.4s ease";
+      updateTranslate();
+    };
+
+    const selectReview = (index) => {
+      goToReview(index);
+    };
+
     const handleMouseDown = (event) => {
       isDragging = true;
       startX = event.clientX;
+      carousel.value.style.transition = "none";
     };
 
     const handleMouseMove = (event) => {
@@ -151,20 +187,75 @@ export default {
       updateTranslate();
     };
 
+    const handleTouchStart = (event) => {
+      startX = event.touches[0].clientX;
+      isDragging = true;
+      carousel.value.style.transition = "none";
+    };
+
+    const handleTouchMove = (event) => {
+      if (!isDragging) return;
+      const moveX = event.touches[0].clientX - startX;
+      carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
+    };
+
+    const handleTouchEnd = (event) => {
+      if (!isDragging) return;
+      isDragging = false;
+      const moveX = event.changedTouches[0].clientX - startX;
+
+      if (moveX < -50) nextReview();
+      if (moveX > 50) prevReview();
+      updateTranslate();
+    };
+
+    const startAutoplay = () => {
+      autoplayInterval = setInterval(nextReview, 5000);
+    };
+
+    const stopAutoplay = () => {
+      clearInterval(autoplayInterval);
+    };
+
+    const getRandomDate = () => {
+      const dates = [
+        "2 недели назад",
+        "1 месяц назад",
+        "2 месяца назад",
+        "3 месяца назад",
+        "4 месяца назад",
+        "5 месяцев назад",
+        "6 месяцев назад"
+      ];
+      return dates[Math.floor(Math.random() * dates.length)];
+    };
+
+    const open2GIS = () => {
+      window.open("https://2gis.ru/", "_blank");
+    };
+
     onMounted(() => {
       updateTranslate();
       carousel.value.addEventListener("mousedown", handleMouseDown);
       carousel.value.addEventListener("mousemove", handleMouseMove);
       carousel.value.addEventListener("mouseup", handleMouseUp);
       carousel.value.addEventListener("mouseleave", handleMouseUp);
+      carousel.value.addEventListener("touchstart", handleTouchStart);
+      carousel.value.addEventListener("touchmove", handleTouchMove);
+      carousel.value.addEventListener("touchend", handleTouchEnd);
+      // startAutoplay();
     });
 
-    onUnmounted(() => {
-      carousel.value.removeEventListener("mousedown", handleMouseDown);
-      carousel.value.removeEventListener("mousemove", handleMouseMove);
-      carousel.value.removeEventListener("mouseup", handleMouseUp);
-      carousel.value.removeEventListener("mouseleave", handleMouseUp);
-    });
+    // onUnmounted(() => {
+    //   carousel.value.removeEventListener("mousedown", handleMouseDown);
+    //   carousel.value.removeEventListener("mousemove", handleMouseMove);
+    //   carousel.value.removeEventListener("mouseup", handleMouseUp);
+    //   carousel.value.removeEventListener("mouseleave", handleMouseUp);
+    //   carousel.value.removeEventListener("touchstart", handleTouchStart);
+    //   carousel.value.removeEventListener("touchmove", handleTouchMove);
+    //   carousel.value.removeEventListener("touchend", handleTouchEnd);
+    //   stopAutoplay();
+    // });
 
     return {
       reviews,
@@ -173,6 +264,10 @@ export default {
       carousel,
       nextReview,
       prevReview,
+      goToReview,
+      selectReview,
+      getRandomDate,
+      open2GIS
     };
   },
 };
@@ -295,27 +390,296 @@ export default {
 }
 /* Адаптив для мобильных устройств */
 @media (max-width: 768px) {
-  .review-card {
-    width: 50%;
-    flex: 0 0 100%;
-  }
   .reviews-container {
-    height: 50%;
+    padding: 20px 10px;
+    margin: 20px auto;
   }
+
   .reviews-title {
-    display: block;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .reviews-title h2 {
     font-size: 18px;
   }
+
+  .reviews-title img {
+    width: 100px;
+  }
+
+  .carousel-container {
+    padding: 0 10px;
+  }
+
+  .reviews-wrapper {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .review-card {
+    width: 100%;
+    flex: 0 0 100%;
+    padding: 15px;
+  }
+
+  .review-header {
+    font-size: 14px;
+  }
+
+  .review-rating .star {
+    font-size: 16px;
+  }
+
+  .review-text {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .review-link {
+    font-size: 12px;
+  }
+
   .arrow {
-    font-size: 24px;
+    font-size: 20px;
+    opacity: 0.8;
   }
 
   .arrow.left {
-    left: 5px;
+    left: 0;
   }
 
   .arrow.right {
-    right: 5px;
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviews-container {
+    padding: 15px 5px;
+    margin: 15px auto;
+  }
+
+  .reviews-title h2 {
+    font-size: 16px;
+  }
+
+  .reviews-title img {
+    width: 80px;
+  }
+
+  .review-card {
+    padding: 12px;
+  }
+
+  .review-header {
+    font-size: 13px;
+  }
+
+  .review-rating .star {
+    font-size: 14px;
+  }
+
+  .review-text {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .review-link {
+    font-size: 11px;
+  }
+
+  .arrow {
+    font-size: 18px;
+  }
+}
+
+/* Добавляем поддержку ландшафтной ориентации */
+@media (max-height: 600px) and (orientation: landscape) {
+  .reviews-container {
+    padding: 15px 5px;
+  }
+
+  .review-card {
+    padding: 10px;
+  }
+
+  .review-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .review-name {
+    font-size: 13px;
+  }
+
+  .review-text {
+    font-size: 12px;
+  }
+}
+
+/* Улучшаем отображение на планшетах */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .review-card {
+    width: 50%;
+    flex: 0 0 50%;
+  }
+
+  .reviews-title h2 {
+    font-size: 22px;
+  }
+
+  .reviews-title img {
+    width: 100px;
+  }
+}
+
+.review-avatar {
+  width: 40px;
+  height: 40px;
+  background: #cf1034;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.review-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.review-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.review-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.review-card:hover {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.review-card.active {
+  transform: scale(1);
+  opacity: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.arrow-icon {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.arrow:hover .arrow-icon {
+  transform: scale(1.2);
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ddd;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.dot:hover {
+  background: #cf1034;
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: #cf1034;
+  transform: scale(1.2);
+}
+
+.link-icon {
+  margin-right: 5px;
+}
+
+/* Улучшенная адаптивность */
+@media (max-width: 768px) {
+  .review-avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .review-name {
+    font-size: 14px;
+  }
+
+  .review-date {
+    font-size: 11px;
+  }
+
+  .review-text {
+    font-size: 13px;
+  }
+
+  .arrow-icon {
+    font-size: 20px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Добавляем поддержку тёмной темы */
+@media (prefers-color-scheme: dark) {
+  .review-card {
+    background: #2a2a2a;
+  }
+
+  .review-date {
+    color: #999;
+  }
+
+  .review-text {
+    color: #fff;
+  }
+
+  .dot {
+    background: #444;
+  }
+
+  .dot:hover,
+  .dot.active {
+    background: #cf1034;
+  }
+}
+
+/* Улучшаем доступность */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 </style>

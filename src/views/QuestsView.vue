@@ -1,7 +1,11 @@
 <template>
   <Header />
-  <h1 class="title">Квесты</h1>
-  <Quests :quests="quests" />
+  <div class="quests-page">
+    <div class="container">
+      <h1 class="page-title">Квесты</h1>
+      <Quests :quests="quests" basePath="/quests"/>
+    </div>
+  </div>
   <section class="schedule">
     <div class="container">
       <h1 class="title">Расписание</h1>
@@ -14,153 +18,219 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Map from '@/components/Map.vue';
 import Quests from '@/components/Quests.vue';
 import Lounge from '@/components/Lounge.vue';
 
-const quests = [
-  {
-    id: 1,
-    name: 'Башня Франкенштейна',
-    age: '12+',
-    images: ['src/assets/quest__1.jpg', 'src/assets/quest__1(2).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Робеспьера, 1',
-  },
-  {
-    id: 2,
-    name: 'Корабль-Призрак',
-    age: '12+',
-    images: ['src/assets/quest__2.jpg', 'src/assets/quest__2(2).jpg', 'src/assets/quest__2(3).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-  },
-  {
-    id: 3,
-    name: 'Станция "Логос"',
-    age: '14+',
-    images: ['src/assets/quest__3.jpg', 'src/assets/quest__3(2).jpg', 'src/assets/quest__3(3).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Сложный',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Алексеева, 113',
-  },
-  {
-    id: 4,
-    name: 'Афера века',
-    age: '12+',
-    images: ['src/assets/quest__4.gif', 'src/assets/quest__4(2).gif', 'src/assets/quest__4(3).gif'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Робеспьера, 1 ',
-  },
-  {
-    id: 5,
-    name: 'Петля времени',
-    age: '14+',
-    images: ['src/assets/quest__5.jpg', 'src/assets/quest__5(2).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Алексеева, 113',
-  },
-  {
-    id: 6,
-    name: 'Логово Великана',
-    age: '12+',
-    images: ['src/assets/quest__6.jpg', 'src/assets/quest__6(2).jpg', 'src/assets/quest__6(3).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-  },
-  {
-    id: 7,
-    name: 'Мумия. В поисках артефакта',
-    age: '12+',
-    images: ['src/assets/quest__7.jpg', 'src/assets/quest__7(2).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-  },
-  {
-    id: 8,
-    name: 'Семейка Аддамс',
-    age: '12+',
-    images: ['src/assets/quest__8.jpg', 'src/assets/quest__8(2).jpg', 'src/assets/quest__8(3).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-  },
-  {
-    id: 9,
-    name: 'Джуманджи',
-    age: '12+',
-    images: ['src/assets/quest__9.jpg', 'src/assets/quest__9(2).jpg', 'src/assets/quest__9(3).jpg'],
-    players: '2-6 игрока',
-    time: '60 минут',
-    difficulty: 'Средний',
-    contact: '+7 (391) 269-92-23',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-  },
-];
+// Здесь можно оставить импорты изображений, если они используются отдельно
+
+const quests = ref([]);
+onMounted(async () => {
+  try {
+    const response = await axios.get('https://chezakod.ru/api/v2/quests/');
+    quests.value = response.data.result.map((q) => ({
+      id: q.id,
+      name: q.name.replace(/&quot;/g, '"'), // для замены кавычек
+      age: `${q.age_min}+`,
+      images: [q.main_image, ...(q.photo || [])],
+      players: `${q.players.min}-${q.players.max} игрока`,
+      time: `${q.duration} минут`,
+      difficulty: 'Средний', // Если из API не приходит — задаём дефолт
+      contact: '+7 (391) 269-92-23', // Тоже дефолтно, если всегда одинаковый
+
+      restrictions: q.limits || [],
+      description: q.description.replace(/<[^>]*>?/gm, '') // Удаление HTML-тегов
+    }));
+  } catch (error) {
+    console.error('Ошибка при загрузке квестов:', error);
+  }
+});
+
+//   {
+//     id: 1,
+//     name: 'Башня Франкенштейна',
+//     age: '7+',
+//     images: [quest1Image, quest1Image2],
+//     players: '2-4 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 986-85-16',
+//     restrictions: [
+// "Нельзя на каблуках",
+// "Нельзя людям, использующим кардиостимулятор",
+// "Нельзя в состоянии алкогольного или наркотического опьянения",
+// "Дети от 7 до 12 лет могут играть в сопровождении взрослого или аниматора"
+// ],
+//     description:
+//         'Несколько десятков лет прошло с тех пор, как история чудовища, созданного ученым Виктором Франкенштейном, потрясла всю округу. Замок ученого пустовал. Люди стали забывать холодящие спину от ужаса истории.\n' +
+//         '\n' +
+//         '       Но в последнее время ночами в одной из башен замка кто-то стал зажигать огонь. Свет горит в лаборатории Франкенштейна.\n' +
+//         '\n' +
+//         '       Ходят слухи, что последователь Виктора вернулся ради какой-то зловещей цели. Местные жители не выходят из дома в темное время суток, опасаясь стать жертвой во имя новой жизни нового чудовища. Очень жаль, что вы с друзьями не восприняли эти слухи всерьез…',
+//   },
+//   {
+//     id: 2,
+//     name: 'Корабль-Призрак',
+//     age: '12+',
+//     images: [quest2Image, quest2Image2, quest2Image3],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//   "restriction": [
+// "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+// "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+// ],
+//     description: 'Вы - команда исследователей, которая отправилась на поиски затерянного корабля. Легенды гласят, что на его борту находится сокровище невероятной ценности. Однако, когда вы находите корабль, оказывается, что он не так уж и пуст...',
+//   },
+//   {
+//     id: 3,
+//     name: 'Станция "Логос"',
+//     age: '14+',
+//     images: [quest3Image, quest3Image2, quest3Image3],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Сложный',
+//     contact: '+7 (391) 269-92-23',
+//     restrictions: [
+//       "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+//       "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+//       ],
+//     description: 'Вы - команда ученых, отправленная на заброшенную космическую станцию "Логос". Ваша задача - выяснить, что случилось с предыдущей экспедицией и восстановить работу станции. Но чем глубже вы проникаете в тайны станции, тем больше понимаете, что здесь происходит что-то необъяснимое...',
+//   },
+//   {
+//     id: 4,
+//     name: 'Афера века',
+//     age: '12+',
+//     images: [quest4Image, quest4Image2, quest4Image3],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//     restrictions: [
+// "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+// "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+// ],
+//     description: 'Вы - команда профессиональных мошенников, которым предстоит провернуть самую грандиозную аферу в истории. Но чтобы добиться успеха, вам нужно разгадать множество загадок и обойти все системы безопасности...',
+//   },
+//   {
+//     id: 5,
+//     name: 'Петля времени',
+//     age: '14+',
+//     images: [quest5Image, quest5Image2],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//     restrictions: [
+// "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+// "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+// ],
+//     description: 'Вы случайно активировали устройство, которое перенесло вас в прошлое. Теперь вам нужно найти способ вернуться в настоящее, но каждое ваше действие может изменить будущее...',
+//   },
+//   {
+//     id: 6,
+//     name: 'Логово Великана',
+//     age: '12+',
+//     images: [quest6Image, quest6Image2, quest6Image3],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//     description: 'Вы - команда исследователей, отправившаяся в древнее логово великана. Легенды гласят, что здесь спрятаны несметные сокровища, но путь к ним охраняют древние ловушки и загадки...',
+//   },
+//   {
+//     id: 7,
+//     name: 'Мумия. В поисках артефакта',
+//     age: '12+',
+//     images: [quest7Image, quest7Image2],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//     restrictions: [
+// "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+// "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+// ],
+//     description: 'Вы - команда археологов, отправившаяся в древнюю гробницу в поисках легендарного артефакта. Но когда вы проникаете внутрь, оказывается, что гробница не так уж и пуста...',
+//   },
+//   {
+//     id: 8,
+//     name: 'Семейка Аддамс',
+//     age: '12+',
+//     images: [quest8Image, quest8Image2, quest8Image3],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//     restrictions: [
+// "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+// "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+// ],
+//     description: 'Вы - гости в доме семейства Аддамс. Но что-то пошло не так, и теперь вам нужно найти способ выбраться из этого странного дома, разгадывая загадки и преодолевая препятствия...',
+//   },
+//   {
+//     id: 9,
+//     name: 'Джуманджи',
+//     age: '12+',
+//     images: [quest9Image, quest9Image2, quest9Image3],
+//     players: '2-6 игрока',
+//     time: '60 минут',
+//     difficulty: 'Средний',
+//     contact: '+7 (391) 269-92-23',
+//     restrictions: [
+// "Дети от 8 до 14 лет могут играть в сопровождении взрослого или аниматора",
+// "Нельзя на каблуках; в состоянии алкогольного или наркотического опьянения"
+// ],
+//     description: 'Вы случайно активировали древнюю игру Джуманджи, и теперь вам нужно пройти все испытания, чтобы вернуться в реальный мир. Но будьте осторожны - каждое ваше действие может иметь непредсказуемые последствия...',
+//   }
+// ];
+
 
 const lounges = [
   {
     id: 1,
-    image: 'src/assets/lounge__1.jpg',
+    image: 'src/assets/images/lounge__1.jpg',
     address: 'ул. Алексеева, 113',
     price: 'от 1500 ₽/час',
     players: '2-6',
   },
   {
     id: 2,
-    image: 'src/assets/lounge__2.jpg',
+    image: 'src/assets/images/lounge__2.jpg',
     address: 'ул. Ленина, 45',
     price: 'от 2000 ₽/час',
     players: '4-8',
   },
   {
     id: 3,
-    image: 'src/assets/lounge__3.jpg',
+    image: 'src/assets/images/lounge__3.jpg',
     address: 'ул. Пушкина, 10',
     price: 'от 1800 ₽/час',
     players: '3-5',
   },
   {
     id: 4,
-    image: 'src/assets/lounge__4.jpg',
+    image: 'src/assets/images/lounge__4.jpg',
     address: 'ул. Пушкина, 10',
     price: 'от 1800 ₽/час',
     players: '3-5',
   },
   {
     id: 5,
-    image: 'src/assets/lounge__5.jpg',
+    image: 'src/assets/images/lounge__5.jpg',
     address: 'ул. Пушкина, 10',
     price: 'от 1800 ₽/час',
     players: '3-5',
   },
   {
     id: 6,
-    image: 'src/assets/lounge__6.jpg',
+    image: 'src/assets/images/lounge__6.jpg',
     address: 'ул. Пушкина, 10',
     price: 'от 1800 ₽/час',
     players: '3-5',
@@ -175,6 +245,21 @@ const lounges = [
   --text-color: #fff;
   --border-radius: 40px;
   --transition-duration: 0.5s;
+}
+
+.quests-page {
+  color: #fff;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .title {

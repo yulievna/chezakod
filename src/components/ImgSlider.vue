@@ -1,31 +1,48 @@
 <template>
   <div ref="carouselRef" class="owl-carousel owl-theme">
     <div v-for="(image, index) in images" :key="index" class="item">
-      <img :src="image" :alt="'Image ' + (index + 1)">
+      <img 
+        :src="isPromoSlider ? image.src : image" 
+        :alt="isPromoSlider ? image.alt : 'Image ' + (index + 1)"
+        @click="handleImageClick(index)"
+        style="cursor: pointer;"
+      >
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import 'owl.carousel';
+
+const router = useRouter();
 
 // Определяем пропсы
 const props = defineProps({
   images: {
     type: Array,
     required: true,
-    validator: (value) => value.every((item) => typeof item === 'string'),
   },
+  isPromoSlider: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Уникальный идентификатор для каждой карусели
 const uniqueId = ref(`carousel-${Math.random().toString(36).substr(2, 9)}`);
 const carouselRef = ref(null);
 
-// Функция для установки ref
+const handleImageClick = (index) => {
+  if (props.isPromoSlider && props.images[index] && props.images[index].id) {
+    const promotionId = props.images[index].id;
+    router.push({ path: '/promotions', hash: `#${promotionId}` });
+  }
+};
+
 const setCarouselRef = (el) => {
   carouselRef.value = el;
 };
@@ -33,12 +50,12 @@ const setCarouselRef = (el) => {
 onMounted(() => {
   nextTick(() => {
     if (carouselRef.value) {
-      const owl = $(carouselRef.value).owlCarousel({
+      $(carouselRef.value).owlCarousel({
         loop: true,
         margin: 0,
         nav: false,
         dots: true,
-        autoplay: false,
+        autoplay: true,
         autoplayTimeout: 4000,
         autoplayHoverPause: true,
         items: 1,
@@ -48,9 +65,16 @@ onMounted(() => {
       $(carouselRef.value).find('.owl-dot').each(function (index) {
         $(this).hover(
             function () {
+              const owl = $(this).closest('.owl-carousel').owlCarousel();
               owl.trigger('to.owl.carousel', [index, 300]); // Переключаем слайд
             }
         );
+        $(this).click(
+            function(){
+            const promotionId = props.images[index].id;
+              router.push({ path: '/promotions', hash: `#${promotionId}` });
+            }
+        )
       });
     }
   });
@@ -93,6 +117,7 @@ onMounted(() => {
   max-width: 100%;
   min-height: 176px;
   border-radius: 10px;
+  z-index: 10;
 }
 
 .owl-theme .owl-dots {

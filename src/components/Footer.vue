@@ -4,18 +4,17 @@
       <div class="footer-content">
         <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
-          <img class="logo" src="../assets/logo.png" alt="Logo" />
+          <img class="logo" src="../assets/images/logo-white.svg" alt="Logo" />
         </router-link>
 
         <!-- Меню -->
         <ul class="footer-menu">
           <li class="footer-item"><router-link to="/quests">Квесты</router-link></li>
           <li class="footer-item"><router-link to="/#">Экшн игры</router-link></li>
+          <li class="footer-item"><router-link to="/#">Картинг</router-link></li>
           <li class="footer-item"><router-link to="/#">Караоке</router-link></li>
           <li class="footer-item"><router-link to="/#">Шоу программы</router-link></li>
-          <li class="footer-item"><router-link to="/#">Дни рождения</router-link></li>
-          <li class="footer-item"><router-link to="/#">Корпоративы</router-link></li>
-          <li class="footer-item"><router-link to="/#">Выпускной 2025</router-link></li>
+          <li class="footer-item"><router-link to="/#">Мероприятия</router-link></li>
           <li class="footer-item"><router-link to="/#">Расписание</router-link></li>
           <li class="footer-item"><router-link to="/#">Сертификаты</router-link></li>
           <li class="footer-item"><router-link to="/#">Акции</router-link></li>
@@ -60,7 +59,7 @@ const togglePopup = () => {
 }
 
 .footer-container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -68,24 +67,20 @@ const togglePopup = () => {
 .footer-content {
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
   align-items: flex-start;
   gap: 40px;
-  flex-wrap: wrap;
 }
 
-.logo-wrapper {
-  display: flex;
-  align-items: center;
-}
 
 .logo {
-  height: 0px;
+  width: 200px;
 }
 
 .footer-menu {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 15px;
   list-style-type: none;
   margin: 0;
   padding: 0;

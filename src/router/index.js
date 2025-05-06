@@ -1,5 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import CertificatesView from '@/views/CertificatesView.vue'
+import PromotionsView from '@/views/PromotionsView.vue'
+import ActionGames from '@/views/ActionGames.vue'
+import AboutUsView from '@/views/AboutUsView.vue'
+import EventsView from '@/views/EventsView.vue'
+import ShowProgramsView from '@/views/ShowProgramsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,16 +20,58 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/about',
+      name: 'about',
+      component: AboutUsView
+    },
+    {
       path: '/quests',
       name: 'quests',
       component: () => import("@/views/QuestsView.vue")
     },
     {
-      path: '/quests/:id', // Динамический маршрут для каждого квеста
+      path: '/quests/:id',
       name: 'AboutQuest',
       component: () => import("@/views/AboutQuest.vue"),
-      props: true, // Передаем параметры маршрута как пропсы
+      props: true,
     },
+    {
+      path: '/certificates',
+      name: 'certificates',
+      component: CertificatesView
+    },
+    {
+      path: '/promotions',
+      name: 'promotions',
+      component: PromotionsView
+    },
+    {
+      path: '/action-games',
+      name: 'action-games',
+      component: ActionGames
+    },
+    {
+      path: '/action-games/:id',
+      name: 'AboutActionGame',
+      component: () => import("@/views/AboutActionGame.vue"),
+      props: true,
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: EventsView
+    },
+    {
+      path: '/show-programs',
+      name: 'show-programs',
+      component: ShowProgramsView
+    },
+    {
+      path: '/show-programs/:id',
+      name: 'about-show',
+      component: () => import("@/views/AboutShow.vue"),
+      props: true,
+    }
   ],
 })
 
