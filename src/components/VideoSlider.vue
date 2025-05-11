@@ -1,21 +1,19 @@
 <template>
+  <h1 class="title">Смотри наши видео</h1>
   <div class="video-carousel">
     <button class="arrow left" @click="prevVideo">❮</button>
     <div class="carousel-container" ref="carousel">
       <div
-          class="video-item"
-          v-for="(video, index) in videos"
-          :key="index"
-          :class="{ active: index === currentIndex }"
+        class="video-item"
+        v-for="(video, index) in videos"
+        :key="index"
       >
         <video
-            :src="video.src"
-            autoplay
-            muted
-            loop
-            playsinline
-            width="100%"
-            height="640px"
+          :src="video.src"
+          autoplay
+          muted
+          loop
+          playsinline
         ></video>
       </div>
     </div>
@@ -24,51 +22,52 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 
-// Данные для видео
-const videos = ref([
+const videos = [
   { src: "https://chezakod.ru/upload/video/5.mp4" },
   { src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4" },
-  { src: "https://chezakod.ru/kiosk/video/partykod/00Башня_Джу_Экшн.mp4" },
+  { src: "https://chezakod.ru/upload/video/5.mp4" },
   { src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4" },
-  { src: "https://chezakod.ru/kiosk/video/partykod/00Башня_Джу_Экшн.mp4" },
-]);
+    { src: "https://chezakod.ru/upload/video/5.mp4" },
+];
 
-// Текущий индекс видео
-const currentIndex = ref(0);
 const carousel = ref(null);
+const currentIndex = ref(0);
+const videoWidth = 1200;
+const gap = 20;
 
-// Переключение на предыдущее видео
-const prevVideo = () => {
-  currentIndex.value = (currentIndex.value - 1 + videos.value.length) % videos.value.length;
-};
-
-// Переключение на следующее видео
-const nextVideo = () => {
-  currentIndex.value = (currentIndex.value + 1) % videos.value.length;
-};
-
-// Обновление позиции карусели
 const updateCarousel = () => {
   if (!carousel.value) return;
-
-  const itemWidth = carousel.value.clientWidth / 2; // Ширина одного видео
-  const offset = -currentIndex.value * itemWidth;
+  
+  const offset = -currentIndex.value * (videoWidth + gap);
+  carousel.value.style.transition = "transform 0.5s ease-in-out";
   carousel.value.style.transform = `translateX(${offset}px)`;
 };
 
-// Следим за изменением currentIndex
-watch(currentIndex, updateCarousel);
+const nextVideo = () => {
+  currentIndex.value = (currentIndex.value + 1) % videos.length;
+  updateCarousel();
+};
 
-// Инициализация карусели
+const prevVideo = () => {
+  currentIndex.value = (currentIndex.value - 1 + videos.length) % videos.length;
+  updateCarousel();
+};
+
 onMounted(() => {
   updateCarousel();
-  window.addEventListener("resize", updateCarousel); // Обновляем при изменении размера окна
 });
 </script>
 
 <style scoped>
+.title{
+  color: #CF1034;
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 30px
+}
 .video-carousel {
   position: relative;
   width: 100%;
@@ -81,45 +80,49 @@ onMounted(() => {
 
 .carousel-container {
   display: flex;
-  transition: transform 0.5s ease-in-out;
-  width: 100%;
   gap: 20px;
-
 }
 
 .video-item {
-  flex: 0 0 60%; /* Ширина одного видео */
+  width: 1200px;
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.3s ease-in-out;
-  opacity: 0.5;
-}
-
-.video-item.active {
-  opacity: 1; /* Центральное видео полностью видимо */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
 
 .video-item video {
   width: 100%;
-  max-width: 1280px;
   height: 660px;
-  border: none;
-  border-radius: 10px;
-  object-fit: cover; /* Чтобы видео заполняло контейнер */
+  object-fit: cover;
 }
 
 .arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: rgba(0,0,0,0.5);
   color: white;
   border: none;
-  padding: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 24px;
-  z-index: 10;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.arrow:hover {
+  background: rgba(0,0,0,0.7);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .arrow.left {
@@ -128,21 +131,5 @@ onMounted(() => {
 
 .arrow.right {
   right: 10px;
-}
-
-/* Адаптив для мобильных устройств */
-@media (max-width: 768px) {
-  .video-item {
-    flex: 0 0 100%; /* На мобильных устройствах показываем одно видео */
-  }
-
-  .video-item:not(.active) {
-    display: none; /* Скрываем неактивные видео */
-  }
-
-  .arrow {
-    font-size: 18px;
-    padding: 8px;
-  }
 }
 </style>

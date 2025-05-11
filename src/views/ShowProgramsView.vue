@@ -1,377 +1,559 @@
-<template>
-  <Header />
-  <section class="show-programs">
-    <div class="container">
-      <h1 class="page-title">Шоу программы</h1>
-      
-      <!-- Mini Programs Section -->
-      <div class="section">
-        <h2 class="section-title">Мини программы</h2>
-        <div class="mini-programs-grid">
-          <div v-for="program in miniPrograms" :key="program.id" class="mini-program-card">
-            <div class="mini-program-card__image">
-              <img :src="program.image" :alt="program.name">
-            </div>
-            <div class="mini-program-card__content">
-              <h3 class="mini-program-card__title">{{ program.name }}</h3>
-              <p class="mini-program-card__description">{{ program.description }}</p>
-              <div class="mini-program-card__price">{{ program.price }} ₽</div>
-            </div>
-          </div>
-        </div>
-      </div>
+<template> 
+  <div class="show-programs">
+    <Header></Header>
 
-      <!-- Show Programs Section -->
-      <div class="section">
-        <h2 class="section-title">Шоу-программы</h2>
-        <div class="quests-grid">
-          <Quest
-            :quest="showPrograms"
-          />
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero__title">Шоу-программы</h1>
+        <p class="hero__subtitle">Незабываемые развлечения для вашего праздника</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="loading" class="loading-state">
+          <div class="spinner"></div>
+          <p>Загрузка шоу-программ...</p>
         </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="error-state">
+          <p>{{ error }}</p>
+          <button @click="loadShows" class="retry-button">Повторить</button>
+        </div>
+
+        <!-- Основные шоу-программы -->
+        <div v-else>
+          <!-- <h2 class="section-title">Основные шоу-программы</h2> -->
+<div class="shows-grid">
+  <div v-for="show in showPrograms" :key="show.id" class="show-card">
+    <div class="show-image">
+      <img :src="show.previewImage" :alt="show.name" loading="lazy">
+    </div>
+    <div class="show-content">
+      <h3>{{ show.name }}</h3>
+      <p>{{ show.previewText }}</p>
+      <div class="show-details">
+        <p><strong>Длительность:</strong> {{ show.duration }}</p>
+        <p><strong>Актеры:</strong> {{ show.actor }}</p>
+        <div class="show-price">{{ show.price }} ₽</div>
       </div>
     </div>
-  </section>
-  <Footer />
+  </div>
+</div>
+
+<h2 class="section-title">Мини шоу-программы</h2>
+<div class="mini-shows-grid">
+  <div v-for="mini in miniShows" :key="mini.id" class="mini-show-card" @click="selectedMiniShow = mini">
+    <img :src="mini.image" :alt="mini.name" loading="lazy">
+    <h4>{{ mini.name }}</h4>
+    <p class="mini-price">{{ mini.price }} ₽</p>
+  </div>
+</div>
+
+<!-- Modal -->
+<div v-if="selectedMiniShow" class="modal-backdrop" @click.self="selectedMiniShow = null">
+  <div class="modal-content">
+    <button class="modal-close" @click="selectedMiniShow = null">×</button>
+    <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name" />
+    <h3>{{ selectedMiniShow.name }}</h3>
+    <p>{{ selectedMiniShow.description }}</p>
+    <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
+  </div>
+</div>
+
+
+        </div>
+      </div>
+    </section>
+
+    <Footer></Footer>
+  </div>
 </template>
 
+
 <script setup>
-import { ref } from 'vue';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import Quest from '@/components/Quests.vue';
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
-// Import images
-import touchShowImage from '@/assets/images/touch-show.jpg';
-import tasteShowImage from '@/assets/images/taste-show.jpg';
-import silverShowImage from '@/assets/images/silver-show.jpg';
-import chemicalShowImage from '@/assets/images/chemical-show.jpg';
-import popitShowImage from '@/assets/images/popit-show.jpg';
-import slimeShowImage from '@/assets/images/slime-show.jpg';
-import ebruImage from '@/assets/images/ebru.jpg';
-import cottonCandyImage from '@/assets/images/cotton-candy.jpg';
-import bubbleShowImage from '@/assets/images/bubble-show.jpg';
+const showPrograms = ref([]);
+const miniShows = ref([]);
+const selectedMiniShow = ref(null);
+const loading = ref(true);
+const error = ref(null);
 
-const miniPrograms = ref([
-  {
-    id: 'touch-show',
-    name: '"Нащупай" шоу',
-    description: 'Сверхэмоциональное шоу, где вам одновременно весело и страшно от неизвестности.',
-    price: 5500,
-    image: touchShowImage
-  },
-  {
-    id: 'taste-show',
-    name: 'Попробуй Шоу',
-    description: 'Уникальное "вкусное" шоу, где участники испытывают свои вкусовые способности.',
-    price: 5500,
-    image: tasteShowImage
-  },
-  {
-    id: 'silver-show',
-    name: 'Серебряное шоу',
-    description: 'Очень веселое и красивое представление с использованием 10 кг серебристого конфетти.',
-    price: 5500,
-    image: silverShowImage
-  },
-  {
-    id: 'chemical-show',
-    name: 'Химическое шоу',
-    description: 'Удивительное шоу, в котором научные принципы сочетаются со шквалом дыма, льда и огня.',
-    price: 5500,
-    image: chemicalShowImage
-  },
-  {
-    id: 'popit-show',
-    name: 'Pop it шоу',
-    description: 'Фейерверк эмоций и самая популярная игра у детей. Интерактивный формат пиньяты.',
-    price: 5500,
-    image: popitShowImage
-  },
-  {
-    id: 'slime-show',
-    name: 'Слайм шоу',
-    description: 'Залипательное представление, где дети сами создадут уникальные слаймы.',
-    price: 5500,
-    image: slimeShowImage
-  },
-  {
-    id: 'ebru',
-    name: 'Рисование ЭБРУ',
-    description: 'Волшебная техника живописи красками по воде с перенесением на бумагу.',
-    price: 5500,
-    image: ebruImage
-  },
-  {
-    id: 'cotton-candy',
-    name: 'Шоу сладкой ваты',
-    description: 'Воздушное угощение для сладкоежек! Именинник научится сам ее закручивать.',
-    price: 5500,
-    image: cottonCandyImage
-  },
-  {
-    id: 'bubble-show',
-    name: 'Шоу мыльных пузырей',
-    description: 'Необыкновенное представление, завораживающее и детей и взрослых!',
-    price: 5500,
-    image: bubbleShowImage
+const loadShows = async () => {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const [main, mini] = await Promise.all([
+      axios.get('https://chezakod.ru/api/v2/show/'),
+      axios.get('https://chezakod.ru/api/v2/service/')
+    ]);
+
+    // Основные шоу
+    showPrograms.value = main.data.result.map(show => ({
+      id: show.id,
+      name: show.name,
+      previewImage: show.preview_image,
+      previewText: show.preview_text?.replace(/<[^>]*>/g, '') || '',
+      duration: show.duration,
+      actor: show.actor,
+      price: show.price
+    }));
+
+    // Мини-шоу
+    miniShows.value = mini.data.result.map(service => ({
+      id: service.id,
+      name: service.name,
+      description: service.description.replace(/<[^>]*>/g, ''),
+      price: service.price,
+      image: service.image
+    }));
+  } catch (err) {
+    console.error(err);
+    error.value = 'Ошибка загрузки шоу-программ.';
+  } finally {
+    loading.value = false;
   }
-]);
+};
 
-const showPrograms = ref([
-  {
-    id: 'museum',
-    name: 'Тайны ночного музея',
-    description: 'Когда-нибудь задумывались, есть ли у экспонатов в музее своя жизнь? А что, если обычная экскурсия превратится в увлекательное приключение? Приготовьтесь к фантастическому путешествию, где встретятся древние культуры и загадочные существа.',
-    features: [
-      'Изучение письменности Майя',
-      'Выращивание динозавров',
-      'Разгадка шифра от тайной двери',
-      'Танцы с динозавром и принцессой'
-    ],
-    includes: [
-      'Пригласительные',
-      'Банкетная зона на 2,5 часа',
-      'Сервировка стола праздной посудой',
-      'Праздничный фонтан из шаров',
-      'Зажигательный ведущий после основной программы',
-      'Персональный менеджер праздника'
-    ],
-    hosts: ['Принцесса племени по имени Майя'],
-    time: '2,5 часа',
-    equipment: 'Портативная колонка',
-    price: 20500,
-    priceNote: 'На команду 10 человек',
-    address: 'Ул. Белинского 8 ТРЦ «Комсомолл» 3 этаж',
-    images: ['@/assets/images/quests/museum.jpg']
-  },
-  {
-    id: 'pirate',
-    title: 'Пиратское приключение',
-    description: 'Неутомимый капитан Джек Воробей снова отправляется на встречу опасности. Джек задумал обрести вечную жизнь с помощью источника молодости. Для этого он даже похитил русалку с берегов адриатического моря. Вот только есть одна проблема: для эликсира молодости нужна не сама русалка, а ее слеза радости.',
-    features: [
-      'Знакомство с Пиратом и его пленницей – Русалкой',
-      'Клятва пирата',
-      '«От юнги до капитана»',
-      '«Распутай Русалку»',
-      'Найти общий язык с русалкой',
-      'Превращение слезы и жемчужины в эликсир'
-    ],
-    includes: [
-      'Пригласительные',
-      'Банкетная зона на 2,5 часа',
-      'Сервировка стола праздной посудой',
-      'Праздничный фонтан из шаров',
-      'Зажигательный ведущий после основной программы',
-      'Персональный менеджер праздника'
-    ],
-    hosts: ['2 ведущих (Пират и русалка)'],
-    duration: '2 часа 30 минут',
-    equipment: 'Портативная колонка',
-    price: 20500,
-    priceNote: 'На команду 10 человек',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-    phone: '2-333-999',
-    image: '@/assets/images/quests/pirate.jpg'
-  },
-  {
-    id: 'wizard',
-    title: 'Ученик Чародея',
-    description: 'Орден Чародеев защищает волшебную Башню, многие века хранящая свою магическую силу. Но в Башню проникает злой дух, который крадет электричество. Спящий в Башне Чародей знает способ, как усмирить духа, но только магия способна его разбудить.',
-    features: [
-      'Приветствие и посвящение в историю Чародейкой',
-      'Памятные сувениры из квеста – обереги',
-      'Активные игры с Чародеем',
-      'Тесла-катушка и настоящая молния',
-      'Сказочный антураж квеста',
-      'Магия химического шоу и опытов'
-    ],
-    includes: [
-      'Пригласительные',
-      'Банкетная комната на 2.5 часа',
-      'Сервировка стола праздничной посудой',
-      'Праздничный фонтан из шаров',
-      'Зажигательный ведущий после основной программы',
-      'Персональный менеджер праздника'
-    ],
-    hosts: ['2 ведущих (Великий Чародей Мэрлин и Чародейка)'],
-    duration: '2 часа 30 минут',
-    equipment: 'Портативная колонка',
-    price: 20500,
-    priceNote: 'На команду 10 человек',
-    address: 'Ул. Робеспьера 1',
-    phone: '2-333-999',
-    image: '@/assets/images/quests/wizard.jpg'
-  },
-  {
-    id: 'spiderman',
-    title: 'Спайдермен против доктора Осьминога',
-    description: 'Вы супергерои! Объединились вместе, чтобы противостоять злу в команде с Человеком-пауком! Ваша миссия обезвредить сыворотку, которая может сделать всех людей несчастными.',
-    features: [
-      'Знакомство с профессором и лаборантом',
-      'Проверка знаний на составление химических формул',
-      'Разминирование бункера (игра «Твистер»)',
-      'Сбор цепей кода для открытия станции',
-      'Генерация секретной сыворотки (3 опыта)'
-    ],
-    includes: [
-      'Пригласительные',
-      'Банкетная зона на 2,5 часа',
-      'Сервировка стола праздной посудой',
-      'Праздничный фонтан из шаров',
-      'Зажигательный ведущий после основной программы',
-      'Персональный менеджер праздника'
-    ],
-    hosts: ['2 ведущих (Человек-Паук и Доктор Осьминог)'],
-    duration: '2 часа 30 минут',
-    equipment: 'Портативная колонка',
-    price: 20500,
-    priceNote: 'На команду 10 человек',
-    address: 'Ул. Алексеева 113 (цоколь)',
-    phone: '2-333-999',
-    image: '@/assets/images/quests/spiderman.jpg'
-  },
-  {
-    id: 'dinosaur',
-    title: 'По следам динозавров',
-    description: 'С древних времён люди находили в земле окаменелые кости странных, непонятных существ и пытались объяснить их природу самыми разными способами. Великие тайны мира динозавров не раскрыты до сих пор...',
-    features: [
-      'Знакомство с виновником торжества и его друзьями',
-      'Путешествие на затерянный остров',
-      'Изучение затерянного языка Майа',
-      'Поиск карты с местоположением захоронения костей',
-      'Оживление динозавра с помощью камня'
-    ],
-    includes: [
-      'Пригласительные',
-      'Банкетная зона на 2,5 часа',
-      'Сервировка стола праздной посудой',
-      'Праздничный фонтан из шаров',
-      'Зажигательный ведущий после основной программы',
-      'Персональный менеджер праздника'
-    ],
-    hosts: ['2 ведущих (Палеонтологи и Динозавр)'],
-    duration: '2 часа 30 минут',
-    equipment: 'Портативная колонка',
-    price: 20500,
-    priceNote: 'На команду 10 человек',
-    address: 'ул. Белинского, 8 ТРЦ "Комсомолл" 3 этаж',
-    phone: '2-333-999',
-    image: '@/assets/images/quests/dinosaur.jpg'
-  }
-]);
+onMounted(loadShows);
+
 </script>
 
 <style scoped>
-.show-programs {
-  padding: 40px 0;
-  min-height: 100vh;
-  background-color: #1a1a1a;
-  color: #fff;
+.mini-shows {
+  margin-top: 60px;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+.mini-shows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
 }
 
-.page-title {
-  font-size: 2.5rem;
-  margin-bottom: 40px;
+.mini-show-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   text-align: center;
-  position: relative;
+  padding: 10px;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.section {
-  margin-bottom: 60px;
+.mini-show-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Мини-шоу стили */
+.mini-shows {
+  margin-top: 60px;
 }
 
 .section-title {
-  font-size: 2rem;
-  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
   color: #CF1034;
 }
 
-/* Mini Programs Grid */
-.mini-programs-grid {
+.mini-shows-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
 }
 
-.mini-program-card {
-  background: #2a2a2a;
-  border-radius: 8px;
+.mini-show-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease;
 }
 
-.mini-program-card:hover {
+.mini-show-card:hover {
   transform: translateY(-5px);
 }
 
-.mini-program-card__image {
+.mini-show-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.mini-show-info {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-show-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.mini-show-description {
+  font-size: 0.95rem;
+  color: #555;
+  height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.mini-show-price {
+  font-size: 1.1rem;
+  color: #CF1034;
+  font-weight: 600;
+  margin-top: auto;
+}
+.section-title {
+  font-size: 28px;
+  margin: 40px 0 20px;
+  text-align: center;
+  color: #333;
+}
+
+.mini-shows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.mini-show-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.3s ease;
+  padding: 15px;
+}
+
+.mini-show-card:hover {
+  transform: scale(1.03);
+}
+
+.mini-show-card img {
   width: 100%;
   height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.mini-show-card h4 {
+  font-size: 18px;
+  margin: 12px 0 6px;
+  color: #CF1034;
+}
+
+.mini-price {
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.modal-content h3 {
+  color: #CF1034;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #666;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Шоу-программы стили (улучшения) */
+.show-card {
+  background: linear-gradient(to bottom right, #fff, #fdf4f6);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.show-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.show-title {
+  font-size: 1.6rem;
+  color: #CF1034;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.show-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  max-height: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-link {
+  background: linear-gradient(135deg, #CF1034, #e82c4c);
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+
+.show-programs {
+  background-color: #f8f9fa;
+}
+
+.hero {
+  background-size: cover;
+  background-position: center;
+  color: #000;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero__title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.hero__subtitle {
+  font-size: 24px;
+  opacity: 0.9;
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.main-content {
+  /* padding: 60px 0; */
+}
+
+.shows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.show-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.show-card:hover {
+  transform: translateY(-5px);
+}
+
+.show-image {
+  width: 100%;
+  height: 200px;
   overflow: hidden;
 }
 
-.mini-program-card__image img {
+.show-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.mini-program-card__content {
-  padding: 15px;
+.show-content {
+  padding: 20px;
 }
 
-.mini-program-card__title {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  color: #CF1034;
-}
-
-.mini-program-card__description {
-  font-size: 0.9rem;
-  color: #ccc;
+.show-title {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 10px;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.mini-program-card__price {
-  font-size: 1.1rem;
-  font-weight: bold;
   color: #CF1034;
 }
 
-/* Show Programs Grid */
-.quests-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
+.show-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.show-details {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.show-details p {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.show-price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #CF1034;
+  margin-top: 10px;
+}
+
+.show-link {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #CF1034;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 15px;
+  transition: background 0.3s ease;
+}
+
+.show-link:hover {
+  background: #a00d29;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 60px;
+  color: #000;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
-  .mini-programs-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  .hero__title {
+    font-size: 36px;
   }
   
-  .quests-grid {
+  .hero__subtitle {
+    font-size: 20px;
+  }
+  
+  .shows-grid {
     grid-template-columns: 1fr;
   }
-  
-  .page-title {
-    font-size: 2rem;
-  }
-  
-  .section-title {
-    font-size: 1.75rem;
-  }
 }
-</style> 
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #CF1034;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-state {
+  text-align: center;
+  padding: 40px;
+  color: #CF1034;
+}
+
+.retry-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #CF1034;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #a00d29;
+}
+</style>

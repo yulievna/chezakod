@@ -14,6 +14,7 @@
     "axios": "^1.8.4",
     "jquery": "^3.7.1",
     "owl.carousel": "^2.3.4",
+    "pinia": "^3.0.2",
     "swiper": "^8.4.7",
     "v-mask": "^2.3.0",
     "vue": "^3.5.13",
@@ -21,6 +22,7 @@
     "vue-collapsed": "^1.3.4",
     "vue-owl-carousel": "^2.0.3",
     "vue-router": "^4.4.5",
+    "vue-the-mask": "^0.11.1",
     "vue-yandex-maps": "^2.1.4"
   },
   "devDependencies": {

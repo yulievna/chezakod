@@ -50,7 +50,7 @@
           <ul class="restriction-list">
             <li v-for="(rule, index) in game.restrictions" :key="index" class="restriction-item">
               <div class="restriction-icon-wrapper">
-                <img src="@/assets/icon_restriction.svg" alt="!" class="restriction-icon" />
+                <img src="@/assets/images/icon_restriction.svg" alt="!" class="restriction-icon" />
               </div>
               <span>{{ rule }}</span>
             </li>
@@ -75,11 +75,11 @@
           <h2 class="section-title">Контакты</h2>
           <div class="contacts-info">
             <div class="contact-item">
-              <img src="@/assets/icon__quest-1.png" alt="Phone" class="contact-icon" />
+              <img src="@/assets/images/icon__quest-1.png" alt="Phone" class="contact-icon" />
               <p class="phone">{{ game.contact }}</p>
             </div>
             <div class="contact-item">
-              <img src="@/assets/icon__quest-2.png" alt="Location" class="contact-icon" />
+              <img src="@/assets/images/icon__quest-2.png" alt="Location" class="contact-icon" />
               <p class="way">{{ game.address }}</p>
             </div>
           </div>
@@ -201,6 +201,7 @@ const getServiceIcon = (service) => {
   color: #fff;
   padding: 20px;
   background-color: #1a1a1a;
+  font-family: 'Rubik';
 }
 
 .game-header {
@@ -218,7 +219,7 @@ const getServiceIcon = (service) => {
 }
 
 .game-header .container {
-  width: 100%;
+
   display: flex;
   justify-content: space-between;
 }

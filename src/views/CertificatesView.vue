@@ -179,14 +179,14 @@ const openOrderPopup = () => {
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 2rem;
-  color: #fff;
+  color: #CF1034;
 }
 
 .section-title {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 2rem;
-  color: #fff;
+  color: #CF1034;
 }
 section{
   margin-bottom: 60px;

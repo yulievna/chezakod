@@ -195,33 +195,14 @@
     </section>
 
     <!-- Additional Services -->
-    <section class="additional-services">
-      <div class="container">
-        <h2 class="section-title">Дополнительные услуги</h2>
-        <div class="services-grid">
-          <div v-for="(service, index) in additionalServices" :key="index" class="service-card">
-            <div class="service-card__icon">
-              <img :src="service.icon" :alt="service.name">
-            </div>
-            <h3>{{ service.name }}</h3>
-            <p>{{ service.description }}</p>
-            <div class="service-card__price">{{ service.price }} ₽</div>
-          </div>
-        </div>
-      </div>
-    </section>
+
 
     <!-- Lounges Section -->
     <section class="lounges-section">
       <div class="container">
-        <h2 class="section-title">Наши локации</h2>
-        <div class="lounges-grid">
-          <Lounge 
-            v-for="lounge in lounges" 
-            :key="lounge.id"
-            :lounge="lounge"
+        <Lounge 
+            :lounges="lounges"
           />
-        </div>
       </div>
     </section>
 
@@ -241,12 +222,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import ImgSlider from '@/components/ImgSlider.vue'
 import Quest from '@/components/Quests.vue'
 import Lounge from '@/components/Lounge.vue'
+import axios from 'axios'
 
 import korporativ from '@/assets/images/korporativ.jpg';
 import korporativ2 from '@/assets/images/korporativ2.jpg';
@@ -353,50 +335,27 @@ const additionalServices = [
   // ... add other additional services ...
 ]
 
-const lounges = [
-  {
-    id: 1,
-    image: 'src/assets/images/lounge__1.jpg',
-    address: 'ул. Алексеева, 113',
-    price: 'от 1500 ₽/час',
-    players: '2-6',
-  },
-  {
-    id: 2,
-    image: 'src/assets/images/lounge__2.jpg',
-    address: 'ул. Ленина, 45',
-    price: 'от 2000 ₽/час',
-    players: '4-8',
-  },
-  {
-    id: 3,
-    image: 'src/assets/images/lounge__3.jpg',
-    address: 'ул. Пушкина, 10',
-    price: 'от 1800 ₽/час',
-    players: '3-5',
-  },
-  {
-    id: 4,
-    image: 'src/assets/images/lounge__4.jpg',
-    address: 'ул. Пушкина, 10',
-    price: 'от 1800 ₽/час',
-    players: '3-5',
-  },
-  {
-    id: 5,
-    image: 'src/assets/images/lounge__5.jpg',
-    address: 'ул. Пушкина, 10',
-    price: 'от 1800 ₽/час',
-    players: '3-5',
-  },
-  {
-    id: 6,
-    image: 'src/assets/images/lounge__6.jpg',
-    address: 'ул. Пушкина, 10',
-    price: 'от 1800 ₽/час',
-    players: '3-5',
+const lounges = ref([]);
+onMounted(async () => {
+  try {
+    const responseL = await axios.get('https://chezakod.ru/api/v2/vip/');
+    lounges.value = responseL.data.result.map((l) => ({
+      id: l.id,
+      photo: l.photo,
+      location: {
+        id: l.location.id,
+        name: l.location.name,
+        address: l.location.address.replace(/&quot;/g, '"'),
+        coordinates: l.location.coordinates,
+        links: l.location.links
+      },
+      quests: l.quests
+    }));
+    // lounges.value = responseL.
+  } catch (error) {
+    console.error('Ошибка при загрузке випок:', error);
   }
-]
+});
 </script>
 
 <style scoped>
@@ -436,7 +395,6 @@ const lounges = [
 .container {
   width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 .content-grid {

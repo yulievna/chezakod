@@ -65,10 +65,8 @@
 
   <!-- Попап -->
   <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
-    <div class="popup">
-      <button class="popup-close" @click="togglePopup">&times;</button>
-      <Form></Form>
-    </div>
+    <Form></Form>
+
   </div>
 </template>
 

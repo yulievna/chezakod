@@ -11,7 +11,7 @@
           <p>Мы уделяем внимание каждой детали, поэтому наши квесты до сих пор остаются одними из самых любимых развлечений гостей всех возрастов. У нас есть форматы как с актёрами, так и классические сценарные квесты, а также современные игровые механики с дополненной реальностью и необычными сюжетами.</p>
         </div>
         <div class="about-image" data-aos="fade-left">
-          <img src="@/assets/images/logo-white.svg" alt="Чеширский код" />
+          <img src="@/assets/images/logo.svg" alt="Чеширский код" />
         </div>
       </div>
     </div>
@@ -83,38 +83,15 @@
   <section class="mission">
     <div class="container">
       <div class="mission-content" data-aos="zoom-in">
-        <h2>Наша миссия</h2>
+        <h2 class="mission-text">Наша миссия</h2>
         <p>Мы развиваемся и расширяемся, но остаёмся верны своей идее делать лучшее, что только можно придумать для веселья, эмоций и настоящих приключений</p>
       </div>
     </div>
   </section>
 
   <section class="contacts">
-    <div class="container">
       <h2 data-aos="fade-up">Контакты</h2>
-      <div class="contacts-grid">
-        <div class="contact-info" data-aos="fade-right">
-          <h3>Адрес</h3>
-          <p>г. Красноярск, ул. Вавилова, 1</p>
-          
-          <h3>График работы</h3>
-          <p>Ежедневно с 10:00 до 22:00</p>
-          
-          <a href="tel:+73912000000" class="contact-link">
-            <i class="fas fa-phone"></i>
-            +7 (391) 200-00-00
-          </a>
-          <a href="mailto:info@chezakod.ru" class="contact-link">
-            <i class="fas fa-envelope"></i>
-            info@chezakod.ru
-          </a>
-        </div>
-        
-        <div class="contact-map" data-aos="fade-left">
-          <Map></Map>
-        </div>
-      </div>
-    </div>
+      <Map></Map>
   </section>
 
   <Footer></Footer>
@@ -158,12 +135,13 @@ import { onMounted } from 'vue';
   color: #CF1034;
   margin-bottom: 30px;
   text-align: center;
+  font-weight: 600;
 }
 
 .about-text p {
   font-size: 18px;
   line-height: 1.6;
-  color: #fff;
+  color: #000;
   margin-bottom: 20px;
 }
 
@@ -184,17 +162,17 @@ import { onMounted } from 'vue';
   padding: 80px 0;
   /* background-color: #f8f8f8; */
 }
-.organizations h2{
-  font-size: 48px;
+h2{
+  font-size: 32px;
   color: #CF1034;
   margin-bottom: 30px;
   text-align: center;
-
+  font-weight: 600;
 }
 
 .section-intro {
   font-size: 20px;
-  color: #fff;
+  color: #000;
   margin-bottom: 40px;
   text-align: center;
 }
@@ -314,7 +292,7 @@ import { onMounted } from 'vue';
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('@/assets/images/pattern.svg') repeat;
+  /* background: url('@/assets/images/pattern.svg') repeat; */
   opacity: 0.1;
   animation: slide 20s linear infinite;
 }
@@ -332,7 +310,9 @@ import { onMounted } from 'vue';
   max-width: 800px;
   margin: 0 auto;
 }
-
+.mission-text{
+  color: #000;
+}
 .mission h2 {
   font-size: 36px;
   margin-bottom: 30px;

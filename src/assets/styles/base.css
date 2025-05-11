@@ -74,7 +74,8 @@ input[type=checkbox]:checked {
   /* be as obvious as possible that it's a checkbox and that it's checked! */
 }
 body {
-  background: linear-gradient(#0d2032, #000)  !important;
+  /* background: linear-gradient(#0d2032, #000)  !important; */
+  background: #f8f8f8  !important;
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);

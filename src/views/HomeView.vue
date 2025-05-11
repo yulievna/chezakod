@@ -10,10 +10,35 @@
       <div class="container">
         <ul class="servises__list">
           <li class="main-slider"><ImgSlider :images="imageUrls"></ImgSlider></li>
-          <li class="serviсes__el quests" style="background-image: url('src/assets/images/logovo-velikana.jpg');"><router-link class="overlay" to="/quests">Квесты</router-link></li>
-          <li class="serviсes__el karaoke" style="background-image: url('src/assets/images/party.jpg');"><router-link class="overlay" to="/">Квесты</router-link></li>
-          <li class="serviсes__el action-games" style="background-image: url('src/assets/images/action.jpg');"><router-link class="overlay" to="/action-games">Экшн-игры</router-link></li>
-          <li class="serviсes__el karting" style="background-image: url('src/assets/images/chego.jpg');"><router-link class="overlay" to="/">Картинг</router-link></li>
+          <router-link
+            class="serviсes__el quests"
+            to="/quests"
+            style="background-image: url('src/assets/images/quest__2.jpg');"
+          >
+            <span class="overlay">Квесты</span>
+          </router-link>
+
+          <a href="https://party-kod.ru/"
+            class="serviсes__el karaoke"
+            style="background-image: url('src/assets/images/party.jpg');"
+          >
+            <span class="overlay">Караоке</span>
+          </a>
+
+          <router-link
+            class="serviсes__el action-games"
+            to="/action-games"
+            style="background-image: url('src/assets/images/action.jpg');"
+          >
+            <span class="overlay">Экшн-игры</span>
+          </router-link>
+
+          <a  href="https://kartingchego.ru/"
+              class="serviсes__el karting"
+              style="background-image: url('src/assets/images/chego.jpg');"
+            >
+              <span class="overlay">Картинг</span>
+          </a>
           <li class="programs"><ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider></li>
           <li class="serviсes__el kids-party" style="background-image: url('src/assets/images/children.jpg');"><router-link class="overlay" to="/">Детские праздники</router-link></li>
           <li class="serviсes__el adult-party" style="background-image: url('src/assets/images/korporativ.jpg');"><router-link class="overlay" to="/">Корпоративы</router-link></li>
@@ -53,6 +78,7 @@
   
     <section class="form">
         <div class="container">
+          <h2 class="title">Заполни форму и мы с тобой свяжимся</h2>
           <Form></Form>
         </div>
     </section>
@@ -61,6 +87,8 @@
   
     <section class="faq">
       <div class="container">
+      <h2 class="title">Ответы на часто задаваемые вопросы</h2>
+
           <Accordion></Accordion>
       </div>
     </section>
@@ -97,8 +125,8 @@
   import Form from "@/components/Form.vue";
 
   const imageUrls = [
-    'src/assets/images/korporativ.jpg',
     'src/assets/images/sl2.jpg',
+    'src/assets/images/korporativ.jpg',
     'src/assets/images/sl3.jpg',
   ];
 
@@ -148,9 +176,6 @@
     {
       src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"
     },
-    {
-      src: "https://chezakod.ru/kiosk/video/partykod/00Башня_Джу_Экшн.mp4"
-    }
   ];
 
   </script>
@@ -175,7 +200,7 @@
       "slider slider slider karting karaoke"
       "programs programs programs adult kids";
   }
-  .serviсes__el{
+  /* .serviсes__el{
     background-color: #CF1034;
     color: #fff;
     font-size: 36px;
@@ -192,7 +217,66 @@
   }
   .serviсes__el:hover{
     transform: scale(1.15);
-  }
+  } */
+  .serviсes__el {
+  position: relative;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+/* Псевдоэлемент для размытия фона */
+.serviсes__el::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(0px);
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: backdrop-filter 0.4s ease, background-color 0.4s ease;
+  z-index: 1;
+}
+
+/* Hover — активируем размытие */
+.serviсes__el:hover::before {
+  backdrop-filter: blur(2px);
+}
+
+/* Текстовая часть по центру */
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* Показываем текст при наведении */
+.serviсes__el:hover .overlay {
+  opacity: 1;
+}
+.serviсes__el:hover {
+  transform: scale(1.05);
+}
+
+
+
+
+
+
   .programs:hover, .main-slider:hover{
     transform: scale(1.05);
   }
@@ -237,8 +321,15 @@
     padding: 20px;
   }
   /* --------------------------------- */
+  .title{
+    color: #CF1034;
+    font-size: 36px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+  }
   .form{
-    margin: 290px 0 60px;
+    margin: 30px 0 60px;
   }
   .form__content{
     max-width: 792px;

@@ -7,22 +7,77 @@
           v-for="lounge in lounges"
           :key="lounge.id"
           class="lounge__el"
-          :style="{ backgroundImage: `url(${lounge.image})` }"
+          :style="{ backgroundImage: `url(${lounge.photo[0] || lounge.image})` }"
         >
           <div class="lounge__overlay">
             <div class="lounge__info">
               <div class="lounge__address">
-                <!-- <span class="icon"></span> -->
-                {{ lounge.address }}
+                {{ lounge.location?.address || lounge.address }}
               </div>
-              <div class="lounge__price">{{ lounge.price }}</div>
-              <div class="lounge__players">
-                <!-- <span class="icon">👥</span> -->
-                {{ lounge.players }} гостей
+              <div class="lounge__links">
+                <a 
+                  v-if="lounge.location?.links?.ymaps" 
+                  :href="lounge.location.links.ymaps" 
+                  target="_blank" 
+                  class="lounge__map-link"
+                >
+                  Яндекс Карты
+                </a>
+                <a 
+                  v-if="lounge.location?.links?.['2gis']" 
+                  :href="lounge.location.links['2gis']" 
+                  target="_blank" 
+                  class="lounge__map-link"
+                >
+                  2GIS
+                </a>
               </div>
-              <button class="lounge__book-btn">Забронировать</button>
+              <button 
+                class="lounge__book-btn"
+                @click="openGallery(lounge)"
+              >
+                Посмотреть
+              </button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo Gallery Modal -->
+    <div v-if="selectedLounge" class="gallery-modal" @click="closeGallery">
+      <div class="gallery-modal__content" @click.stop>
+        <button class="gallery-modal__close" @click="closeGallery">&times;</button>
+        <div class="gallery-modal__main">
+          <button 
+            class="gallery-modal__arrow gallery-modal__arrow--prev"
+            @click="prevPhoto"
+            :disabled="currentPhotoIndex === 0"
+          >
+            &#10094;
+          </button>
+          <img 
+            :src="currentPhoto" 
+            :alt="selectedLounge.location?.name || 'Лаундж зона'"
+            class="gallery-modal__image"
+          >
+          <button 
+            class="gallery-modal__arrow gallery-modal__arrow--next"
+            @click="nextPhoto"
+            :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
+          >
+            &#10095;
+          </button>
+        </div>
+        <div class="gallery-modal__thumbnails">
+          <img 
+            v-for="(photo, index) in selectedLounge.photo" 
+            :key="index"
+            :src="photo"
+            :alt="`Фото ${index + 1}`"
+            :class="{ 'active': currentPhotoIndex === index }"
+            @click="currentPhotoIndex = index"
+          >
         </div>
       </div>
     </div>
@@ -30,34 +85,66 @@
 </template>
 
 <script setup>
-defineProps({
+import { ref, computed } from 'vue';
+
+const props = defineProps({
   lounges: {
     type: Array,
     required: true,
   },
 });
+
+const selectedLounge = ref(null);
+const currentPhotoIndex = ref(0);
+
+const currentPhoto = computed(() => {
+  if (!selectedLounge.value?.photo?.length) return '';
+  return selectedLounge.value.photo[currentPhotoIndex.value];
+});
+
+const openGallery = (lounge) => {
+  selectedLounge.value = lounge;
+  currentPhotoIndex.value = 0;
+  document.body.style.overflow = 'hidden';
+};
+
+const closeGallery = () => {
+  selectedLounge.value = null;
+  currentPhotoIndex.value = 0;
+  document.body.style.overflow = '';
+};
+
+const nextPhoto = () => {
+  if (currentPhotoIndex.value < selectedLounge.value.photo.length - 1) {
+    currentPhotoIndex.value++;
+  }
+};
+
+const prevPhoto = () => {
+  if (currentPhotoIndex.value > 0) {
+    currentPhotoIndex.value--;
+  }
+};
 </script>
 
 <style scoped>
 .lounge {
   padding: 60px 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), transparent);
 }
 
 .title {
-  margin-bottom: 40px;
+  font-size: 32px;
+  margin: 30px 0;
   text-align: center;
-  font-size: 46px;
-  color: #fff;
-  position: relative;
-  padding-bottom: 15px;
+  color:#CF1034;
+  font-weight: 600;
+  width: 1200px;
 }
 
 .lounge__list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-  padding: 20px;
 }
 
 .lounge__el {
@@ -112,6 +199,7 @@ defineProps({
   display: flex;
   align-items: center;
   gap: 8px;
+
 }
 
 .lounge__price {
@@ -169,6 +257,131 @@ defineProps({
   font-size: 18px;
 }
 
+.lounge__links {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.lounge__map-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.lounge__map-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.gallery-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.gallery-modal__content {
+  position: relative;
+  width: 90%;
+  max-width: 8%;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.gallery-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.gallery-modal__main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.gallery-modal__image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.gallery-modal__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gallery-modal__arrow:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.gallery-modal__arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gallery-modal__arrow--prev {
+  left: 10px;
+}
+
+.gallery-modal__arrow--next {
+  right: 10px;
+}
+
+.gallery-modal__thumbnails {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+  justify-content: center;
+}
+
+.gallery-modal__thumbnails img {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.gallery-modal__thumbnails img:hover {
+  opacity: 0.8;
+}
+
+.gallery-modal__thumbnails img.active {
+  opacity: 1;
+  border: 2px solid #cf1034;
+}
+
 @media (max-width: 1024px) {
   .lounge__list {
     grid-template-columns: repeat(2, 1fr);
@@ -203,6 +416,21 @@ defineProps({
 
   .lounge__info {
     transform: translateY(0);
+  }
+
+  .gallery-modal__content {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .gallery-modal__arrow {
+    padding: 10px;
+    font-size: 20px;
+  }
+
+  .gallery-modal__thumbnails img {
+    width: 80px;
+    height: 60px;
   }
 }
 
