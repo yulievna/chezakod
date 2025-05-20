@@ -1,7 +1,6 @@
 <template>
   <section class="lounge">
     <div class="container">
-      <h1 class="title">Лаундж зоны</h1>
       <div class="lounge__list">
         <div
           v-for="lounge in lounges"
@@ -128,19 +127,6 @@ const prevPhoto = () => {
 </script>
 
 <style scoped>
-.lounge {
-  padding: 60px 0;
-}
-
-.title {
-  font-size: 32px;
-  margin: 30px 0;
-  text-align: center;
-  color:#CF1034;
-  font-weight: 600;
-  width: 1200px;
-}
-
 .lounge__list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -192,26 +178,31 @@ const prevPhoto = () => {
   transform: translateY(0);
 }
 
-.lounge__address,
-.lounge__players {
+.lounge__address {
   font-size: 16px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-
 }
 
-.lounge__price {
-  font-weight: bold;
-  font-size: 24px;
-  color: #cf1034;
-  background: #fff;
-  width: fit-content;
-  padding: 8px 15px;
-  border-radius: 10px;
+.lounge__links {
+  display: flex;
+  gap: 10px;
   margin-bottom: 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.lounge__map-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.lounge__map-link:hover {
+  opacity: 1;
+  text-decoration: underline;
 }
 
 .lounge__book-btn {
@@ -249,33 +240,85 @@ const prevPhoto = () => {
   left: 100%;
 }
 
-.lounge__book-btn:hover {
-  box-shadow: 0 4px 15px rgba(207, 16, 52, 0.3);
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+  .lounge__list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
 }
 
-.icon {
-  font-size: 18px;
+@media (max-width: 992px) {
+  .lounge__list {
+    gap: 20px;
+  }
+
+  .lounge__el {
+    min-height: 350px;
+  }
+
+  .lounge__overlay {
+    padding: 25px;
+  }
+
+  .lounge__address {
+    font-size: 15px;
+  }
 }
 
-.lounge__links {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0;
+@media (max-width: 768px) {
+  .lounge__list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .lounge__el {
+    min-height: 300px;
+  }
+
+  .lounge__overlay {
+    padding: 20px;
+    opacity: 1;
+  }
+
+  .lounge__info {
+    transform: translateY(0);
+  }
+
+  .lounge__address {
+    font-size: 14px;
+  }
+
+  .lounge__book-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
 }
 
-.lounge__map-link {
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 15px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  transition: all 0.3s ease;
+@media (max-width: 480px) {
+  .lounge__el {
+    min-height: 250px;
+  }
+
+  .lounge__overlay {
+    padding: 15px;
+  }
+
+  .lounge__address {
+    font-size: 13px;
+  }
+
+  .lounge__map-link {
+    font-size: 12px;
+  }
+
+  .lounge__book-btn {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
 }
 
-.lounge__map-link:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
+/* Стили для модального окна галереи */
 .gallery-modal {
   position: fixed;
   top: 0;
@@ -287,13 +330,14 @@ const prevPhoto = () => {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 20px;
 }
 
 .gallery-modal__content {
   position: relative;
   width: 90%;
-  max-width: 8%;
-  background: #fff;
+  max-width: 1200px;
+  background: #1a1a1a;
   border-radius: 10px;
   padding: 20px;
 }
@@ -307,7 +351,7 @@ const prevPhoto = () => {
   font-size: 30px;
   color: #fff;
   cursor: pointer;
-  z-index: 1;
+  z-index: 2;
 }
 
 .gallery-modal__main {
@@ -322,29 +366,25 @@ const prevPhoto = () => {
   max-width: 100%;
   max-height: 70vh;
   object-fit: contain;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .gallery-modal__arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: #fff;
   font-size: 24px;
   padding: 15px;
   cursor: pointer;
+  border-radius: 50%;
   transition: all 0.3s ease;
 }
 
 .gallery-modal__arrow:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.gallery-modal__arrow:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .gallery-modal__arrow--prev {
@@ -361,11 +401,27 @@ const prevPhoto = () => {
   overflow-x: auto;
   padding: 10px 0;
   justify-content: center;
+  scrollbar-width: thin;
+  scrollbar-color: #cf1034 #1a1a1a;
+}
+
+.gallery-modal__thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-modal__thumbnails::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+
+.gallery-modal__thumbnails::-webkit-scrollbar-thumb {
+  background: #cf1034;
+  border-radius: 3px;
 }
 
 .gallery-modal__thumbnails img {
-  width: 100px;
-  height: 70px;
+  width: 80px;
+  height: 60px;
   object-fit: cover;
   border-radius: 5px;
   cursor: pointer;
@@ -382,45 +438,10 @@ const prevPhoto = () => {
   border: 2px solid #cf1034;
 }
 
-@media (max-width: 1024px) {
-  .lounge__list {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-}
-
 @media (max-width: 768px) {
-  .lounge {
-    padding: 40px 0;
-  }
-
-  .title {
-    font-size: 28px;
-    margin-bottom: 30px;
-  }
-
-  .lounge__list {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 10px;
-  }
-
-  .lounge__el {
-    min-height: 350px;
-  }
-
-  .lounge__overlay {
-    opacity: 1;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
-  }
-
-  .lounge__info {
-    transform: translateY(0);
-  }
-
   .gallery-modal__content {
     width: 95%;
-    padding: 10px;
+    padding: 15px;
   }
 
   .gallery-modal__arrow {
@@ -429,29 +450,32 @@ const prevPhoto = () => {
   }
 
   .gallery-modal__thumbnails img {
-    width: 80px;
-    height: 60px;
+    width: 60px;
+    height: 45px;
   }
 }
 
 @media (max-width: 480px) {
-  .lounge__el {
-    min-height: 300px;
+  .gallery-modal {
+    padding: 10px;
   }
 
-  .lounge__price {
-    font-size: 20px;
-    padding: 6px 12px;
+  .gallery-modal__content {
+    padding: 10px;
   }
 
-  .lounge__address,
-  .lounge__players {
-    font-size: 14px;
+  .gallery-modal__close {
+    font-size: 24px;
   }
 
-  .lounge__book-btn {
-    padding: 10px 20px;
-    font-size: 14px;
+  .gallery-modal__arrow {
+    padding: 8px;
+    font-size: 18px;
+  }
+
+  .gallery-modal__thumbnails img {
+    width: 50px;
+    height: 38px;
   }
 }
 </style>

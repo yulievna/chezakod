@@ -27,43 +27,87 @@
 
         <!-- Основные шоу-программы -->
         <div v-else>
-          <!-- <h2 class="section-title">Основные шоу-программы</h2> -->
-<div class="shows-grid">
-  <div v-for="show in showPrograms" :key="show.id" class="show-card">
-    <div class="show-image">
-      <img :src="show.previewImage" :alt="show.name" loading="lazy">
-    </div>
-    <div class="show-content">
-      <h3>{{ show.name }}</h3>
-      <p>{{ show.previewText }}</p>
-      <div class="show-details">
-        <p><strong>Длительность:</strong> {{ show.duration }}</p>
-        <p><strong>Актеры:</strong> {{ show.actor }}</p>
-        <div class="show-price">{{ show.price }} ₽</div>
-      </div>
-    </div>
-  </div>
-</div>
+          <div class="shows-grid">
+            <div class="shows-grid">
+                <div v-for="show in showPrograms" :key="show.id" class="show-card" @click="openGallery(show)">
+                  <div class="show-image">
+                    <img :src="show.previewImage" :alt="show.name" loading="lazy">
+                  </div>
+                  <div class="show-content">
+                    <h3>{{ show.name }}</h3>
+                    <p class="show-description">{{ show.previewText }}</p>
+                    <div class="show-details">
+                      <div class="detail-row">
+                        <span class="detail-label">Длительность: {{ show.duration }}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Актеры: {{ show.actor }}</span>
+                      </div>
+                      <div class="show-price">{{ show.price }} ₽ <span class="price-note">на команду 10 человек</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
 
-<h2 class="section-title">Мини шоу-программы</h2>
-<div class="mini-shows-grid">
-  <div v-for="mini in miniShows" :key="mini.id" class="mini-show-card" @click="selectedMiniShow = mini">
-    <img :src="mini.image" :alt="mini.name" loading="lazy">
-    <h4>{{ mini.name }}</h4>
-    <p class="mini-price">{{ mini.price }} ₽</p>
-  </div>
-</div>
+          <!-- Галерея шоу-программы -->
+          <div v-if="selectedShow" class="gallery-modal" @click="closeGallery">
+            <div class="gallery-modal__content" @click.stop>
+              <button class="gallery-modal__close" @click="closeGallery">&times;</button>
+              <div class="gallery-modal__main">
+                <button
+                    class="gallery-modal__arrow gallery-modal__arrow--prev"
+                    @click="prevPhoto"
+                    :disabled="currentPhotoIndex === 0"
+                >
+                  &#10094;
+                </button>
+                <img
+                    :src="currentPhoto"
+                    :alt="selectedShow.name"
+                    class="gallery-modal__image"
+                >
+                <button
+                    class="gallery-modal__arrow gallery-modal__arrow--next"
+                    @click="nextPhoto"
+                    :disabled="currentPhotoIndex === selectedShow.gallery.length - 1"
+                >
+                  &#10095;
+                </button>
+              </div>
+              <div class="gallery-modal__thumbnails">
+                <img
+                    v-for="(photo, index) in selectedShow.gallery"
+                    :key="index"
+                    :src="photo"
+                    :alt="`Фото ${index + 1}`"
+                    :class="{ 'active': currentPhotoIndex === index }"
+                    @click="currentPhotoIndex = index"
+                >
+              </div>
+            </div>
+          </div>
 
-<!-- Modal -->
-<div v-if="selectedMiniShow" class="modal-backdrop" @click.self="selectedMiniShow = null">
-  <div class="modal-content">
-    <button class="modal-close" @click="selectedMiniShow = null">×</button>
-    <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name" />
-    <h3>{{ selectedMiniShow.name }}</h3>
-    <p>{{ selectedMiniShow.description }}</p>
-    <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
-  </div>
-</div>
+
+          <h2 class="section-title">Мини шоу-программы</h2>
+          <div class="mini-shows-grid">
+            <div v-for="mini in miniShows" :key="mini.id" class="mini-show-card" @click="selectedMiniShow = mini">
+              <img :src="mini.image" :alt="mini.name" loading="lazy">
+              <h4>{{ mini.name }}</h4>
+              <p class="mini-price">{{ mini.price }} ₽</p>
+            </div>
+          </div>
+
+          <!-- Modal -->
+          <div v-if="selectedMiniShow" class="modal-backdrop" @click.self="selectedMiniShow = null">
+            <div class="modal-content">
+              <button class="modal-close" @click="selectedMiniShow = null">×</button>
+              <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name" />
+              <h3>{{ selectedMiniShow.name }}</h3>
+              <p>{{ selectedMiniShow.description }}</p>
+              <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
+            </div>
+          </div>
 
 
         </div>
@@ -76,7 +120,7 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -86,6 +130,38 @@ const miniShows = ref([]);
 const selectedMiniShow = ref(null);
 const loading = ref(true);
 const error = ref(null);
+const selectedShow = ref(null)
+const selectedLounge = ref(null);
+const currentPhotoIndex = ref(0);
+
+const currentPhoto = computed(() => {
+  if (!selectedShow.value?.gallery?.length) return '';
+  return selectedShow.value.gallery[currentPhotoIndex.value];
+});
+
+const openGallery = (show) => {
+  selectedShow.value = show;
+  currentPhotoIndex.value = 0;
+  document.body.style.overflow = 'hidden';
+};
+
+const closeGallery = () => {
+  selectedShow.value = null;
+  currentPhotoIndex.value = 0;
+  document.body.style.overflow = '';
+};
+
+const nextPhoto = () => {
+  if (currentPhotoIndex.value < selectedShow.value.gallery.length - 1) {
+    currentPhotoIndex.value++;
+  }
+};
+
+const prevPhoto = () => {
+  if (currentPhotoIndex.value > 0) {
+    currentPhotoIndex.value--;
+  }
+};
 
 const loadShows = async () => {
   loading.value = true;
@@ -105,7 +181,8 @@ const loadShows = async () => {
       previewText: show.preview_text?.replace(/<[^>]*>/g, '') || '',
       duration: show.duration,
       actor: show.actor,
-      price: show.price
+      price: show.price,
+      gallery: show.photo || [] // Переименовываем photo в gallery
     }));
 
     // Мини-шоу
@@ -380,7 +457,7 @@ onMounted(loadShows);
   background-size: cover;
   background-position: center;
   color: #000;
-  padding: 100px 0;
+  padding: 40px 0;
   text-align: center;
 }
 
@@ -403,29 +480,33 @@ onMounted(loadShows);
 .main-content {
   /* padding: 60px 0; */
 }
-
 .shows-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 30px;
-  margin-top: 30px;
+  margin: 30px 0;
 }
 
 .show-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .show-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .show-image {
   width: 100%;
-  height: 200px;
+  height: 220px;
   overflow: hidden;
 }
 
@@ -433,59 +514,93 @@ onMounted(loadShows);
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.show-card:hover .show-image img {
+  transform: scale(1.03);
 }
 
 .show-content {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  flex-grow: 1;
 }
 
-.show-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 10px;
+.show-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
   color: #CF1034;
+  line-height: 1.3;
 }
 
 .show-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  color: #666;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #000;
+  margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 .show-details {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+.show-details p{
+  color: #666;
+}
+.detail-row {
+  display: flex;
+  margin-bottom: 8px;
+  font-size: 14px;
+  gap: 10px;
 }
 
-.show-details p {
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+.detail-label {
+  font-weight: 500;
+  color: #333;
+  min-width: 90px;
+}
+
+.detail-value {
   color: #666;
 }
 
 .show-price {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: #CF1034;
-  margin-top: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
 }
 
-.show-link {
-  display: inline-block;
-  padding: 10px 20px;
-  background: #CF1034;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-top: 15px;
-  transition: background 0.3s ease;
+.price-note {
+  font-size: 13px;
+  font-weight: 400;
+  color: #888;
+  display: block;
+  margin-top: 4px;
 }
 
-.show-link:hover {
-  background: #a00d29;
+@media (max-width: 768px) {
+  .shows-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .show-image {
+    height: 180px;
+  }
+  
+  .show-content {
+    padding: 18px;
+  }
 }
+
 
 .section-title {
   font-size: 2rem;
@@ -511,6 +626,16 @@ onMounted(loadShows);
   
   .shows-grid {
     grid-template-columns: 1fr;
+  }
+  .gallery-modal__content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    position: relative;
+    width: 90%;
+    height: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
   }
 }
 
@@ -556,4 +681,184 @@ onMounted(loadShows);
 .retry-button:hover {
   background: #a00d29;
 }
+.gallery-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.gallery-modal__content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gallery-modal__close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.gallery-modal__close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.gallery-modal__main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.gallery-modal__image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.gallery-modal__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 2;
+}
+
+.gallery-modal__arrow:hover {
+  background: #fff;
+}
+
+.gallery-modal__arrow--prev {
+  left: 20px;
+}
+
+.gallery-modal__arrow--next {
+  right: 20px;
+}
+
+.gallery-modal__arrow[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gallery-modal__thumbnails {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #CF1034 #f0f0f0;
+}
+
+.gallery-modal__thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-modal__thumbnails::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.gallery-modal__thumbnails::-webkit-scrollbar-thumb {
+  background: #CF1034;
+  border-radius: 3px;
+}
+
+.gallery-modal__thumbnails img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.gallery-modal__thumbnails img:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.gallery-modal__thumbnails img.active {
+  opacity: 1;
+  border: 2px solid #CF1034;
+}
+
+@media (max-width: 768px) {
+  .gallery-modal__content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .gallery-modal__arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .gallery-modal__thumbnails img {
+    width: 60px;
+    height: 45px;
+  }
+
+  .gallery-modal__image {
+    max-height: 60vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-modal__arrow {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .gallery-modal__thumbnails img {
+    width: 50px;
+    height: 40px;
+  }
+}
+
 </style>

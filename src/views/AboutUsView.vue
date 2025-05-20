@@ -26,7 +26,7 @@
         <div class="org-card" data-aos="fade-up" data-aos-delay="200">
           <div class="card-content">
             <img src="@/assets/images/logo-white.svg" alt="Чеширский KOD" />
-            <h3>Чеширский KOD</h3>
+            <!-- <h3>Чеширский KOD</h3> -->
             <p>Атмосферные квесты, организация и проведение праздников в Красноярске.</p>
           </div>
           <a href="https://chezakod.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
@@ -35,7 +35,7 @@
         <div class="org-card" data-aos="fade-up" data-aos-delay="300">
           <div class="card-content">
             <img src="@/assets/images/zhmurki-logo.svg" alt="Жмурки" />
-            <h3>Жмурки</h3>
+            <!-- <h3>Жмурки</h3> -->
             <p>Первая экшн-игра в полной темноте, которая влюбила в себя тысячи игроков.</p>
           </div>
           <a href="https://zhmurki.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
@@ -44,7 +44,7 @@
         <div class="org-card" data-aos="fade-up" data-aos-delay="400">
           <div class="card-content">
             <img src="@/assets/images/chego-logo.svg" alt="Че!Go" />
-            <h3>Че!Go</h3>
+            <!-- <h3>Че!Go</h3> -->
             <p>Современный крытый электрокартинг для всей семьи. Удобное расположение, свежий воздух, безопасность и драйв!</p>
           </div>
           <a href="https://chego.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
@@ -53,7 +53,7 @@
         <div class="org-card" data-aos="fade-up" data-aos-delay="500">
           <div class="card-content">
             <img src="@/assets/images/actionkod-logo.svg" alt="Action Kod" />
-            <h3>Action Kod</h3>
+            <!-- <h3>Action Kod</h3> -->
             <p>Технологичный соревновательный формат, в котором команды решают задания, проходят испытания и соревнуются за баллы. Эту игру мы разрабатывали с 2018 года и вложили в неё весь наш опыт.</p>
           </div>
           <a href="https://actionkod.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
@@ -61,7 +61,7 @@
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="600">
           <div class="card-content">
-            <img src="@/assets/images/actionkod-logo.svg" alt="Play Kod" />
+            <!-- <img src="@/assets/images/actionkod-logo.svg" alt="Play Kod" /> -->
             <h3>Play Kod</h3>
             <p>Новинка 2025 года! Интерактивный сенсорный пол, где можно бегать, прыгать, играть с друзьями или всей семьёй. Формат ярких мини-игр, от которых не оторваться.</p>
           </div>
@@ -71,7 +71,7 @@
         <div class="org-card" data-aos="fade-up" data-aos-delay="700">
           <div class="card-content">
             <img src="@/assets/images/partykod-logo.svg" alt="Party Kod" />
-            <h3>Party Kod</h3>
+            <!-- <h3>Party Kod</h3> -->
             <p>Уютные лофт-караоке комнаты с атмосферой праздника и качественным звуком.</p>
           </div>
           <a href="https://partykod.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
@@ -101,22 +101,12 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Map from '@/components/Map.vue';
-// import AOS from 'aos';
-// import '../aos/dist/aos.css';
-import { onMounted } from 'vue';
 
-// onMounted(() => {
-//   AOS.init({
-//     duration: 1000,
-//     once: true,
-//     offset: 100
-//   });
-// });
 </script>
 
 <style scoped>
 .about-us {
-  padding: 80px 0;
+  padding: 40px 0;
   /* background-color: #fff; */
 }
 
@@ -159,7 +149,7 @@ import { onMounted } from 'vue';
 
 /* Organizations Section */
 .organizations {
-  padding: 80px 0;
+  padding: 40px 0;
   /* background-color: #f8f8f8; */
 }
 h2{
@@ -196,7 +186,6 @@ h2{
   text-align: center;
   transition: all 0.3s ease;
   position: relative;
-  height: 400px;
   overflow: hidden;
 }
 
@@ -392,6 +381,10 @@ h2{
 }
 
 @media (max-width: 768px) {
+  .about-us {
+    padding: 40px 0;
+    /* background-color: #fff; */
+  }
   .about-content {
     flex-direction: column;
     text-align: center;
@@ -418,8 +411,7 @@ h2{
   }
 
   .org-card {
-    height: auto;
-    min-height: 400px;
+    height: 35vh;
   }
   
   .contact-link:hover {

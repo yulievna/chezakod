@@ -1,24 +1,5 @@
-<template>
-  <Header />
-  <div class="quests-page">
-    <div class="container">
-      <h1 class="page-title">Квесты</h1>
-      <Quests :quests="quests" basePath="/quests"/>
-    </div>
-  </div>
-  <section class="schedule">
-    <div class="container">
-      <h1 class="title">Расписание</h1>
-      <iframe src="https://chezakod.ru/quest/11519850/timetable/" width="100%" height="1820" style="border: none;" ref="iframeRef" scrolling="no" @load="onIframeLoad" ></iframe>
-    </div>
-  </section>
-  <Lounge :lounges="lounges" />
-  <Map />
-  <Footer />
-</template>
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 import Header from '@/components/Header.vue';
@@ -26,25 +7,46 @@ import Footer from '@/components/Footer.vue';
 import Map from '@/components/Map.vue';
 import Quests from '@/components/Quests.vue';
 import Lounge from '@/components/Lounge.vue';
-
-// Здесь можно оставить импорты изображений, если они используются отдельно
+import TimetableEmbed from '@/components/TimetableEmbed.vue';
 
 const quests = ref([]);
 const lounges = ref([]);
-onMounted(async () => {
+const activeCategory = ref('regular');
+const timetableQuestIds = ref([]);
+
+const loadQuests = async (category) => {
   try {
-    const responseQ = await axios.get('https://chezakod.ru/api/v2/quests/');
+    const url = category === 'child' 
+      ? 'https://chezakod.ru/api/v2/quests/?category=child'
+      : 'https://chezakod.ru/api/v2/quests/';
+    
+    const responseQ = await axios.get(url);
     quests.value = responseQ.data.result.map((q) => ({
       id: q.id,
-      name: q.name.replace(/&quot;/g, '"'), // для замены кавычек
+      name: q.name.replace(/&quot;/g, '"'),
       age: `${q.age_min}+`,
       images: [q.main_image, ...(q.photo || [])],
       players: `${q.players.min}-${q.players.max} игрока`,
       time: `${q.duration} минут`,
-      difficulty: 'Средний', // Если из API не приходит — задаём дефолт
-      contact: '+7 (391) 269-92-23', // Тоже дефолтно, если всегда одинаковый
+      difficulty: 'Средний',
+      contact: '+7 (391) 269-92-23',
       address: q.location.address.replace(/&quot;/g, '"'),
     }));
+    timetableQuestIds.value = responseQ.data.result.map((q) => ([q.id]))
+  } catch (error) {
+    console.error('Ошибка при загрузке квестов:', error);
+  }
+};
+
+const switchCategory = (category) => {
+  activeCategory.value = category;
+  loadQuests(category);
+};
+
+onMounted(async () => {
+  await loadQuests('regular');
+  
+  try {
     const responseL = await axios.get('https://chezakod.ru/api/v2/vip/');
     lounges.value = responseL.data.result.map((l) => ({
       id: l.id,
@@ -58,96 +60,173 @@ onMounted(async () => {
       },
       quests: l.quests
     }));
-    // lounges.value = responseL.
   } catch (error) {
-    console.error('Ошибка при загрузке квестов:', error);
+    console.error('Ошибка при загрузке лаундж-зон:', error);
   }
+
+  // Load timetable script
+  const script = document.createElement('script');
+  script.src = 'https://chezakod.ru/f/build/embed.js';
+  script.async = true;
+  document.body.appendChild(script);
 });
-
-// const lounges = [
-//   {
-//     id: 1,
-//     image: 'src/assets/images/lounge__1.jpg',
-//     address: 'ул. Алексеева, 113',
-//     price: 'от 1500 ₽/час',
-//     players: '2-6',
-//   },
-//   {
-//     id: 2,
-//     image: 'src/assets/images/lounge__2.jpg',
-//     address: 'ул. Ленина, 45',
-//     price: 'от 2000 ₽/час',
-//     players: '4-8',
-//   },
-//   {
-//     id: 3,
-//     image: 'src/assets/images/lounge__3.jpg',
-//     address: 'ул. Пушкина, 10',
-//     price: 'от 1800 ₽/час',
-//     players: '3-5',
-//   },
-//   {
-//     id: 4,
-//     image: 'src/assets/images/lounge__4.jpg',
-//     address: 'ул. Пушкина, 10',
-//     price: 'от 1800 ₽/час',
-//     players: '3-5',
-//   },
-//   {
-//     id: 5,
-//     image: 'src/assets/images/lounge__5.jpg',
-//     address: 'ул. Пушкина, 10',
-//     price: 'от 1800 ₽/час',
-//     players: '3-5',
-//   },
-//   {
-//     id: 6,
-//     image: 'src/assets/images/lounge__6.jpg',
-//     address: 'ул. Пушкина, 10',
-//     price: 'от 1800 ₽/час',
-//     players: '3-5',
-//   },
-//   // Добавьте остальные лаундж-зоны
-// ];
 </script>
+<template>
+  <Header />
+  <div class="quests-page">
+    <div class="container">
+      <h1 class="page-title">Квесты</h1>
+      <div class="category-switcher">
+        <button
+            :class="['switch-btn', { active: activeCategory === 'regular' }]"
+            @click="switchCategory('regular')"
+        >
+          Квесты
+        </button>
+        <button
+            :class="['switch-btn', { active: activeCategory === 'child' }]"
+            @click="switchCategory('child')"
+        >
+          Детские квесты
+        </button>
+      </div>
+      <Quests
+          :quests="quests"
+          basePath="/quests"
+          :isChildQuest="activeCategory === 'child'"
+      />
+    </div>
+  </div>
+  <section class="schedule">
+    <div class="container">
+      <h1 class="title">Расписание</h1>
+      <TimetableEmbed :questIds="timetableQuestIds" />
+    </div>
+  </section>
+  <section class="lounges">
+    <div class="container">
+      <h2 class="page-title">Лаундж зоны</h2>
+      <Lounge :lounges="lounges" />
+    </div>
+  </section>
+  <Map />
+  <Footer />
+</template>
 
-<style>
+<style scoped>
 :root {
   --primary-color: #CF1034;
-  --text-color: #fff;
-  --border-radius: 40px;
-  --transition-duration: 0.5s;
+  --primary-hover: rgba(207, 16, 52, 0.1);
+  --text-color: #333;
+  --bg-color: #fff;
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
 }
 
 .quests-page {
-  color: #fff;
-}
-
-.page-title {
-  font-size: 32px;
-  margin: 30px;
-  text-align: center;
-  color:#CF1034;
-  font-weight: 600;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+@media (min-width: 1200px) {
+  .container {
+    padding: 0;
+  }
+}
+
+.page-title, .title {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 2rem auto;
+  line-height: 1.3;
+}
+
+.page-title {
+  margin-bottom: 1.5rem;
 }
 
 .title {
-  margin: 60px auto;
-  width: fit-content;
-  font-size: 32px;
-  color:#CF1034;
-
+  margin: 3rem auto;
+}
+.lounges{
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 768px) {
+  .page-title, .title {
+    margin: 1.5rem auto;
+  }
 }
 
-@media (max-width: 450px) {
-  .container {
-    width: 380px;
+.category-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.switch-btn {
+  font-size: 16px;
+  padding: 7px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-weight: 500;
+  border: 2px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  min-width: 160px;
+  text-align: center;
+}
+
+.switch-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.switch-btn:active {
+  transform: translateY(0);
+}
+
+.switch-btn.active {
+  background: var(--primary-color);
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(207, 16, 52, 0.2);
+}
+
+@media (max-width: 768px) {
+  .category-switcher {
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .switch-btn {
+    width: 250px;
+    font-size: 16px;
+    padding: 10px 20px;
     margin: 0 auto;
   }
+}
+
+@media (max-width: 480px) {
+  .category-switcher {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
 }
 </style>

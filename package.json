@@ -13,6 +13,7 @@
     "aos": "^2.3.4",
     "axios": "^1.8.4",
     "jquery": "^3.7.1",
+    "lucide-vue-next": "^0.510.0",
     "owl.carousel": "^2.3.4",
     "pinia": "^3.0.2",
     "swiper": "^8.4.7",

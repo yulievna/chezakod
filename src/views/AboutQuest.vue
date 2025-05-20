@@ -8,7 +8,7 @@
       {{ error }}
     </div>
     <div v-else-if="quest" class="quest-info">
-      <div class="quest-header" :style="{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${quest.main_image})` }">
+      <div class="quest-header" :style="{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${quest.main_image})` }">
         <div class="container">
           <span class="age">{{ quest.age_min }}+</span>
 
@@ -42,6 +42,7 @@
           </div>
 
           <div class="quest-details">
+            <h1 class="details-name__quest">{{ quest.name }}</h1>
             <div class="description" v-html="quest.description"></div>
           </div>
         </div>
@@ -50,10 +51,10 @@
 
 
             <div class="vip-lounges" v-if="quest.vips && quest.vips.length">
-              <h3>Доступные лаундж-зоны</h3>
+              <h3>Доступные лаундж-зоны на этом квесте</h3>
               <div class="lounges-grid">
-                <div 
-                  v-for="lounge in quest.vips" 
+                <div
+                  v-for="lounge in quest.vips"
                   :key="lounge.id"
                   class="lounge-card"
                   :style="{ backgroundImage: `url(${lounge.photo[0]})` }"
@@ -70,8 +71,8 @@
               <div class="additional-services" v-if="quest.additional_services && quest.additional_services.length">
               <h3>Дополнительные услуги</h3>
               <div class="services-list">
-                <div 
-                  v-for="service in quest.additional_services" 
+                <div
+                  v-for="service in quest.additional_services"
                   :key="service.id"
                   class="service-item"
                 >
@@ -93,17 +94,17 @@
               <h3>Локация</h3>
               <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
               <div class="map-links">
-                <a 
-                  v-if="quest.location.links.ymaps" 
-                  :href="quest.location.links.ymaps" 
+                <a
+                  v-if="quest.location.links.ymaps"
+                  :href="quest.location.links.ymaps"
                   target="_blank"
                   class="map-link"
                 >
                   Яндекс Карты
                 </a>
-                <a 
-                  v-if="quest.location.links['2gis']" 
-                  :href="quest.location.links['2gis']" 
+                <a
+                  v-if="quest.location.links['2gis']"
+                  :href="quest.location.links['2gis']"
                   target="_blank"
                   class="map-link"
                 >
@@ -113,6 +114,14 @@
             </div>
         </div>
       </div>
+
+      <!-- Add timetable section -->
+      <section class="schedule">
+        <div class="container">
+          <h2 class="title">Расписание</h2>
+          <TimetableEmbed :questIds="[quest.id]" />
+        </div>
+      </section>
     </div>
 
     <!-- Gallery Modal -->
@@ -120,19 +129,19 @@
       <div class="gallery-modal__content" @click.stop>
         <button class="gallery-modal__close" @click="closeGallery">&times;</button>
         <div class="gallery-modal__main">
-          <button 
+          <button
             class="gallery-modal__arrow gallery-modal__arrow--prev"
             @click="prevPhoto"
             :disabled="currentPhotoIndex === 0"
           >
             &#10094;
           </button>
-          <img 
-            :src="currentPhoto" 
+          <img
+            :src="currentPhoto"
             :alt="'Лаундж зона'"
             class="gallery-modal__image"
           >
-          <button 
+          <button
             class="gallery-modal__arrow gallery-modal__arrow--next"
             @click="nextPhoto"
             :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
@@ -141,8 +150,8 @@
           </button>
         </div>
         <div class="gallery-modal__thumbnails">
-          <img 
-            v-for="(photo, index) in selectedLounge.photo" 
+          <img
+            v-for="(photo, index) in selectedLounge.photo"
             :key="index"
             :src="photo"
             :alt="`Фото ${index + 1}`"
@@ -161,6 +170,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import TimetableEmbed from '@/components/TimetableEmbed.vue';
 
 import axios from 'axios';
 import players from '@/assets/images/players.png';
@@ -175,12 +185,14 @@ const props = defineProps({
   }
 });
 
+const route = useRoute();
 const quest = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const currentImage = ref('');
 const selectedLounge = ref(null);
 const currentPhotoIndex = ref(0);
+const isChildQuest = ref(false);
 
 const currentPhoto = computed(() => {
   if (!selectedLounge.value?.photo?.length) return '';
@@ -191,7 +203,16 @@ onMounted(async () => {
   try {
     loading.value = true;
     error.value = null;
-    const response = await axios.get(`https://chezakod.ru/api/v2/quests/?id=${props.id}/`);
+    
+    // Check if we're in a child quest route
+    isChildQuest.value = route.path.includes('/child-quests/');
+    
+    // Construct URL with category parameter for child quests
+    const url = isChildQuest.value
+      ? `https://chezakod.ru/api/v2/quests/?id=${props.id}&category=child`
+      : `https://chezakod.ru/api/v2/quests/?id=${props.id}`;
+
+    const response = await axios.get(url);
     if (response.data.status && response.data.result) {
       quest.value = response.data.result;
       quest.value.images = response.data.result.photo;
@@ -235,22 +256,29 @@ const prevPhoto = () => {
 </script>
 
 <style scoped>
+/* Базовые стили */
 .about-quest {
-  color: #fff;
+  color: #000;
   min-height: 100vh;
-  background: #1a1a1a;
+  background: #fff;
 }
-.quest-addition{
-  display: flex;
-  justify-content: space-between;
-  margin: 30px 0;
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
+
+/* Шапка квеста */
 .quest-header {
   position: relative;
   background-size: cover;
   background-position: center;
   padding: 300px 0 30px;
   margin-bottom: 40px;
+  color: #fff5f5;
 }
 
 .quest-header::before {
@@ -263,30 +291,29 @@ const prevPhoto = () => {
   background: rgba(0, 0, 0, 0.5);
 }
 
+.age {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: #CF1034;
+  font-weight: bold;
+  font-size: 18px;
+}
+
 .quest-about {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
   position: relative;
   z-index: 1;
 }
 
-.quest-title-wrapper {
-  align-items: center;
-}
-
-.age{
-  position: absolute;
-  top: -250px;
-  right: 0;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #CF1034;
-}
-
 .name-quest {
-  font-size: 2.5rem;
-  margin: 0;
+  font-size: 42px;
+  margin: 0 0 15px 0;
+  line-height: 1.2;
 }
 
 .to-book {
@@ -303,18 +330,21 @@ const prevPhoto = () => {
 
 .to-book:hover {
   background: #a00d29;
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
 .quest-chars {
   display: flex;
   gap: 30px;
 }
-
+.details-name__quest{
+  font-size: 28px;
+}
 .char-item {
   display: flex;
   align-items: center;
   gap: 10px;
+  font-size: 16px;
 }
 
 .char-item img {
@@ -322,102 +352,37 @@ const prevPhoto = () => {
   height: 24px;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-
+/* Основной контент */
 .quest-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
+  margin-bottom: 40px;
 }
 
-.quest-gallery {
-  position: relative;
-}
-
-.main-image {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
+.slider {
   border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.thumbnail-list {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.thumbnail-list img {
-  width: 100px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 5px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: all 0.3s ease;
-}
-
-.thumbnail-list img:hover {
-  opacity: 0.8;
-}
-
-.thumbnail-list img.active {
-  opacity: 1;
-  border: 2px solid #cf1034;
+  overflow: hidden;
 }
 
 .quest-details {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.description {
   line-height: 1.6;
 }
 
-.location-info {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.map-links {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.map-link {
-  background: #cf1034;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background 0.3s ease;
-}
-
-.map-link:hover {
-  background: #a00d29;
-}
-
+/* VIP лаунжи */
 .vip-lounges {
   margin-top: 40px;
-  padding: 20px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
 .vip-lounges h3 {
-  color: #fff;
-  margin-bottom: 20px;
-  font-size: 24px;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0 auto;
+  line-height: 1.3;
 }
 
 .lounges-grid {
@@ -435,8 +400,7 @@ const prevPhoto = () => {
   background-size: cover;
   background-position: center;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .lounge-card:hover {
@@ -455,7 +419,7 @@ const prevPhoto = () => {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .lounge-card:hover .lounge-overlay {
@@ -466,30 +430,51 @@ const prevPhoto = () => {
   background: #CF1034;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 16px;
-  font-weight: 500;
 }
 
 .view-btn:hover {
   background: #a00d29;
-  transform: scale(1.05);
+}
+
+/* Дополнительные услуги и ограничения */
+.quest-addition {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
 }
 
 .additional-services {
-  background: rgba(255, 255, 255, 0.1);
+  width: 450px;
+}
+.limits {
+  width: 700px;
+}
+.game-addition {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.additional-services, .limits {
+  background: #f5f5f5;
   padding: 20px;
-  width: 550px;
   border-radius: 10px;
+}
+
+.additional-services h3, .limits h3 {
+  color: #CF1034;
+  margin-bottom: 15px;
+  font-size: 20px;
 }
 
 .services-list {
   display: grid;
-  gap: 15px;
-  margin-top: 15px;
+  gap: 10px;
 }
 
 .service-item {
@@ -497,39 +482,117 @@ const prevPhoto = () => {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #fff;
   border-radius: 5px;
-}
-
-.limits {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 10px;
 }
 
 .limits ul {
   list-style: none;
   padding: 0;
-  margin: 15px 0 0;
 }
 
 .limits li {
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  background: #fff;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-.limits li:last-child {
-  border-bottom: none;
+
+/* Расписание */
+.schedule {
+  margin-top: 60px;
+  padding: 40px 0;
 }
-.slider {
+
+.schedule .title {
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #CF1034;
+  font-weight: 600;
+}
+
+ .location-info {
+   border-color: rgba(207, 16, 52, 0.3);
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+   border-radius: 12px;
+   padding: 24px;
+   transition: all 0.3s ease;
+ }
+
+
+.location-info h3 {
+  font-size: 32px;
+  color: #CF1034;
+  font-weight: 600;
   display: flex;
-  flex-direction: column;
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Gallery Modal Styles */
+.location-info h3::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23CF1034"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>') no-repeat center;
+}
+
+.location-info p {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #000000;
+  margin-bottom: 20px;
+  padding-left: 34px;
+  position: relative;
+}
+
+
+.map-links {
+  display: flex;
+  gap: 12px;
+  padding-left: 34px;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #000000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  border: 3px solid #cf1034;
+}
+
+.map-link:active {
+  transform: translateY(0);
+}
+
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .location-info {
+    padding: 18px;
+  }
+.limits{
+  width: 100%;
+}
+
+  .map-link {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+
+
+/* Модальное окно галереи */
 .gallery-modal {
   position: fixed;
   top: 0;
@@ -547,70 +610,27 @@ const prevPhoto = () => {
   position: relative;
   width: 90%;
   max-width: 800px;
-  background: #fff;
+  background: #1a1a1a;
   border-radius: 10px;
   padding: 20px;
 }
 
 .gallery-modal__close {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
   font-size: 30px;
   color: #fff;
   cursor: pointer;
-  z-index: 1;
-}
-
-.gallery-modal__main {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  
 }
 
 .gallery-modal__image {
   max-width: 100%;
   max-height: 70vh;
   object-fit: contain;
-  border-radius: 10px;
-
-}
-
-.gallery-modal__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.3);
-  border: none;
-  color: #fff;
-  font-size: 24px;
-  border-radius: 10px;
-
-  padding: 15px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.gallery-modal__arrow:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.gallery-modal__arrow:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.gallery-modal__arrow--prev {
-  left: 10px;
-}
-
-.gallery-modal__arrow--next {
-  right: 10px;
+  border-radius: 5px;
 }
 
 .gallery-modal__thumbnails {
@@ -622,8 +642,8 @@ const prevPhoto = () => {
 }
 
 .gallery-modal__thumbnails img {
-  width: 100px;
-  height: 70px;
+  width: 80px;
+  height: 60px;
   object-fit: cover;
   border-radius: 5px;
   cursor: pointer;
@@ -640,9 +660,77 @@ const prevPhoto = () => {
   border: 2px solid #cf1034;
 }
 
-@media (max-width: 768px) {
+/* Адаптация для мобильных */
+@media (max-width: 992px) {
   .quest-content {
     grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .quest-addition {
+    flex-direction: column;
+  }
+
+  .additional-services {
+    width: 100%;
+  }
+
+  .limits {
+    margin-left: 0;
+    margin-top: 20px;
+  }
+  .lounge-overlay{
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+  .quest-header {
+    padding: 200px 0 20px;
+  }
+
+  .name-quest {
+    font-size: 32px;
+  }
+
+  .quest-about {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .quest-chars {
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .schedule .title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 20px;
+  }
+  .quest-header{
+    padding: 440px 40px 70px;
+  }
+  .quest-details {
+    line-height: 1.6;
+    font-size: 20px;
+  }
+  .name-quest {
+    font-size: 24px;
+  }
+
+  .to-book {
+    width: 100%;
+    padding: 10px;
   }
 
   .lounges-grid {
@@ -654,41 +742,12 @@ const prevPhoto = () => {
     padding: 10px;
   }
 
-  .gallery-modal__arrow {
-    padding: 10px;
-    font-size: 20px;
-  }
-
   .gallery-modal__thumbnails img {
-    width: 80px;
-    height: 60px;
+    width: 60px;
+    height: 45px;
   }
-
-  .quest-title-wrapper {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-
-  .quest-chars {
-    flex-direction: column;
-    align-items: center;
+  .quest-title-wrapper{
+    order: 2;
   }
 }
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 1.2rem;
-  color: #fff;
-}
-
-.error {
-  text-align: center;
-  padding: 40px;
-  color: #cf1034;
-  background: rgba(207, 16, 52, 0.1);
-  border-radius: 10px;
-  margin: 20px 0;
-}
-</style> 
+</style>

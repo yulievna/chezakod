@@ -102,7 +102,7 @@
 
       <div class="promotion-card" id="ticket">
         <div class="promotion-card__image">
-          <img src="@/assets/images/discount3.jpg" alt="Билет" class="promotion-card__img">
+          <img src="@/assets/images/discount4.jpg" alt="Билет" class="promotion-card__img">
         </div>
         <div class="promotion-card__content">
           <div class="promotion-card__header">
@@ -142,7 +142,7 @@
 
       <div class="promotion-card" id="birthday">
         <div class="promotion-card__image">
-          <img src="@/assets/images/discount4.jpg" alt="Скидка в день рождения" class="promotion-card__img">
+          <img src="@/assets/images/discount3.jpg" alt="Скидка в день рождения" class="promotion-card__img">
         </div>
         <div class="promotion-card__content">
           <div class="promotion-card__header">
@@ -407,7 +407,7 @@ watch(() => route.hash, (newHash) => {
 }
 
 .promotion-card {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9);
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -598,7 +598,7 @@ watch(() => route.hash, (newHash) => {
 }
 
 .promotions__note {
-  margin-top: 40px;
+  margin: 40px 0;
   padding: 20px;
   background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
@@ -608,37 +608,82 @@ watch(() => route.hash, (newHash) => {
 }
 
 @media (max-width: 768px) {
-  .promotions {
+  .promotions{
+    padding: 0;
+  }
+  .promotions__nav {
+    display: none;
+  }
+
+  .promotions__container {
     padding: 10px;
   }
 
-  .promotions__title {
-    font-size: 2rem;
+  .promotion-card {
+    flex-direction: column;
+    margin-bottom: 20px;
   }
 
   .promotion-card__image {
-    height: 200px;
+    width: 100%;
+  }
+
+  .promotion-card__img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
   }
 
   .promotion-card__content {
-    padding: 20px;
+    padding: 10px;
   }
 
   .promotion-card__title {
-    font-size: 1.5rem;
+    font-size: 18px;
   }
 
   .promotion-card__price {
-    font-size: 1rem;
-    padding: 6px 12px;
+    font-size: 16px;
   }
 
-  .promotion-card__description {
-    font-size: 1rem;
+  .promotion-card__description,
+  .promotion-card__subtitle,
+  .promotion-card__note {
+    font-size: 14px;
   }
 
-  .promotion-card__subtitle {
-    font-size: 1.2rem;
+  .promotion-card__conditions,
+  .promotion-card__features,
+  .promotion-card__bonus-list,
+  .promotion-card__restrictions-list {
+    padding-left: 20px;
+    font-size: 14px;
+  }
+
+  .contact-button {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+  }
+
+  .contact-button__text,
+  .contact-button__phone {
+    font-size: 16px;
+  }
+
+  .telegram-button {
+    flex-direction: column;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .promotions__note {
+    padding: 15px;
+    font-size: 12px;
+    text-align: center;
   }
 }
+
 </style> 

@@ -1,19 +1,36 @@
 <template>
   <Header />
-  <section class="quests">
+  <section class="action-games">
     <div class="container">
       <h1 class="page-title">Экшн Игры</h1>
       <Quests :quests="actionGames" basePath="/action-games" />
     </div>
   </section>
+  <section class="schedule">
+    <div class="container">
+      <h2 class="page-title">Расписание</h2>
+      <TimetableEmbed :questIds="timetableQuestIds" />
+    </div>
+  </section>
+  <section class="lounges">
+    <div class="container">
+      <h2 class="page-title">Лаундж зоны</h2>
+      <Lounge :lounges="lounges" />
+    </div>
+  </section>
+  <Map />
   <Footer />
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Quests from '@/components/Quests.vue';
+import Map from "@/components/Map.vue";
+import TimetableEmbed from "@/components/TimetableEmbed.vue";
+import Lounge from "@/components/Lounge.vue";
+import axios from "axios";
 
 import img1 from '@/assets/images/sl1.jpg';
 import img2 from '@/assets/images/sl2.jpg';
@@ -23,6 +40,7 @@ import img5 from '@/assets/images/jmurki2.jpg';
 import img6 from '@/assets/images/jmurki3.jpg';
 import img7 from '@/assets/images/playkod1.jpeg';
 import img8 from '@/assets/images/playkod2.jpeg';
+
 
 const actionGames = ref([
   {
@@ -59,37 +77,57 @@ const actionGames = ref([
     contact: '+7 (391) 986-85-16',
   }
 ]);
+const lounges = ref([]);
+const timetableQuestIds = ref(['14428', '11519850', '12507544']);
+
+
+onMounted(async () => {
+
+  try {
+    const responseL = await axios.get('https://chezakod.ru/api/v2/vip/');
+    lounges.value = responseL.data.result.map((l) => ({
+      id: l.id,
+      photo: l.photo,
+      location: {
+        id: l.location.id,
+        name: l.location.name,
+        address: l.location.address.replace(/&quot;/g, '"'),
+        coordinates: l.location.coordinates,
+        links: l.location.links
+      },
+      quests: l.quests
+    }));
+  } catch (error) {
+    console.error('Ошибка при загрузке лаундж-зон:', error);
+  }
+
+  // Load timetable script
+  const script = document.createElement('script');
+  script.src = 'https://chezakod.ru/f/build/embed.js';
+  script.async = true;
+  document.body.appendChild(script);
+});
 </script>
 
 <style scoped>
-.quests {
-  padding: 40px 0;
-  min-height: 100vh;
+.lounges{
+  margin-bottom: 1.5rem;
 }
-
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .page-title {
-  color: #fff;
-  font-size: 2.5rem;
-  margin-bottom: 40px;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   text-align: center;
-  position: relative;
-}
-
-.page-title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background-color: #cf1034;
+  color: var(--primary-color);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 3rem auto 2rem;
 }
 
 @media (max-width: 768px) {

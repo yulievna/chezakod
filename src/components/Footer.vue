@@ -27,6 +27,7 @@
             <a href="tel:+79998887766" class="contact-phone">+7 (999) 888-77-66</a>
             <a href="#" class="social-link">WhatsApp</a>
             <a href="#" class="social-link">Telegram</a>
+            <a href="#" class="social-link">ВКонтакте</a>
           </div>
 <!--          <button class="book-btn" @click="togglePopup">Забронировать</button>-->
         </div>

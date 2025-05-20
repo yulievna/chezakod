@@ -77,7 +77,8 @@ body {
   /* background: linear-gradient(#0d2032, #000)  !important; */
   background: #f8f8f8  !important;
   min-height: 100vh;
-  color: var(--color-text);
+  color: #000;
+  overflow-x: hidden;
   background: var(--color-background);
   transition:
     color 0.5s,

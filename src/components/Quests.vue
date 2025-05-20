@@ -3,7 +3,7 @@
     <div class="container">
       <ul class="quests__list">
         <li v-for="quest in quests" :key="quest.id" class="quests__el">
-          <router-link :to="basePath + '/' + quest.id" class="quest_link">
+          <router-link :to="getQuestPath(quest.id)" class="quest_link">
             <div class="age">{{ quest.age }}</div>
             <QuestsSlider :images="quest.images" />
             <div class="quest_info">
@@ -42,11 +42,21 @@ const props = defineProps({
   basePath: {
     type: String,
     required: true
+  },
+  isChildQuest: {
+    type: Boolean,
+    default: false
   }
 });
 
+const getQuestPath = (questId) => {
+  return props.isChildQuest 
+    ? `/child-quests/${questId}`
+    : `${props.basePath}/${questId}`;
+};
+
 const goToAboutQuest = (questId) => {
-  router.push(props.basePath + '/' + questId);
+  router.push(getQuestPath(questId));
 };
 </script>
 
@@ -140,8 +150,10 @@ const goToAboutQuest = (questId) => {
   transition: all 0.3s ease;
   overflow: hidden;
   position: relative;
+  border: none;
 }
-.to_book::before{
+
+.to_book::before {
   content: '';
   position: absolute;
   top: 0;
@@ -156,6 +168,7 @@ const goToAboutQuest = (questId) => {
   );
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .to_book:hover::before {
   left: 100%;
 }
@@ -170,9 +183,17 @@ const goToAboutQuest = (questId) => {
   max-width: 150px;
 }
 
-@media (max-width: 768px) {
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+  .quests__list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
   .quests__list {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
   }
 
   .quests__el {
@@ -193,9 +214,10 @@ const goToAboutQuest = (questId) => {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .quests__list {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
   }
 
   .quests__el {
@@ -208,6 +230,15 @@ const goToAboutQuest = (questId) => {
 
   .quest_title {
     font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .quest_chars {
+    margin-bottom: 10px;
+  }
+
+  .players, .time, .difficulty {
+    font-size: 12px;
   }
 
   .booking {
@@ -218,6 +249,41 @@ const goToAboutQuest = (questId) => {
 
   .contacts {
     text-align: left;
+    width: 100%;
+  }
+
+  .contact, .address {
+    max-width: none;
+    font-size: 12px;
+  }
+
+  .to_book {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .quests__list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .quests__el {
+    height: 380px;
+  }
+
+  .quest_info {
+    padding: 12px;
+  }
+
+  .quest_title {
+    font-size: 16px;
+  }
+
+  .age {
+    padding: 6px 15px;
+    font-size: 12px;
   }
 }
 </style>

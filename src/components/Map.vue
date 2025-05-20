@@ -224,7 +224,7 @@ export default {
             var marker = new google.maps.Marker({
               position: latLng,
               map: map,
-              icon: "src/assets/pointer-min.png",
+              icon: "src/assets/images/pointer-min.png",
               info: contentInfo,
               id: i,
               animation: google.maps.Animation.DROP,
@@ -254,11 +254,17 @@ export default {
 </script>
 
 <style scoped>
+#map{
+    color: #000;
+}
 .address-item {
   font-size: 10px;
   font-weight: 400;
   color: black;
   text-align: center;
+}
+.address-text{
+    
 }
 .address-item .btn-close {
   position: absolute;

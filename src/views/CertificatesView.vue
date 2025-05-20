@@ -201,6 +201,8 @@ section{
   perspective: 1000px;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
+  min-height: 200px;
 }
 
 .certificate-card {
@@ -212,20 +214,20 @@ section{
   cursor: pointer;
   width: 500px;
   transform-style: preserve-3d;
+  opacity: 0.7;
+  transform: scale(0.9);
 }
 
 .certificate-card:hover {
   transform: scale(1.05);
   z-index: 2;
+  opacity: 0.9;
 }
 
 .certificate-card.selected {
   transform: scale(1.1);
   z-index: 3;
-}
-
-.certificate-card:not(.selected):not(:hover) {
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .certificate-image {
@@ -402,29 +404,95 @@ section{
     box-shadow: 0 4px 15px rgba(49, 5, 13, 0.3);
   transform: translateY(-2px);
 }
-/* Responsive Design */
-@media (max-width: 1024px) {
+/* Responsive Styles */
+@media (max-width: 1200px) {
   .certificates-grid {
-    max-width: 500px;
+    gap: 1.5rem;
   }
-  
+
   .certificate-card {
-    height: 350px;
+    width: 450px;
+  }
+
+  .methods-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .certificates-grid {
+    gap: 1rem;
+  }
+
+  .certificate-card {
+    width: 400px;
   }
 }
 
 @media (max-width: 768px) {
   .certificates-grid {
+    flex-direction: column;
+    gap: 2rem;
+    min-height: auto;
+  }
+
+  .certificate-card {
+    width: 100%;
+    max-width: 400px;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .certificate-card:hover {
+    transform: scale(1.02);
+  }
+
+  .certificate-card.selected {
+    transform: scale(1.05);
+  }
+
+  .methods-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .method-card {
+    padding: 1.5rem;
+  }
+
+  .method-card h3 {
+    font-size: 20px;
+  }
+
+  .condition-item {
+    padding: 1.2rem 1.2rem 1.2rem 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificate-card {
     max-width: 100%;
   }
-  
-  .certificate-card {
-    height: 300px;
+
+  .certificate-content {
+    padding: 1rem;
   }
-  
-  .certificate-card:hover,
-  .certificate-card.selected {
-    transform: none;
+
+  .certificate-content h3 {
+    font-size: 18px;
+  }
+
+  .method-card {
+    padding: 1.2rem;
+  }
+
+  .method-card h3 {
+    font-size: 18px;
+  }
+
+  .condition-item {
+    padding: 1rem 1rem 1rem 2rem;
+    font-size: 14px;
   }
 }
 </style> 

@@ -28,17 +28,17 @@
           </li>
           <li class="navigation-item dropdown">
             <router-link to="/events">Мероприятия</router-link>
-            <!-- <ul class="dropdown-menu">
-              <li><router-link to="/#">Дни рождения</router-link></li>
-              <li><router-link to="/#">Корпоративы</router-link></li>
-              <li class="graduate"><router-link to="/#">Выпускной 2025</router-link></li>
-            </ul> -->
           </li>
-          <!-- <li class="navigation-item graduate"><router-link to="#">Выпускной 2025</router-link></li> -->
-          <li class="navigation-item"><router-link to="#">Расписание</router-link></li>
+          <li class="navigation-item"><router-link to="/timetable">Расписание</router-link></li>
           <li class="navigation-item"><router-link to="/certificates">Сертификаты</router-link></li>
           <li class="navigation-item"><router-link to="/promotions">Акции</router-link></li>
           <li class="navigation-item"><router-link to="/about">О нас</router-link></li>
+
+          <!-- Контакты (в мобильной версии) -->
+          <li class="navigation-item mobile-only"><a href="tel:+79998887766">+7 (999) 888-77-66</a></li>
+          <li class="navigation-item mobile-only"><router-link to="#">WhatsApp</router-link></li>
+          <li class="navigation-item mobile-only"><router-link to="#">Telegram</router-link></li>
+          <li class="navigation-item mobile-only"><router-link to="https://vk.com/chezakod">ВКонтакте</router-link></li>
         </ul>
 
         <!-- Кнопки -->
@@ -56,6 +56,7 @@
               <li><a href="tel:+79998887766" class="contact-link">+7 (999) 888-77-66</a></li>
               <li><router-link to="#" class="contact-link">WhatsApp</router-link></li>
               <li><router-link to="#" class="contact-link">Telegram</router-link></li>
+              <li><router-link to="https://vk.com/chezakod" class="contact-link">ВКонтакте</router-link></li>
             </ul>
           </div>
         </div>
@@ -66,7 +67,6 @@
   <!-- Попап -->
   <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
     <Form></Form>
-
   </div>
 </template>
 
@@ -86,13 +86,14 @@ const toggleMenu = () => {
 };
 </script>
 
+
 <style scoped>
 .header {
   background-color: #ffffff;
   padding: 26px 0;
   position: sticky;
-  top: 0px;
-  z-index: 10;
+  top: -1px;
+  z-index: 100;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
@@ -153,7 +154,6 @@ const toggleMenu = () => {
 .header-buttons {
   display: flex;
   gap: 10px;
-  background-color: #000;
   border-radius: 5px;
   padding: 3px;
   flex: 0 0 auto;
@@ -182,10 +182,10 @@ const toggleMenu = () => {
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
   );
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -207,10 +207,10 @@ const toggleMenu = () => {
 
 .contacts-btn::before {
   background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent
   );
 }
 
@@ -359,10 +359,14 @@ const toggleMenu = () => {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* Адаптивность */
+
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: 768px) {
-  .header {
-    padding: 16px 0;
+  .mobile-only {
+    display: block;
   }
 
   .navigation {
@@ -372,32 +376,25 @@ const toggleMenu = () => {
   }
 
   .logo-wrapper {
+    width: 200px;
     flex: 0 0 auto;
-    width: 120px;
   }
 
-  .navigation-list {
+  .book-btn {
     width: 100%;
-  }
-
-  .header-buttons {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .book-btn,
-  .contacts-btn {
-    flex: 1;
-    max-width: 200px;
+    width: 250px;
+    font-size: 16px;
     padding: 10px 20px;
-    font-size: 14px;
+  }
+  .contacts-btn{
+    display: none;
   }
 
   .burger {
     display: flex;
     position: absolute;
     top: 20px;
-    left: 20px;
+    right: 20px;
     z-index: 100;
   }
 
@@ -405,17 +402,17 @@ const toggleMenu = () => {
     display: none;
     flex-direction: column;
     position: fixed;
-    top: 80px;
+    top: 70px;
     left: 0;
     width: 100%;
-    height: calc(100vh - 80px);
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    height: calc(100vh - 70px);
     padding: 20px;
-    z-index: 10;
+    z-index: 1;
     overflow-y: auto;
-    transform: translateX(-100%);
+    background: #999999;
+    transform: translateX(-50%);
     transition: transform 0.3s ease;
+
   }
 
   .navigation-list.active {
@@ -423,70 +420,18 @@ const toggleMenu = () => {
     transform: translateX(0);
   }
 
-  .navigation-item {
-    width: 100%;
-    margin: 10px 0;
-  }
-
-  .navigation-item a {
-    display: block;
-    padding: 12px;
-    font-size: 18px;
-  }
-
-  .dropdown-menu {
+  .dropdown-menu,
+  .contacts-dropdown {
     position: static;
     box-shadow: none;
     margin-top: 10px;
-    padding-left: 20px;
     opacity: 1;
     visibility: visible;
     transform: none;
   }
 
-  .dropdown-menu.active {
-    display: block;
-  }
-
-  .contacts-dropdown {
-    position: static;
-    width: 100%;
-    box-shadow: none;
-    margin-top: 10px;
-    display: none;
-  }
-
   .contacts-btn-wrapper:hover .contacts-dropdown {
-    display: block;
-  }
-
-  .contacts-dropdown li a {
-    padding: 12px;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-buttons {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .book-btn,
-  .contacts-btn {
-    width: 100%;
-    max-width: 250px;
-  }
-
-  .burger {
-    top: 15px;
-    left: 15px;
-  }
-
-  .navigation-list {
-    top: 70px;
-    height: calc(100vh - 70px);
+    display: none;
   }
 }
 </style>
