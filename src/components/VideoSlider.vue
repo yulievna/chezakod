@@ -66,7 +66,7 @@ onMounted(() => {
   font-size: 36px;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 30px
+  margin-bottom: 30px;
 }
 .video-carousel {
   position: relative;

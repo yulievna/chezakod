@@ -8,9 +8,9 @@
       {{ error }}
     </div>
     <div v-else-if="quest" class="quest-info">
-      <div class="quest-header" :style="{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${quest.main_image})` }">
+      <div class="quest-header" :style="quest.main_image ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${quest.main_image})` } : {}">
         <div class="container">
-          <span class="age">{{ quest.age_min }}+</span>
+          <span v-if="quest.age_min" class="age">{{ quest.age_min }}+</span>
 
           <div class="quest-about">
             <div class="quest-title-wrapper">
@@ -18,11 +18,11 @@
               <button class="to-book">Забронировать</button>
             </div>
             <div class="quest-chars">
-              <div class="char-item">
+              <div v-if="quest.players" class="char-item">
                 <img :src="players" alt="Players" />
                 <span>{{ quest.players.min }}-{{ quest.players.max }} игроков</span>
               </div>
-              <div class="char-item">
+              <div v-if="quest.duration" class="char-item">
                 <img :src="time" alt="Time" />
                 <span>{{ quest.duration }} минут</span>
               </div>
@@ -37,38 +37,36 @@
 
       <div class="container">
         <div class="quest-content">
-          <div class="slider">
+          <div v-if="quest.images" class="slider">
             <ImgSlider :images="quest.images" />
           </div>
 
           <div class="quest-details">
             <h1 class="details-name__quest">{{ quest.name }}</h1>
-            <div class="description" v-html="quest.description"></div>
+            <div v-if="quest.description" class="description" v-html="quest.description"></div>
           </div>
         </div>
 
         <div class="quest-more">
-
-
-            <div class="vip-lounges" v-if="quest.vips && quest.vips.length">
-              <h3>Доступные лаундж-зоны на этом квесте</h3>
-              <div class="lounges-grid">
-                <div
-                  v-for="lounge in quest.vips"
-                  :key="lounge.id"
-                  class="lounge-card"
-                  :style="{ backgroundImage: `url(${lounge.photo[0]})` }"
-                  @click="openGallery(lounge)"
-                >
-                  <div class="lounge-overlay">
-                    <button class="view-btn">Посмотреть</button>
-                  </div>
+          <div v-if="quest.vips && quest.vips.length" class="vip-lounges">
+            <h3>Доступные лаундж-зоны на этом квесте</h3>
+            <div class="lounges-grid">
+              <div
+                v-for="lounge in quest.vips"
+                :key="lounge.id"
+                class="lounge-card"
+                :style="lounge.photo && lounge.photo[0] ? { backgroundImage: `url(${lounge.photo[0]})` } : {}"
+                @click="openGallery(lounge)"
+              >
+                <div class="lounge-overlay">
+                  <button class="view-btn">Посмотреть</button>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="quest-addition">
-              <div class="additional-services" v-if="quest.additional_services && quest.additional_services.length">
+          <div class="quest-addition">
+            <div v-if="quest.additional_services && quest.additional_services.length" class="additional-services">
               <h3>Дополнительные услуги</h3>
               <div class="services-list">
                 <div
@@ -82,41 +80,40 @@
               </div>
             </div>
 
-            <div class="limits" v-if="quest.limits && quest.limits.length">
+            <div v-if="quest.limits && quest.limits.length" class="limits">
               <h3>Ограничения</h3>
               <ul>
                 <li v-for="(limit, index) in quest.limits" :key="index">{{ limit }}</li>
               </ul>
             </div>
-            </div>
+          </div>
 
-            <div class="location-info">
-              <h3>Локация</h3>
-              <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
-              <div class="map-links">
-                <a
-                  v-if="quest.location.links.ymaps"
-                  :href="quest.location.links.ymaps"
-                  target="_blank"
-                  class="map-link"
-                >
-                  Яндекс Карты
-                </a>
-                <a
-                  v-if="quest.location.links['2gis']"
-                  :href="quest.location.links['2gis']"
-                  target="_blank"
-                  class="map-link"
-                >
-                  2GIS
-                </a>
-              </div>
+          <div v-if="quest.location" class="location-info">
+            <h3>Локация</h3>
+            <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
+            <div class="map-links">
+              <a
+                v-if="quest.location.links && quest.location.links.ymaps"
+                :href="quest.location.links.ymaps"
+                target="_blank"
+                class="map-link"
+              >
+                Яндекс Карты
+              </a>
+              <a
+                v-if="quest.location.links && quest.location.links['2gis']"
+                :href="quest.location.links['2gis']"
+                target="_blank"
+                class="map-link"
+              >
+                2GIS
+              </a>
             </div>
+          </div>
         </div>
       </div>
 
-      <!-- Add timetable section -->
-      <section class="schedule">
+      <section v-if="quest.id" class="schedule">
         <div class="container">
           <h2 class="title">Расписание</h2>
           <TimetableEmbed :questIds="[quest.id]" />
@@ -180,7 +177,7 @@ import ImgSlider from '@/components/ImgSlider.vue';
 
 const props = defineProps({
   id: {
-    type: [String, Number],
+    type: String,
     required: true
   }
 });
@@ -199,7 +196,7 @@ const currentPhoto = computed(() => {
   return selectedLounge.value.photo[currentPhotoIndex.value];
 });
 
-onMounted(async () => {
+const loadQuestData = async () => {
   try {
     loading.value = true;
     error.value = null;
@@ -207,18 +204,36 @@ onMounted(async () => {
     // Check if we're in a child quest route
     isChildQuest.value = route.path.includes('/child-quests/');
     
-    // Construct URL with category parameter for child quests
-    const url = isChildQuest.value
-      ? `https://chezakod.ru/api/v2/quests/?id=${props.id}&category=child`
-      : `https://chezakod.ru/api/v2/quests/?id=${props.id}`;
+    // First get all quests to find the one with matching slug
+    const allQuestsUrl = isChildQuest.value
+      ? 'https://chezakod.ru/api/v2/quests/?category=child'
+      : 'https://chezakod.ru/api/v2/quests/';
 
-    const response = await axios.get(url);
+    const allQuestsResponse = await axios.get(allQuestsUrl);
+    if (!allQuestsResponse.data.status || !allQuestsResponse.data.result) {
+      throw new Error('Не удалось загрузить список квестов');
+    }
+
+    // Find the quest with matching slug
+    const matchingQuest = allQuestsResponse.data.result.find(q => q.slug === props.id);
+    if (!matchingQuest) {
+      throw new Error('Квест не найден');
+    }
+
+    // Now get the full quest data using its ID
+    const questUrl = isChildQuest.value
+      ? `https://chezakod.ru/api/v2/quests/?id=${matchingQuest.id}&category=child`
+      : `https://chezakod.ru/api/v2/quests/?id=${matchingQuest.id}`;
+
+    const response = await axios.get(questUrl);
     if (response.data.status && response.data.result) {
       quest.value = response.data.result;
-      quest.value.images = response.data.result.photo;
-      currentImage.value = quest.value.main_image;
-      console.log('Quest data:', quest.value);
-      console.log('VIP lounges:', quest.value.vips);
+      if (response.data.result.photo) {
+        quest.value.images = response.data.result.photo;
+      }
+      if (response.data.result.main_image) {
+        currentImage.value = response.data.result.main_image;
+      }
     } else {
       throw new Error('Неверный формат данных от сервера');
     }
@@ -228,12 +243,18 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+};
+
+onMounted(() => {
+  loadQuestData();
 });
 
 const openGallery = (lounge) => {
-  selectedLounge.value = lounge;
-  currentPhotoIndex.value = 0;
-  document.body.style.overflow = 'hidden';
+  if (lounge) {
+    selectedLounge.value = lounge;
+    currentPhotoIndex.value = 0;
+    document.body.style.overflow = 'hidden';
+  }
 };
 
 const closeGallery = () => {
@@ -243,13 +264,13 @@ const closeGallery = () => {
 };
 
 const nextPhoto = () => {
-  if (currentPhotoIndex.value < selectedLounge.value.photo.length - 1) {
+  if (selectedLounge.value && currentPhotoIndex.value < selectedLounge.value.photo.length - 1) {
     currentPhotoIndex.value++;
   }
 };
 
 const prevPhoto = () => {
-  if (currentPhotoIndex.value > 0) {
+  if (selectedLounge.value && currentPhotoIndex.value > 0) {
     currentPhotoIndex.value--;
   }
 };

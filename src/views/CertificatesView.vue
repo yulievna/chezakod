@@ -131,15 +131,45 @@
     </section>
   </div>
   <Footer />
+
+  <CertificateForm 
+    :is-open="isFormOpen"
+    :selected-certificate="selectedCertificate"
+    @close="closeForm"
+    @submit="handleSubmit"
+  />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import CertificateForm from '@/components/CertificateForm.vue'
 
+const isFormOpen = ref(false)
 const selectedCertificate = ref(null)
 const hoveredCertificate = ref(null)
+
+const certificates = [
+  {
+    id: 1,
+    title: 'Сертификат на квест',
+    description: 'Подарите незабываемое приключение в квест-комнате',
+    image: '/images/certificate-quest.jpg'
+  },
+  {
+    id: 2,
+    title: 'Сертификат на экшн-игру',
+    description: 'Захватывающая игра с лазерными ружьями',
+    image: '/images/certificate-action.jpg'
+  },
+  {
+    id: 3,
+    title: 'Сертификат на корпоратив',
+    description: 'Организация корпоративного мероприятия',
+    image: '/images/certificate-corporate.jpg'
+  }
+]
 
 const selectCertificate = (index) => {
   selectedCertificate.value = index
@@ -160,6 +190,22 @@ const openOrderPopup = () => {
   }
   // TODO: Implement order popup logic
   console.log('Open order popup for certificate:', selectedCertificate.value)
+}
+
+const openForm = (certificate) => {
+  selectedCertificate.value = certificate
+  isFormOpen.value = true
+}
+
+const closeForm = () => {
+  isFormOpen.value = false
+  selectedCertificate.value = null
+}
+
+const handleSubmit = (formData) => {
+  // Здесь можно добавить логику отправки данных на сервер
+  console.log('Form submitted:', formData)
+  closeForm()
 }
 </script>
 

@@ -35,8 +35,8 @@ onMounted(async () => {
 <style scoped>
 .timetable-page {
   min-height: 100vh;
-  background: #1a1a1a;
   color: #fff;
+  margin: 30px 0;
 }
 
 .container {

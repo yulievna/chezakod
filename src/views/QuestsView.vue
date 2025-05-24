@@ -22,7 +22,8 @@ const loadQuests = async (category) => {
     
     const responseQ = await axios.get(url);
     quests.value = responseQ.data.result.map((q) => ({
-      id: q.id,
+      id: q.slug,
+      questId: q.id,
       name: q.name.replace(/&quot;/g, '"'),
       age: `${q.age_min}+`,
       images: [q.main_image, ...(q.photo || [])],
@@ -32,12 +33,12 @@ const loadQuests = async (category) => {
       contact: '+7 (391) 269-92-23',
       address: q.location.address.replace(/&quot;/g, '"'),
     }));
-    timetableQuestIds.value = responseQ.data.result.map((q) => ([q.id]))
+
+    timetableQuestIds.value = responseQ.data.result.map((q) => q.id);
   } catch (error) {
     console.error('Ошибка при загрузке квестов:', error);
   }
 };
-
 const switchCategory = (category) => {
   activeCategory.value = category;
   loadQuests(category);
@@ -103,7 +104,7 @@ onMounted(async () => {
       <TimetableEmbed :questIds="timetableQuestIds" />
     </div>
   </section>
-  <section class="lounges">
+  <section class="lounges" id="lounges">
     <div class="container">
       <h2 class="page-title">Лаундж зоны</h2>
       <Lounge :lounges="lounges" />

@@ -347,11 +347,11 @@ export default {
           formData.append(question.question, Array.isArray(value) ? value.join(', ') : value);
         });
 
-        const response = await axios.post('https://chezakod.ru/child/form.php', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+        // const response = await axios.post('https://chezakod.ru/child/form.php', formData, {
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data'
+        //   }
+        // });
 
         if (response.data.success) {
           this.currentQuestion++;

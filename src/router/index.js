@@ -43,12 +43,12 @@ const router = createRouter({
       props: true,
     },
     {
-      path: '/certificates',
+      path: '/sert',
       name: 'certificates',
       component: CertificatesView
     },
     {
-      path: '/promotions',
+      path: '/action',
       name: 'promotions',
       component: PromotionsView
     },

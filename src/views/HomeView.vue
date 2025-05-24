@@ -8,46 +8,64 @@
   import VideoSlider from "@/components/VideoSlider.vue";
   import Form from "@/components/Form.vue";
 
+  import discount1 from '@/assets/images/discount1.jpg';
+  import discount2 from '@/assets/images/discount2.jpg';
+  import discount3 from '@/assets/images/discount3.jpg';
+  import discount4 from '@/assets/images/discount4.jpg';
+  import discount5 from '@/assets/images/discount5.jpg';
+  import discount6 from '@/assets/images/discount6.jpg';
+  import discount7 from '@/assets/images/discount7.jpg';
+  import sl2 from '@/assets/images/sl2.jpg';
+  import korporativ from '@/assets/images/korporativ.jpg';
+  import sl3 from '@/assets/images/sl3.jpg';
+
+  import quests from '@/assets/images/quest__2.jpg';
+  import action from '@/assets/images/action.jpg';
+  import karting from '@/assets/images/chego.jpg';
+  import karaoke from '@/assets/images/party.jpg';
+  import children from '@/assets/images/children.jpg';
+
+
   const imageUrls = [
-    'src/assets/images/sl2.jpg',
-    'src/assets/images/korporativ.jpg',
-    'src/assets/images/sl3.jpg',
+    sl2,
+    korporativ,
+    sl3,
   ];
 
 
   const imagePrograms = [
     {
-      src: 'src/assets/images/discount1.jpg',
+      src: discount1,
       alt: 'Легкий четверг',
       id: 'easy-thursday'
     },
     {
-      src: 'src/assets/images/discount2.jpg',
+      src: discount2,
       alt: 'Программа лояльности',
       id: 'loyalty-program'
     },
     {
-      src: 'src/assets/images/discount3.jpg',
+      src: discount3,
       alt: 'Билет',
       id: 'ticket'
     },
     {
-      src: 'src/assets/images/discount4.jpg',
+      src: discount4,
       alt: 'Скидка в день рождения',
       id: 'birthday'
     },
     {
-      src: 'src/assets/images/discount5.jpg',
+      src: discount5,
       alt: 'Акции Party KOD',
       id: 'party-kod'
     },
     {
-      src: 'src/assets/images/discount6.jpg',
+      src: discount6,
       alt: 'Жмурки',
       id: 'zhmurki'
     },
     {
-      src: 'src/assets/images/discount7.jpg',
+      src: discount7,
       alt: 'Классным руководителям',
       id: 'teachers'
     }
@@ -74,14 +92,14 @@
         <router-link
             class="serviсes__el quests"
             to="/quests"
-            style="background-image: url('src/assets/images/quest__2.jpg');"
+            :style="{ backgroundImage: `url(${quests})` }"
         >
           <span class="overlay">Квесты</span>
         </router-link>
 
         <a href="https://party-kod.ru/"
            class="serviсes__el karaoke"
-           style="background-image: url('src/assets/images/party.jpg');"
+           :style="{ backgroundImage: `url(${karaoke})` }"
         >
           <span class="overlay">Караоке</span>
         </a>
@@ -89,22 +107,22 @@
         <router-link
             class="serviсes__el action-games"
             to="/action-games"
-            style="background-image: url('src/assets/images/action.jpg');"
+            :style="{ backgroundImage: `url(${action})` }"
         >
           <span class="overlay">Экшн-игры</span>
         </router-link>
 
         <a href="https://kartingchego.ru/"
            class="serviсes__el karting"
-           style="background-image: url('src/assets/images/chego.jpg');"
+           :style="{ backgroundImage: `url(${karting})` }"
         >
           <span class="overlay">Картинг</span>
         </a>
         <li class="programs"><ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider></li>
-        <li class="serviсes__el kids-party" style="background-image: url('src/assets/images/children.jpg');">
+        <li class="serviсes__el kids-party" :style="{ backgroundImage: `url(${children})` }">
           <router-link class="overlay" to="/">Детские праздники</router-link>
         </li>
-        <li class="serviсes__el adult-party" style="background-image: url('src/assets/images/korporativ.jpg');">
+        <li class="serviсes__el adult-party" :style="{ backgroundImage: `url(${korporativ})` }">
           <router-link class="overlay" to="/">Корпоративы</router-link>
         </li>
       </ul>

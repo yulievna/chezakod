@@ -2,7 +2,7 @@
   <section class="reviews-container">
     <div class="reviews-title">
       <h2>Отзывы наших клиентов на </h2>
-      <img class="gis" src="/src/assets/images/Light_ENG2x.png" alt="2GIS" loading="lazy" />
+      <img class="gis" src="@/assets/images/Light_ENG2x.png" alt="2GIS" loading="lazy" />
     </div>
 
     <div class="carousel-container">
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 
 export default {
   name: "ReviewsCarousel",

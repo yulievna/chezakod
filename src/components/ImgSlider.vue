@@ -143,6 +143,7 @@ onMounted(() => {
   transition: opacity 200ms ease;
   padding-top: 70px;
   border-radius: 10px;
+  height: fit-content;
 
 }
 

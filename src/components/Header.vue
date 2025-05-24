@@ -30,8 +30,8 @@
             <router-link to="/events">Мероприятия</router-link>
           </li>
           <li class="navigation-item"><router-link to="/timetable">Расписание</router-link></li>
-          <li class="navigation-item"><router-link to="/certificates">Сертификаты</router-link></li>
-          <li class="navigation-item"><router-link to="/promotions">Акции</router-link></li>
+          <li class="navigation-item"><router-link to="/sert">Сертификаты</router-link></li>
+          <li class="navigation-item"><router-link to="/action">Акции</router-link></li>
           <li class="navigation-item"><router-link to="/about">О нас</router-link></li>
 
           <!-- Контакты (в мобильной версии) -->
@@ -409,7 +409,7 @@ const toggleMenu = () => {
     padding: 20px;
     z-index: 1;
     overflow-y: auto;
-    background: #999999;
+    background: #fff;
     transform: translateX(-50%);
     transition: transform 0.3s ease;
 
@@ -428,6 +428,12 @@ const toggleMenu = () => {
     opacity: 1;
     visibility: visible;
     transform: none;
+    
+  }
+  .dropdown-menu a{
+    background: #cf1034;
+  color: white;
+  border-radius: 5px;
   }
 
   .contacts-btn-wrapper:hover .contacts-dropdown {
