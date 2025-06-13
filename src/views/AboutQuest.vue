@@ -49,23 +49,23 @@
 
         <div class="quest-more">
           <div v-if="quest.vips && quest.vips.length" class="vip-lounges">
-            <h3>Доступные лаундж-зоны на этом квесте</h3>
-            <div class="lounges-grid">
-              <div
-                v-for="lounge in quest.vips"
-                :key="lounge.id"
-                class="lounge-card"
+              <h3>Доступные лаундж-зоны на этом квесте</h3>
+              <div class="lounges-grid">
+                <div
+                  v-for="lounge in quest.vips"
+                  :key="lounge.id"
+                  class="lounge-card"
                 :style="lounge.photo && lounge.photo[0] ? { backgroundImage: `url(${lounge.photo[0]})` } : {}"
-                @click="openGallery(lounge)"
-              >
-                <div class="lounge-overlay">
-                  <button class="view-btn">Посмотреть</button>
+                  @click="openGallery(lounge)"
+                >
+                  <div class="lounge-overlay">
+                    <button class="view-btn">Посмотреть</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="quest-addition">
+            <div class="quest-addition">
             <div v-if="quest.additional_services && quest.additional_services.length" class="additional-services">
               <h3>Дополнительные услуги</h3>
               <div class="services-list">
@@ -86,30 +86,30 @@
                 <li v-for="(limit, index) in quest.limits" :key="index">{{ limit }}</li>
               </ul>
             </div>
-          </div>
+            </div>
 
           <div v-if="quest.location" class="location-info">
-            <h3>Локация</h3>
-            <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
-            <div class="map-links">
-              <a
+              <h3>Локация</h3>
+              <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
+              <div class="map-links">
+                <a
                 v-if="quest.location.links && quest.location.links.ymaps"
-                :href="quest.location.links.ymaps"
-                target="_blank"
-                class="map-link"
-              >
-                Яндекс Карты
-              </a>
-              <a
+                  :href="quest.location.links.ymaps"
+                  target="_blank"
+                  class="map-link"
+                >
+                  Яндекс Карты
+                </a>
+                <a
                 v-if="quest.location.links && quest.location.links['2gis']"
-                :href="quest.location.links['2gis']"
-                target="_blank"
-                class="map-link"
-              >
-                2GIS
-              </a>
+                  :href="quest.location.links['2gis']"
+                  target="_blank"
+                  class="map-link"
+                >
+                  2GIS
+                </a>
+              </div>
             </div>
-          </div>
         </div>
       </div>
 
@@ -229,7 +229,7 @@ const loadQuestData = async () => {
     if (response.data.status && response.data.result) {
       quest.value = response.data.result;
       if (response.data.result.photo) {
-        quest.value.images = response.data.result.photo;
+      quest.value.images = response.data.result.photo;
       }
       if (response.data.result.main_image) {
         currentImage.value = response.data.result.main_image;
@@ -251,9 +251,9 @@ onMounted(() => {
 
 const openGallery = (lounge) => {
   if (lounge) {
-    selectedLounge.value = lounge;
-    currentPhotoIndex.value = 0;
-    document.body.style.overflow = 'hidden';
+  selectedLounge.value = lounge;
+  currentPhotoIndex.value = 0;
+  document.body.style.overflow = 'hidden';
   }
 };
 

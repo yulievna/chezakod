@@ -6,65 +6,88 @@
       
       <h2 class="certificate-form__title">Заявка на сертификат</h2>
       
-      <form @submit.prevent="submitForm" class="certificate-form__form">
+      <div v-if="!isSubmitted" class="certificate-form__form">
         <div class="form-group">
           <label for="name">Ваше имя</label>
-          <input 
-            type="text" 
-            id="name" 
-            v-model="formData.name" 
-            required
-            placeholder="Введите ваше имя"
-          >
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="name" 
+              v-model="formData.name" 
+              required
+              placeholder="Введите ваше имя"
+              @input="validateField('name')"
+              @blur="validateField('name')"
+              :class="{ 'error': errors.name }"
+            >
+            <div class="input-focus-effect"></div>
+          </div>
+          <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
         </div>
-
         <div class="form-group">
           <label for="phone">Телефон</label>
-          <input 
-            type="tel" 
-            id="phone" 
-            v-model="formData.phone" 
-            required
-            placeholder="+7 (___) ___-__-__"
-          >
+          <div class="input-wrapper">
+            <input 
+              type="tel" 
+              id="phone" 
+              v-model="formData.phone" 
+              v-mask="'+7 (###) ###-##-##'"
+              required
+              placeholder="+7 (___) ___-__-__"
+              @input="handlePhoneInput"
+              @blur="validateField('phone')"
+              @keyup.enter="submitForm"
+              :class="{ 'error': errors.phone }"
+              ref="phoneInput"
+            >
+            <div class="input-focus-effect"></div>
+          </div>
+          <span v-if="errors.phone" class="error-message">{{ errors.phone }}</span>
         </div>
-
         <div class="form-group">
-          <label for="nominal">Номинал сертификата</label>
-          <select 
-            id="nominal" 
-            v-model="formData.nominal" 
-            required
-          >
-            <option value="">Выберите номинал</option>
-            <option value="1000">1 000 ₽</option>
-            <option value="2000">2 000 ₽</option>
-            <option value="3000">3 000 ₽</option>
-            <option value="5000">5 000 ₽</option>
-            <option value="10000">10 000 ₽</option>
-          </select>
+          <label>Номинал сертификата</label>
+          <div class="nominal-selector">
+            <div class="nominal-options">
+              <button 
+                v-for="nominal in availableNominals" 
+                :key="nominal"
+                @click="selectNominal(nominal)"
+                :class="{ 
+                  'selected': formData.nominal === nominal,
+                  'error': errors.nominal
+                }"
+                class="nominal-option"
+              >
+                {{ nominal }} ₽
+              </button>
+            </div>
+          </div>
+          <span v-if="errors.nominal" class="error-message">{{ errors.nominal }}</span>
         </div>
 
-        <div class="form-group">
-          <label for="comment">Комментарий</label>
-          <textarea 
-            id="comment" 
-            v-model="formData.comment"
-            placeholder="Дополнительная информация"
-            rows="4"
-          ></textarea>
-        </div>
-
-        <button type="submit" class="certificate-form__submit">
-          Отправить заявку
+        <button 
+          type="submit" 
+          class="certificate-form__submit" 
+          @click="submitForm" 
+          :disabled="isSubmitting || !isFormValid"
+        >
+          {{ isSubmitting ? 'Отправка...' : 'Заказать сертификат' }}
         </button>
-      </form>
+      </div>
+      <div v-else class="success-message">
+        <div class="success-icon">✓</div>
+        <h3>Заявка отправлена!</h3>
+        <p>Мы свяжемся с вами в ближайшее время.</p>
+        <button class="close-btn" @click="closeForm">Закрыть</button>
+      </div>
+      <span v-if="errors.submit" class="error-message">{{ errors.submit }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
+import { mask } from 'vue-the-mask'
 
 const props = defineProps({
   isOpen: {
@@ -72,31 +95,176 @@ const props = defineProps({
     required: true
   },
   selectedCertificate: {
-    type: Object,
-    default: () => ({})
+    type: Number,
+    default: 3000
   }
 })
 
 const emit = defineEmits(['close', 'submit'])
 
+// Данные формы
 const formData = ref({
   name: '',
   phone: '',
-  nominal: '',
-  comment: ''
+  nominal: props.selectedCertificate
 })
 
-const closeForm = () => {
-  emit('close')
+// Ошибки валидации
+const errors = ref({
+  name: '',
+  phone: '',
+  nominal: '',
+  submit: ''
+})
+
+// Состояния
+const isSubmitting = ref(false)
+const isSubmitted = ref(false)
+const phoneInput = ref(null)
+
+// Доступные номиналы
+const availableNominals = [2500, 3000, 3500]
+
+// Валидность формы
+const isFormValid = computed(() => {
+  return formData.value.name.trim() && 
+         isValidPhone(formData.value.phone) && 
+         formData.value.nominal
+})
+
+// Автофокус на поле телефона при открытии
+watch(() => props.isOpen, (newVal) => {
+  if (newVal) {
+    nextTick(() => {
+      phoneInput.value?.focus()
+    })
+  }
+})
+
+// Обработчик ввода телефона
+const handlePhoneInput = () => {
+  // Удаляем все нецифровые символы
+  let cleaned = formData.value.phone.replace(/\D/g, '')
+  
+  // Если номер начинается с 8, заменяем на +7
+  if (cleaned.startsWith('8') && cleaned.length === 11) {
+    cleaned = '7' + cleaned.slice(1)
+  }
+  
+  // Форматируем номер согласно маске
+  if (cleaned.length >= 1) {
+    formData.value.phone = `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`
+  }
+  
+  validateField('phone')
 }
 
-const submitForm = () => {
-  emit('submit', formData.value)
+// Валидация телефона
+const isValidPhone = (phone) => {
+  const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
+  return phoneRegex.test(phone)
+}
+
+// Валидация поля
+const validateField = (field) => {
+  errors.value[field] = ''
+  
+  if (field === 'name') {
+    if (!formData.value.name.trim()) {
+      errors.value.name = 'Введите ваше имя'
+    } else if (formData.value.name.trim().length < 2) {
+      errors.value.name = 'Имя слишком короткое'
+    }
+  }
+  
+  if (field === 'phone') {
+    if (!formData.value.phone) {
+      errors.value.phone = 'Введите номер телефона'
+    } else if (!isValidPhone(formData.value.phone)) {
+      errors.value.phone = 'Введите корректный номер'
+    }
+  }
+  
+  if (field === 'nominal') {
+    if (!formData.value.nominal) {
+      errors.value.nominal = 'Выберите номинал'
+    }
+  }
+}
+
+// Выбор номинала
+const selectNominal = (nominal) => {
+  formData.value.nominal = nominal
+  validateField('nominal')
+}
+
+// Закрытие формы
+const closeForm = () => {
+  emit('close')
+  resetForm()
+}
+
+// Сброс формы
+const resetForm = () => {
   formData.value = {
     name: '',
     phone: '',
+    nominal: props.selectedCertificate
+  }
+  errors.value = {
+    name: '',
+    phone: '',
     nominal: '',
-    comment: ''
+    submit: ''
+  }
+  isSubmitted.value = false
+}
+
+// Отправка формы
+const submitForm = async () => {
+  // Валидация всех полей
+  validateField('name')
+  validateField('phone')
+  validateField('nominal')
+  
+  // Проверка на ошибки
+  if (Object.values(errors.value).some(error => error)) return
+  
+  isSubmitting.value = true
+  
+  try {
+    // Очищаем телефон перед отправкой
+    const submitData = {
+      ...formData.value,
+      phone: formData.value.phone.replace(/\D/g, '')
+    }
+    
+    // Создаем FormData
+    const formDataToSend = new FormData()
+    formDataToSend.append('name', submitData.name)
+    formDataToSend.append('phone', submitData.phone)
+    formDataToSend.append('nominal', submitData.nominal)
+    
+    // Отправляем запрос
+    const response = await fetch('https://chezakod.ru/api/v1/sert', {
+      method: 'POST',
+      body: formDataToSend
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Ошибка при отправке формы')
+    }
+    
+    const result = await response.json()
+    emit('submit', result)
+    isSubmitted.value = true
+  } catch (error) {
+    console.error('Ошибка при отправке:', error)
+    // Показываем ошибку пользователю
+    errors.value.submit = error.message || 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.'
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
@@ -179,13 +347,13 @@ const submitForm = () => {
 }
 
 .form-group input,
-.form-group select,
-.form-group textarea {
+.form-group select {
   padding: 12px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.3s ease;
+  width: 100%;
 }
 
 .form-group input:focus,
@@ -212,6 +380,95 @@ const submitForm = () => {
   background: #a00d29;
 }
 
+.nominal-selector {
+  margin-top: 8px;
+}
+
+.nominal-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nominal-option {
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nominal-option:hover {
+  border-color: #CF1034;
+  background: #fff5f6;
+  transform: translateY(-2px);
+}
+
+.nominal-option.selected {
+  border-color: #CF1034;
+  background: #CF1034;
+  color: white;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+input.error {
+  border-color: #ff4444;
+}
+
+.success-message {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #CF1034;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 auto 20px;
+}
+
+.success-message h3 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.success-message p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: #CF1034;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
   .certificate-form__content {
     padding: 30px 20px;
@@ -233,6 +490,34 @@ const submitForm = () => {
   .certificate-form__submit {
     padding: 12px;
     font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificate-form__content {
+    padding: 20px;
+    margin: 15px;
+  }
+
+  .certificate-form__title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .nominal-options {
+    gap: 8px;
+  }
+
+  .nominal-option {
+    padding: 10px 15px;
+    font-size: 14px;
   }
 }
 </style> 

@@ -29,8 +29,7 @@
               :class="{ 
                 'selected': selectedAnswers[currentQuestion] === answer,
                 'error': errors[currentQuestion] && !selectedAnswers[currentQuestion]
-              }"
-              @click="selectRadioAnswer(answer)">
+              }">
             <input type="radio" 
                    :value="answer" 
                    v-model="selectedAnswers[currentQuestion]" 
@@ -306,7 +305,6 @@ export default {
     },
     selectRadioAnswer(answer) {
       this.selectedAnswers[this.currentQuestion] = answer;
-      this.validateAndNext();
     },
     toggleCheckboxAnswer(answer) {
       console.log('Toggling checkbox:', {
@@ -481,7 +479,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 15px;
-  width: 100%;
+  width: fit-content;
   padding: 5px;
   cursor: pointer;
 }

@@ -7,8 +7,17 @@
         <div class="certificates-grid">
           <div 
             class="certificate-card" 
-            :class="{ 'selected': selectedCertificate === 1 }"
-            @click="selectCertificate(1)"
+            :class="{ 'selected': selectedCertificate === 2500 }"
+            @click="selectCertificate(2500)"
+            @mouseover="hoverCertificate(3)"
+            @mouseleave="resetHover"
+          >
+            <img src="@/assets/images/sert3.jpg" alt="Сертификат на 6 человек" class="certificate-image">
+          </div>
+          <div 
+            class="certificate-card" 
+            :class="{ 'selected': selectedCertificate === 3000 }"
+            @click="selectCertificate(3000)"
             @mouseover="hoverCertificate(1)"
             @mouseleave="resetHover"
           >
@@ -16,25 +25,17 @@
           </div>
           <div 
             class="certificate-card" 
-            :class="{ 'selected': selectedCertificate === 2 }"
-            @click="selectCertificate(2)"
+            :class="{ 'selected': selectedCertificate === 3500 }"
+            @click="selectCertificate(3500)"
             @mouseover="hoverCertificate(2)"
             @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert2.jpg" alt="Сертификат на 4 человека" class="certificate-image">
           </div>
-          <div 
-            class="certificate-card" 
-            :class="{ 'selected': selectedCertificate === 3 }"
-            @click="selectCertificate(3)"
-            @mouseover="hoverCertificate(3)"
-            @mouseleave="resetHover"
-          >
-            <img src="@/assets/images/sert3.jpg" alt="Сертификат на 6 человек" class="certificate-image">
-          </div>
+
         </div>
       </div>
-      <button class="btn btn-primary" @click="openOrderPopup">Заказать сертификат</button>
+      <button class="btn btn-primary" @click="openForm">Заказать сертификат</button>
 
     </section>
 
@@ -148,39 +149,9 @@ import CertificateForm from '@/components/CertificateForm.vue'
 
 const isFormOpen = ref(false)
 const selectedCertificate = ref(null)
-const hoveredCertificate = ref(null)
 
-const certificates = [
-  {
-    id: 1,
-    title: 'Сертификат на квест',
-    description: 'Подарите незабываемое приключение в квест-комнате',
-    image: '/images/certificate-quest.jpg'
-  },
-  {
-    id: 2,
-    title: 'Сертификат на экшн-игру',
-    description: 'Захватывающая игра с лазерными ружьями',
-    image: '/images/certificate-action.jpg'
-  },
-  {
-    id: 3,
-    title: 'Сертификат на корпоратив',
-    description: 'Организация корпоративного мероприятия',
-    image: '/images/certificate-corporate.jpg'
-  }
-]
-
-const selectCertificate = (index) => {
-  selectedCertificate.value = index
-}
-
-const hoverCertificate = (index) => {
-  hoveredCertificate.value = index
-}
-
-const resetHover = () => {
-  hoveredCertificate.value = null
+const selectCertificate = (price) => {
+  selectedCertificate.value = price
 }
 
 const openOrderPopup = () => {
@@ -192,19 +163,21 @@ const openOrderPopup = () => {
   console.log('Open order popup for certificate:', selectedCertificate.value)
 }
 
-const openForm = (certificate) => {
-  selectedCertificate.value = certificate
+const openForm = () => {
+  if (!selectedCertificate.value) {
+    alert('Пожалуйста, выберите сертификат')
+    return
+  }
   isFormOpen.value = true
 }
 
 const closeForm = () => {
   isFormOpen.value = false
-  selectedCertificate.value = null
 }
 
 const handleSubmit = (formData) => {
-  // Здесь можно добавить логику отправки данных на сервер
   console.log('Form submitted:', formData)
+  // Здесь будет отправка данных на сервер
   closeForm()
 }
 </script>
