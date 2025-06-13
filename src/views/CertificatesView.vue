@@ -159,7 +159,6 @@ const openOrderPopup = () => {
     alert('Пожалуйста, выберите сертификат')
     return
   }
-  // TODO: Implement order popup logic
   console.log('Open order popup for certificate:', selectedCertificate.value)
 }
 
@@ -173,12 +172,6 @@ const openForm = () => {
 
 const closeForm = () => {
   isFormOpen.value = false
-}
-
-const handleSubmit = (formData) => {
-  console.log('Form submitted:', formData)
-  // Здесь будет отправка данных на сервер
-  closeForm()
 }
 </script>
 

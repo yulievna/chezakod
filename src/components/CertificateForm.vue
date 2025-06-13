@@ -102,14 +102,12 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'submit'])
 
-// Данные формы
 const formData = ref({
   name: '',
   phone: '',
   nominal: props.selectedCertificate
 })
 
-// Ошибки валидации
 const errors = ref({
   name: '',
   phone: '',
@@ -117,22 +115,18 @@ const errors = ref({
   submit: ''
 })
 
-// Состояния
 const isSubmitting = ref(false)
 const isSubmitted = ref(false)
 const phoneInput = ref(null)
 
-// Доступные номиналы
 const availableNominals = [2500, 3000, 3500]
 
-// Валидность формы
 const isFormValid = computed(() => {
   return formData.value.name.trim() && 
          isValidPhone(formData.value.phone) && 
          formData.value.nominal
 })
 
-// Автофокус на поле телефона при открытии
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
     nextTick(() => {
@@ -141,31 +135,24 @@ watch(() => props.isOpen, (newVal) => {
   }
 })
 
-// Обработчик ввода телефона
 const handlePhoneInput = () => {
-  // Удаляем все нецифровые символы
   let cleaned = formData.value.phone.replace(/\D/g, '')
   
-  // Если номер начинается с 8, заменяем на +7
   if (cleaned.startsWith('8') && cleaned.length === 11) {
     cleaned = '7' + cleaned.slice(1)
   }
   
-  // Форматируем номер согласно маске
   if (cleaned.length >= 1) {
     formData.value.phone = `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`
   }
   
   validateField('phone')
 }
-
-// Валидация телефона
 const isValidPhone = (phone) => {
   const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
   return phoneRegex.test(phone)
 }
 
-// Валидация поля
 const validateField = (field) => {
   errors.value[field] = ''
   
@@ -191,20 +178,16 @@ const validateField = (field) => {
     }
   }
 }
-
-// Выбор номинала
 const selectNominal = (nominal) => {
   formData.value.nominal = nominal
   validateField('nominal')
 }
 
-// Закрытие формы
 const closeForm = () => {
   emit('close')
   resetForm()
 }
 
-// Сброс формы
 const resetForm = () => {
   formData.value = {
     name: '',
@@ -220,32 +203,26 @@ const resetForm = () => {
   isSubmitted.value = false
 }
 
-// Отправка формы
 const submitForm = async () => {
-  // Валидация всех полей
   validateField('name')
   validateField('phone')
   validateField('nominal')
   
-  // Проверка на ошибки
   if (Object.values(errors.value).some(error => error)) return
   
   isSubmitting.value = true
   
   try {
-    // Очищаем телефон перед отправкой
     const submitData = {
       ...formData.value,
       phone: formData.value.phone.replace(/\D/g, '')
     }
     
-    // Создаем FormData
     const formDataToSend = new FormData()
     formDataToSend.append('name', submitData.name)
     formDataToSend.append('phone', submitData.phone)
     formDataToSend.append('nominal', submitData.nominal)
     
-    // Отправляем запрос
     const response = await fetch('https://chezakod.ru/api/v1/sert', {
       method: 'POST',
       body: formDataToSend
@@ -261,7 +238,6 @@ const submitForm = async () => {
     isSubmitted.value = true
   } catch (error) {
     console.error('Ошибка при отправке:', error)
-    // Показываем ошибку пользователю
     errors.value.submit = error.message || 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.'
   } finally {
     isSubmitting.value = false
