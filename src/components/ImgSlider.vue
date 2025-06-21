@@ -1,22 +1,19 @@
 <template>
   <div ref="carouselRef" class="owl-carousel owl-theme">
     <div v-for="(image, index) in images" :key="index" class="item">
-      <img 
-        :src="isPromoSlider ? image.src : image" 
-        :alt="isPromoSlider ? image.alt : 'Image ' + (index + 1)"
-        @click="handleImageClick(index)"
-        style="cursor: pointer;"
+      <img
+          :src="isPromoSlider ? image.src : image"
+          :alt="isPromoSlider ? image.alt : 'Image ' + (index + 1)"
+          @click="handleImageClick(index)"
+          style="cursor: pointer;"
       >
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel/dist/assets/owl.theme.default.css';
-import 'owl.carousel';
+import {nextTick, onMounted, ref} from 'vue';
+import {useRouter} from '@/composables/useRouter.js';
 
 const router = useRouter();
 
@@ -39,7 +36,7 @@ const carouselRef = ref(null);
 const handleImageClick = (index) => {
   if (props.isPromoSlider && props.images[index] && props.images[index].id) {
     const promotionId = props.images[index].id;
-    router.push({ path: '/promotions', hash: `#${promotionId}` });
+    router.push({path: '/promotions', hash: `#${promotionId}`});
   }
 };
 
@@ -47,37 +44,39 @@ const setCarouselRef = (el) => {
   carouselRef.value = el;
 };
 
-onMounted(() => {
-  nextTick(() => {
-    if (carouselRef.value) {
-      $(carouselRef.value).owlCarousel({
-        loop: true,
-        margin: 0,
-        nav: false,
-        dots: true,
-        autoplay: true,
-        autoplayTimeout: 4000,
-        autoplayHoverPause: true,
-        items: 1,
-      });
+onMounted(async () => {
+  await nextTick();
+  await import('owl.carousel/dist/assets/owl.carousel.css');
+  await import('owl.carousel/dist/assets/owl.theme.default.css');
+  await import('owl.carousel');
+  if (carouselRef.value) {
+    $(carouselRef.value).owlCarousel({
+      loop: true,
+      margin: 0,
+      nav: false,
+      dots: true,
+      autoplay: true,
+      autoplayTimeout: 4000,
+      autoplayHoverPause: true,
+      items: 1,
+    });
 
-      // Добавляем обработчики для точек навигации только для текущей карусели
-      $(carouselRef.value).find('.owl-dot').each(function (index) {
-        $(this).hover(
-            function () {
-              const owl = $(this).closest('.owl-carousel').owlCarousel();
-              owl.trigger('to.owl.carousel', [index, 300]); // Переключаем слайд
-            }
-        );
-        $(this).click(
-            function(){
+    // Добавляем обработчики для точек навигации только для текущей карусели
+    $(carouselRef.value).find('.owl-dot').each(function (index) {
+      $(this).hover(
+          function () {
+            const owl = $(this).closest('.owl-carousel').owlCarousel();
+            owl.trigger('to.owl.carousel', [index, 300]); // Переключаем слайд
+          }
+      );
+      $(this).click(
+          function () {
             const promotionId = props.images[index].id;
-              router.push({ path: '/promotions', hash: `#${promotionId}` });
-            }
-        )
-      });
-    }
-  });
+            router.push({path: '/promotions', hash: `#${promotionId}`});
+          }
+      )
+    });
+  }
 });
 </script>
 
@@ -103,10 +102,11 @@ onMounted(() => {
   border-radius: 10px;
 }
 
-.owl-carousel{
+.owl-carousel {
   height: fit-content;
   object-fit: cover;
 }
+
 .owl-carousel .item {
   text-align: center;
   width: 100%;

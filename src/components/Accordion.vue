@@ -1,12 +1,12 @@
 <script setup>
-import { reactive } from 'vue'
-import { Collapse } from 'vue-collapsed'
+import {reactive} from 'vue'
+import {Collapse} from 'vue-collapsed'
 
 const questions = reactive([
   {
     title: 'Что такое квесты в реальности?',
     answer: 'Квесты в реальности - развлечение необычного формата, набравшее популярность во всех городах России и за ее пределами. Это настоящая лихорадка - стоит только начать, и остановиться уже невозможно! <br><br> Принцип игры: следуя определенному сюжету, вас и вашу команду запирают в комнате, из которой вам нужно выбраться, решая все загадки и логические цепочки, подготовленные создателями. Решение всех головоломок квеста приведут вас к выходу.',
-    isExpanded: false 
+    isExpanded: false
   },
   {
     title: 'Какие правила игры?',
@@ -88,7 +88,8 @@ function handleAccordion(selectedIndex) {
 <template>
   <div class="accordion-container">
     <div class="accordion-column">
-      <div class="accordion" v-for="(question, index) in questions.slice(0, Math.ceil(questions.length / 2))" :key="index">
+      <div class="accordion" v-for="(question, index) in questions.slice(0, Math.ceil(questions.length / 2))"
+           :key="index">
         <button @click="handleAccordion(index)">
           {{ question.title }}
           <span class="arrow" :class="{ 'arrow-down': question.isExpanded }"></span>
@@ -99,7 +100,8 @@ function handleAccordion(selectedIndex) {
       </div>
     </div>
     <div class="accordion-column">
-      <div class="accordion" v-for="(question, index) in questions.slice(Math.ceil(questions.length / 2))" :key="index + Math.ceil(questions.length / 2)">
+      <div class="accordion" v-for="(question, index) in questions.slice(Math.ceil(questions.length / 2))"
+           :key="index + Math.ceil(questions.length / 2)">
         <button @click="handleAccordion(index + Math.ceil(questions.length / 2))">
           {{ question.title }}
           <span class="arrow" :class="{ 'arrow-down': question.isExpanded }"></span>
@@ -113,6 +115,11 @@ function handleAccordion(selectedIndex) {
 </template>
 
 <style scoped>
+
+*, *:after, *:before {
+  box-sizing: border-box;
+}
+
 .accordion-container {
   margin-top: 30px;
   display: flex;
@@ -147,7 +154,7 @@ p {
   border-radius: 5px;
   margin-top: -10px;
   text-align: justify;
-  
+
 }
 
 .arrow {
@@ -163,6 +170,7 @@ p {
 .arrow-down {
   transform: rotate(45deg);
 }
+
 @media (max-width: 450px) {
   .accordion-container {
     flex-direction: column; /* Один столбец на мобильных устройствах */

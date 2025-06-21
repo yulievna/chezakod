@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div class="show-programs">
     <Header></Header>
 
@@ -29,25 +29,26 @@
         <div v-else>
           <div class="shows-grid">
             <div class="shows-grid">
-                <div v-for="show in showPrograms" :key="show.id" class="show-card" @click="openGallery(show)">
-                  <div class="show-image">
-                    <img :src="show.previewImage" :alt="show.name" loading="lazy">
-                  </div>
-                  <div class="show-content">
-                    <h3>{{ show.name }}</h3>
-                    <p class="show-description">{{ show.previewText }}</p>
-                    <div class="show-details">
-                      <div class="detail-row">
-                        <span class="detail-label">Длительность: {{ show.duration }}</span>
-                      </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Актеры: {{ show.actor }}</span>
-                      </div>
-                      <div class="show-price">{{ show.price }} ₽ <span class="price-note">на команду 10 человек</span></div>
+              <div v-for="show in showPrograms" :key="show.id" class="show-card" @click="openGallery(show)">
+                <div class="show-image">
+                  <img :src="show.previewImage" :alt="show.name" loading="lazy">
+                </div>
+                <div class="show-content">
+                  <h3>{{ show.name }}</h3>
+                  <p class="show-description">{{ show.previewText }}</p>
+                  <div class="show-details">
+                    <div class="detail-row">
+                      <span class="detail-label">Длительность: {{ show.duration }}</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">Актеры: {{ show.actor }}</span>
+                    </div>
+                    <div class="show-price">{{ show.price }} ₽ <span class="price-note">на команду 10 человек</span>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
 
           <!-- Галерея шоу-программы -->
@@ -102,7 +103,7 @@
           <div v-if="selectedMiniShow" class="modal-backdrop" @click.self="selectedMiniShow = null">
             <div class="modal-content">
               <button class="modal-close" @click="selectedMiniShow = null">×</button>
-              <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name" />
+              <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name"/>
               <h3>{{ selectedMiniShow.name }}</h3>
               <p>{{ selectedMiniShow.description }}</p>
               <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
@@ -120,10 +121,11 @@
 
 
 <script setup>
-import {ref, onMounted, computed} from 'vue'
+import {computed, onMounted, onServerPrefetch, ref} from 'vue'
 import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import {useHead} from "@unhead/vue";
 
 const showPrograms = ref([]);
 const miniShows = ref([]);
@@ -169,8 +171,8 @@ const loadShows = async () => {
 
   try {
     const [main, mini] = await Promise.all([
-      axios.get('https://chezakod.ru/api/v2/show/'),
-      axios.get('https://chezakod.ru/api/v2/service/')
+      axios.get(import.meta.env.VITE_API_URL + '/show/'),
+      axios.get(import.meta.env.VITE_API_URL + '/service/')
     ]);
 
     // Основные шоу
@@ -201,6 +203,11 @@ const loadShows = async () => {
   }
 };
 
+useHead({
+  title: "Шоу-программы"
+});
+
+onServerPrefetch(loadShows);
 onMounted(loadShows);
 
 </script>
@@ -306,6 +313,7 @@ onMounted(loadShows);
   font-weight: 600;
   margin-top: auto;
 }
+
 .section-title {
   font-size: 28px;
   margin: 40px 0 20px;
@@ -323,7 +331,7 @@ onMounted(loadShows);
 .mini-show-card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   cursor: pointer;
   text-align: center;
@@ -359,7 +367,7 @@ onMounted(loadShows);
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -405,8 +413,14 @@ onMounted(loadShows);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Шоу-программы стили (улучшения) */
@@ -480,6 +494,7 @@ onMounted(loadShows);
 .main-content {
   /* padding: 60px 0; */
 }
+
 .shows-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -549,9 +564,11 @@ onMounted(loadShows);
   padding-top: 16px;
   border-top: 1px solid #f0f0f0;
 }
-.show-details p{
+
+.show-details p {
   color: #666;
 }
+
 .detail-row {
   display: flex;
   margin-bottom: 8px;
@@ -591,11 +608,11 @@ onMounted(loadShows);
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .show-image {
     height: 180px;
   }
-  
+
   .show-content {
     padding: 18px;
   }
@@ -619,14 +636,15 @@ onMounted(loadShows);
   .hero__title {
     font-size: 36px;
   }
-  
+
   .hero__subtitle {
     font-size: 20px;
   }
-  
+
   .shows-grid {
     grid-template-columns: 1fr;
   }
+
   .gallery-modal__content {
     background: #fff;
     padding: 20px;
@@ -635,7 +653,7 @@ onMounted(loadShows);
     width: 90%;
     height: 50%;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -656,8 +674,12 @@ onMounted(loadShows);
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error State */
@@ -681,6 +703,7 @@ onMounted(loadShows);
 .retry-button:hover {
   background: #a00d29;
 }
+
 .gallery-modal {
   position: fixed;
   top: 0;

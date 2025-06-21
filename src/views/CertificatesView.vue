@@ -1,34 +1,34 @@
 <template>
-    <Header />
+  <Header/>
   <div class="certificates">
     <section class="certificates-hero">
       <div class="container">
         <h1 class="title">Подарочные сертификаты</h1>
         <div class="certificates-grid">
-          <div 
-            class="certificate-card" 
-            :class="{ 'selected': selectedCertificate === 2500 }"
-            @click="selectCertificate(2500)"
-            @mouseover="hoverCertificate(3)"
-            @mouseleave="resetHover"
+          <div
+              class="certificate-card"
+              :class="{ 'selected': selectedCertificate === 2500 }"
+              @click="selectCertificate(2500)"
+              @mouseover="hoverCertificate(3)"
+              @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert3.jpg" alt="Сертификат на 6 человек" class="certificate-image">
           </div>
-          <div 
-            class="certificate-card" 
-            :class="{ 'selected': selectedCertificate === 3000 }"
-            @click="selectCertificate(3000)"
-            @mouseover="hoverCertificate(1)"
-            @mouseleave="resetHover"
+          <div
+              class="certificate-card"
+              :class="{ 'selected': selectedCertificate === 3000 }"
+              @click="selectCertificate(3000)"
+              @mouseover="hoverCertificate(1)"
+              @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert1.jpg" alt="Сертификат на 2 человека" class="certificate-image">
           </div>
-          <div 
-            class="certificate-card" 
-            :class="{ 'selected': selectedCertificate === 3500 }"
-            @click="selectCertificate(3500)"
-            @mouseover="hoverCertificate(2)"
-            @mouseleave="resetHover"
+          <div
+              class="certificate-card"
+              :class="{ 'selected': selectedCertificate === 3500 }"
+              @click="selectCertificate(3500)"
+              @mouseover="hoverCertificate(2)"
+              @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert2.jpg" alt="Сертификат на 4 человека" class="certificate-image">
           </div>
@@ -45,15 +45,18 @@
         <div class="methods-grid">
           <div class="method-card">
             <h3>Самовывоз</h3>
-            <p>Вы можете приобрести подарочный сертификат на квесты на любой из локаций Чеширского Кода на ресепшене у администратора</p>
+            <p>Вы можете приобрести подарочный сертификат на квесты на любой из локаций Чеширского Кода на ресепшене у
+              администратора</p>
           </div>
           <div class="method-card">
             <h3>Доставка</h3>
-            <p>Вы можете заказать сертификат на квест с доставкой до дома или работы. Стоимость доставки сертификата в черте города — 200 рублей</p>
+            <p>Вы можете заказать сертификат на квест с доставкой до дома или работы. Стоимость доставки сертификата в
+              черте города — 200 рублей</p>
           </div>
           <div class="method-card">
             <h3>Электронный сертификат</h3>
-            <p>Вы можете приобрести электронный сертификат, воспользоваться им можно распечатав или показав сертификат администратору на ресепшене</p>
+            <p>Вы можете приобрести электронный сертификат, воспользоваться им можно распечатав или показав сертификат
+              администратору на ресепшене</p>
           </div>
         </div>
       </div>
@@ -73,7 +76,8 @@
             <p>Стоимость сертификатов соответствует стоимости выбранного квеста</p>
           </div>
           <div class="condition-item">
-            <p>Если приобретен сертификат меньшей стоимости, чем забронированная игра, есть возможность доплатить разницу администратору локации</p>
+            <p>Если приобретен сертификат меньшей стоимости, чем забронированная игра, есть возможность доплатить
+              разницу администратору локации</p>
           </div>
           <div class="condition-item">
             <p>Срок действия сертификатов: 6 месяцев с момента покупки</p>
@@ -89,12 +93,14 @@
           <div class="gift-card">
             <img src="@/assets/images/child.png" alt="Детям" class="gift-icon">
             <h3>Сыну или дочке!</h3>
-            <p>Подарите настоящее приключение своему ребенку и его друзьям! Наши квесты подходят для детей благодаря присутствию аниматора, который помогает юным игрокам справиться с поставленными задачами!</p>
+            <p>Подарите настоящее приключение своему ребенку и его друзьям! Наши квесты подходят для детей благодаря
+              присутствию аниматора, который помогает юным игрокам справиться с поставленными задачами!</p>
           </div>
           <div class="gift-card">
             <img src="@/assets/images/friends.png" alt="Друзьям" class="gift-icon">
             <h3>Компании друзей!</h3>
-            <p>У вас большая компания? Подарите сертификат в квест всей команде и отправляйтесь все вместе в приключение, которое вы никогда не забудете!</p>
+            <p>У вас большая компания? Подарите сертификат в квест всей команде и отправляйтесь все вместе в
+              приключение, которое вы никогда не забудете!</p>
           </div>
           <div class="gift-card">
             <img src="@/assets/images/family.png" alt="Родителям" class="gift-icon">
@@ -104,12 +110,15 @@
           <div class="gift-card">
             <img src="@/assets/images/boss.png" alt="Руководителю" class="gift-icon">
             <h3>Руководителю!</h3>
-            <p>Что подарить начальнику на день рождения или его профессиональный праздник? Подарите любое из 10 уникальных приключений, в которые он сможет отправиться со своими близкими и отдохнуть от рабочей рутины!</p>
+            <p>Что подарить начальнику на день рождения или его профессиональный праздник? Подарите любое из 10
+              уникальных приключений, в которые он сможет отправиться со своими близкими и отдохнуть от рабочей
+              рутины!</p>
           </div>
           <div class="gift-card">
             <img src="@/assets/images/couple.png" alt="Любимому" class="gift-icon">
             <h3>Любимому человеку!</h3>
-            <p>Сертификат в квест — подарок для вас двоих, приключение, в котором он покажет себя героем, она ощутит себя нужной, а вместе вы будете крепкой командой!</p>
+            <p>Сертификат в квест — подарок для вас двоих, приключение, в котором он покажет себя героем, она ощутит
+              себя нужной, а вместе вы будете крепкой командой!</p>
           </div>
           <div class="gift-card">
             <img src="@/assets/images/best-friend.png" alt="Лучшему другу" class="gift-icon">
@@ -131,21 +140,26 @@
       </div>
     </section>
   </div>
-  <Footer />
+  <Footer/>
 
-  <CertificateForm 
-    :is-open="isFormOpen"
-    :selected-certificate="selectedCertificate"
-    @close="closeForm"
-    @submit="handleSubmit"
+  <CertificateForm
+      :is-open="isFormOpen"
+      :selected-certificate="selectedCertificate"
+      @close="closeForm"
+      @submit="handleSubmit"
   />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import CertificateForm from '@/components/CertificateForm.vue'
+import {useHead} from "@unhead/vue";
+
+useHead({
+  title: "Сертификаты"
+})
 
 const isFormOpen = ref(false)
 const selectedCertificate = ref(null)
@@ -200,7 +214,8 @@ const closeForm = () => {
   margin-bottom: 2rem;
   color: #CF1034;
 }
-section{
+
+section {
   margin-bottom: 60px;
 }
 
@@ -361,7 +376,7 @@ section{
 .universal-gift {
   background: #CF1034;
   padding: 4rem 0;
-  margin-bottom: 4rem;
+  margin-bottom: 0;
 }
 
 .universal-content {
@@ -406,6 +421,7 @@ section{
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(207, 16, 52, 0.3);
 }
+
 .btn-secondary {
   background: #000;
   color: #fff;
@@ -413,9 +429,10 @@ section{
 }
 
 .btn-secondary:hover {
-    box-shadow: 0 4px 15px rgba(49, 5, 13, 0.3);
+  box-shadow: 0 4px 15px rgba(49, 5, 13, 0.3);
   transform: translateY(-2px);
 }
+
 /* Responsive Styles */
 @media (max-width: 1200px) {
   .certificates-grid {

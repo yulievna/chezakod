@@ -3,9 +3,9 @@
     <div class="container">
       <ul class="quests__list">
         <li v-for="quest in quests" :key="quest.id" class="quests__el">
-          <router-link :to="getQuestPath(quest.id)" class="quest_link">
+          <router-link :to="getQuestPath(quest.slug)" class="quest_link">
             <div class="age">{{ quest.age }}</div>
-            <QuestsSlider :images="quest.images" />
+            <QuestsSlider :images="quest.images"/>
             <div class="quest_info">
               <div class="quest_title">{{ quest.name }}</div>
               <div class="quest_chars">
@@ -14,7 +14,7 @@
                 <div class="difficulty">{{ quest.difficulty }}</div>
               </div>
               <div class="booking">
-                <button class="to_book" @click.prevent="goToAboutQuest(quest.id)">Забронировать</button>
+                <button class="to_book" @click.prevent="goToAboutQuest(quest.slug)">Забронировать</button>
                 <div class="contacts">
                   <div class="contact">{{ quest.contact }}</div>
                   <div class="address">{{ quest.address }}</div>
@@ -30,7 +30,7 @@
 
 <script setup>
 import QuestsSlider from "@/components/QuestsSlider.vue";
-import { useRouter } from 'vue-router';
+import {useRouter} from '@/composables/useRouter.js';
 
 const router = useRouter();
 
@@ -49,14 +49,14 @@ const props = defineProps({
   }
 });
 
-const getQuestPath = (questId) => {
-  return props.isChildQuest 
-    ? `/child-quests/${questId}`
-    : `${props.basePath}/${questId}`;
+const getQuestPath = (slug) => {
+  return props.isChildQuest
+      ? `/child-quests/${slug}`
+      : `${props.basePath}/${slug}`;
 };
 
-const goToAboutQuest = (questId) => {
-  router.push(getQuestPath(questId));
+const goToAboutQuest = (slug) => {
+  router.push(getQuestPath(slug));
 };
 </script>
 
@@ -161,10 +161,10 @@ const goToAboutQuest = (questId) => {
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
   );
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }

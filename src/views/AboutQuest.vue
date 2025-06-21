@@ -8,7 +8,8 @@
       {{ error }}
     </div>
     <div v-else-if="quest" class="quest-info">
-      <div class="quest-header" :style="quest.main_image ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${quest.main_image})` } : {}">
+      <div class="quest-header"
+           :style="quest.main_image ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${quest.main_image})` } : {}">
         <div class="container">
           <span v-if="quest.age_min" class="age">{{ quest.age_min }}+</span>
 
@@ -19,15 +20,15 @@
             </div>
             <div class="quest-chars">
               <div v-if="quest.players" class="char-item">
-                <img :src="players" alt="Players" />
+                <img :src="players" alt="Players"/>
                 <span>{{ quest.players.min }}-{{ quest.players.max }} игроков</span>
               </div>
               <div v-if="quest.duration" class="char-item">
-                <img :src="time" alt="Time" />
+                <img :src="time" alt="Time"/>
                 <span>{{ quest.duration }} минут</span>
               </div>
               <div class="char-item">
-                <img :src="difficulty" alt="Difficulty" />
+                <img :src="difficulty" alt="Difficulty"/>
                 <span>Средняя сложность</span>
               </div>
             </div>
@@ -38,7 +39,7 @@
       <div class="container">
         <div class="quest-content">
           <div v-if="quest.images" class="slider">
-            <ImgSlider :images="quest.images" />
+            <ImgSlider :images="quest.images"/>
           </div>
 
           <div class="quest-details">
@@ -49,30 +50,30 @@
 
         <div class="quest-more">
           <div v-if="quest.vips && quest.vips.length" class="vip-lounges">
-              <h3>Доступные лаундж-зоны на этом квесте</h3>
-              <div class="lounges-grid">
-                <div
+            <h3>Доступные лаундж-зоны на этом квесте</h3>
+            <div class="lounges-grid">
+              <div
                   v-for="lounge in quest.vips"
                   :key="lounge.id"
                   class="lounge-card"
-                :style="lounge.photo && lounge.photo[0] ? { backgroundImage: `url(${lounge.photo[0]})` } : {}"
+                  :style="lounge.photo && lounge.photo[0] ? { backgroundImage: `url(${lounge.photo[0]})` } : {}"
                   @click="openGallery(lounge)"
-                >
-                  <div class="lounge-overlay">
-                    <button class="view-btn">Посмотреть</button>
-                  </div>
+              >
+                <div class="lounge-overlay">
+                  <button class="view-btn">Посмотреть</button>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="quest-addition">
+          <div class="quest-addition">
             <div v-if="quest.additional_services && quest.additional_services.length" class="additional-services">
               <h3>Дополнительные услуги</h3>
               <div class="services-list">
                 <div
-                  v-for="service in quest.additional_services"
-                  :key="service.id"
-                  class="service-item"
+                    v-for="service in quest.additional_services"
+                    :key="service.id"
+                    class="service-item"
                 >
                   <span class="service-name">{{ service.name }}</span>
                   <span class="service-price">{{ service.price }} ₽</span>
@@ -86,37 +87,37 @@
                 <li v-for="(limit, index) in quest.limits" :key="index">{{ limit }}</li>
               </ul>
             </div>
-            </div>
+          </div>
 
           <div v-if="quest.location" class="location-info">
-              <h3>Локация</h3>
-              <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
-              <div class="map-links">
-                <a
-                v-if="quest.location.links && quest.location.links.ymaps"
+            <h3>Локация</h3>
+            <p>{{ quest.location.address.replace(/&quot;/g, '"') }}</p>
+            <div class="map-links">
+              <a
+                  v-if="quest.location.links && quest.location.links.ymaps"
                   :href="quest.location.links.ymaps"
                   target="_blank"
                   class="map-link"
-                >
-                  Яндекс Карты
-                </a>
-                <a
-                v-if="quest.location.links && quest.location.links['2gis']"
+              >
+                Яндекс Карты
+              </a>
+              <a
+                  v-if="quest.location.links && quest.location.links['2gis']"
                   :href="quest.location.links['2gis']"
                   target="_blank"
                   class="map-link"
-                >
-                  2GIS
-                </a>
-              </div>
+              >
+                2GIS
+              </a>
             </div>
+          </div>
         </div>
       </div>
 
       <section v-if="quest.id" class="schedule">
         <div class="container">
           <h2 class="title">Расписание</h2>
-          <TimetableEmbed :questIds="[quest.id]" />
+          <TimetableEmbed :questIds="[quest.id]"/>
         </div>
       </section>
     </div>
@@ -127,33 +128,33 @@
         <button class="gallery-modal__close" @click="closeGallery">&times;</button>
         <div class="gallery-modal__main">
           <button
-            class="gallery-modal__arrow gallery-modal__arrow--prev"
-            @click="prevPhoto"
-            :disabled="currentPhotoIndex === 0"
+              class="gallery-modal__arrow gallery-modal__arrow--prev"
+              @click="prevPhoto"
+              :disabled="currentPhotoIndex === 0"
           >
             &#10094;
           </button>
           <img
-            :src="currentPhoto"
-            :alt="'Лаундж зона'"
-            class="gallery-modal__image"
+              :src="currentPhoto"
+              :alt="'Лаундж зона'"
+              class="gallery-modal__image"
           >
           <button
-            class="gallery-modal__arrow gallery-modal__arrow--next"
-            @click="nextPhoto"
-            :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
+              class="gallery-modal__arrow gallery-modal__arrow--next"
+              @click="nextPhoto"
+              :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
           >
             &#10095;
           </button>
         </div>
         <div class="gallery-modal__thumbnails">
           <img
-            v-for="(photo, index) in selectedLounge.photo"
-            :key="index"
-            :src="photo"
-            :alt="`Фото ${index + 1}`"
-            :class="{ 'active': currentPhotoIndex === index }"
-            @click="currentPhotoIndex = index"
+              v-for="(photo, index) in selectedLounge.photo"
+              :key="index"
+              :src="photo"
+              :alt="`Фото ${index + 1}`"
+              :class="{ 'active': currentPhotoIndex === index }"
+              @click="currentPhotoIndex = index"
           >
         </div>
       </div>
@@ -163,8 +164,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import {computed, onMounted, onServerPrefetch, ref} from 'vue';
+import {useRoute} from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import TimetableEmbed from '@/components/TimetableEmbed.vue';
@@ -174,6 +175,7 @@ import players from '@/assets/images/players.png';
 import time from '@/assets/images/time.png';
 import difficulty from '@/assets/images/difficulty.png';
 import ImgSlider from '@/components/ImgSlider.vue';
+import {useHead} from "@unhead/vue";
 
 const props = defineProps({
   id: {
@@ -190,6 +192,11 @@ const currentImage = ref('');
 const selectedLounge = ref(null);
 const currentPhotoIndex = ref(0);
 const isChildQuest = ref(false);
+const head = ref({
+  title: "Загрузка...",
+  description: "",
+  titleTemplate: null
+})
 
 const currentPhoto = computed(() => {
   if (!selectedLounge.value?.photo?.length) return '';
@@ -200,14 +207,14 @@ const loadQuestData = async () => {
   try {
     loading.value = true;
     error.value = null;
-    
+
     // Check if we're in a child quest route
     isChildQuest.value = route.path.includes('/child-quests/');
-    
+
     // First get all quests to find the one with matching slug
     const allQuestsUrl = isChildQuest.value
-      ? 'https://chezakod.ru/api/v2/quests/?category=child'
-      : 'https://chezakod.ru/api/v2/quests/';
+        ? import.meta.env.VITE_API_URL + '/quests/?category=child'
+        : import.meta.env.VITE_API_URL + '/quests/';
 
     const allQuestsResponse = await axios.get(allQuestsUrl);
     if (!allQuestsResponse.data.status || !allQuestsResponse.data.result) {
@@ -222,14 +229,19 @@ const loadQuestData = async () => {
 
     // Now get the full quest data using its ID
     const questUrl = isChildQuest.value
-      ? `https://chezakod.ru/api/v2/quests/?id=${matchingQuest.id}&category=child`
-      : `https://chezakod.ru/api/v2/quests/?id=${matchingQuest.id}`;
+        ? `${import.meta.env.VITE_API_URL}/quests/?id=${matchingQuest.id}&category=child`
+        : `${import.meta.env.VITE_API_URL}/quests/?id=${matchingQuest.id}`;
 
     const response = await axios.get(questUrl);
     if (response.data.status && response.data.result) {
       quest.value = response.data.result;
+      head.value = {
+        title: quest.value.name,
+        description: quest.value.description,
+        titleTemplate: "%s %sep квест %sep %siteName"
+      }
       if (response.data.result.photo) {
-      quest.value.images = response.data.result.photo;
+        quest.value.images = response.data.result.photo;
       }
       if (response.data.result.main_image) {
         currentImage.value = response.data.result.main_image;
@@ -245,15 +257,25 @@ const loadQuestData = async () => {
   }
 };
 
+useHead({
+  title: computed(() => head.value.title),
+  titleTemplate: computed(() => head.value.titleTemplate)
+});
+
+onServerPrefetch(loadQuestData);
+
 onMounted(() => {
   loadQuestData();
 });
 
+onMounted(() => {
+});
+
 const openGallery = (lounge) => {
   if (lounge) {
-  selectedLounge.value = lounge;
-  currentPhotoIndex.value = 0;
-  document.body.style.overflow = 'hidden';
+    selectedLounge.value = lounge;
+    currentPhotoIndex.value = 0;
+    document.body.style.overflow = 'hidden';
   }
 };
 
@@ -358,9 +380,11 @@ const prevPhoto = () => {
   display: flex;
   gap: 30px;
 }
-.details-name__quest{
+
+.details-name__quest {
   font-size: 28px;
 }
+
 .char-item {
   display: flex;
   align-items: center;
@@ -471,9 +495,11 @@ const prevPhoto = () => {
 .additional-services {
   width: 450px;
 }
+
 .limits {
   width: 700px;
 }
+
 .game-addition {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -534,13 +560,13 @@ const prevPhoto = () => {
   font-weight: 600;
 }
 
- .location-info {
-   border-color: rgba(207, 16, 52, 0.3);
-   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-   border-radius: 12px;
-   padding: 24px;
-   transition: all 0.3s ease;
- }
+.location-info {
+  border-color: rgba(207, 16, 52, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
 
 
 .location-info h3 {
@@ -601,16 +627,16 @@ const prevPhoto = () => {
   .location-info {
     padding: 18px;
   }
-.limits{
-  width: 100%;
-}
+
+  .limits {
+    width: 100%;
+  }
 
   .map-link {
     width: 100%;
     padding: 12px;
   }
 }
-
 
 
 /* Модальное окно галереи */
@@ -700,7 +726,8 @@ const prevPhoto = () => {
     margin-left: 0;
     margin-top: 20px;
   }
-  .lounge-overlay{
+
+  .lounge-overlay {
     opacity: 1;
   }
 }
@@ -709,6 +736,7 @@ const prevPhoto = () => {
   .container {
     padding: 0 15px;
   }
+
   .quest-header {
     padding: 200px 0 20px;
   }
@@ -738,13 +766,16 @@ const prevPhoto = () => {
   .container {
     padding: 0 20px;
   }
-  .quest-header{
+
+  .quest-header {
     padding: 440px 40px 70px;
   }
+
   .quest-details {
     line-height: 1.6;
     font-size: 20px;
   }
+
   .name-quest {
     font-size: 24px;
   }
@@ -767,7 +798,8 @@ const prevPhoto = () => {
     width: 60px;
     height: 45px;
   }
-  .quest-title-wrapper{
+
+  .quest-title-wrapper {
     order: 2;
   }
 }

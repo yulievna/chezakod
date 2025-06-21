@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite-ssg build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -27,9 +27,12 @@
     "vue-yandex-maps": "^2.1.4"
   },
   "devDependencies": {
+    "@unhead/vue": "^2.0.10",
     "@vitejs/plugin-vue": "^5.1.4",
     "sass-embedded": "^1.82.0",
     "vite": "^5.4.10",
-    "vite-plugin-vue-devtools": "^7.5.4"
+    "vite-plugin-pwa": "^1.0.0",
+    "vite-plugin-vue-devtools": "^7.5.4",
+    "vite-ssg": "^27.0.1"
   }
 }

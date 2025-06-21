@@ -11,7 +11,7 @@
 
         <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
-          <img class="logo" src="../assets/images/logo.svg" alt="Logo" />
+          <img class="logo" src="../assets/images/logo.svg" alt="Logo"/>
         </router-link>
 
         <!-- Меню -->
@@ -19,26 +19,46 @@
           <li class="navigation-item dropdown">
             <router-link to="#">Развлечения</router-link>
             <ul class="dropdown-menu">
-              <li><router-link to="/quests">Квесты</router-link></li>
-              <li><router-link to="/action-games">Экшн игры</router-link></li>
+              <li>
+                <router-link to="/quests">Квесты</router-link>
+              </li>
+              <li>
+                <router-link to="/action-games">Экшн игры</router-link>
+              </li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
-              <li><router-link to="/show-programs">Шоу программы</router-link></li>
+              <li>
+                <router-link to="/show-programs">Шоу программы</router-link>
+              </li>
             </ul>
           </li>
           <li class="navigation-item dropdown">
             <router-link to="/events">Мероприятия</router-link>
           </li>
-          <li class="navigation-item"><router-link to="/timetable">Расписание</router-link></li>
-          <li class="navigation-item"><router-link to="/sert">Сертификаты</router-link></li>
-          <li class="navigation-item"><router-link to="/action">Акции</router-link></li>
-          <li class="navigation-item"><router-link to="/about">О нас</router-link></li>
+          <li class="navigation-item">
+            <router-link to="/timetable">Расписание</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/sert">Сертификаты</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/action">Акции</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/about">О нас</router-link>
+          </li>
 
           <!-- Контакты (в мобильной версии) -->
           <li class="navigation-item mobile-only"><a href="tel:+79998887766">+7 (999) 888-77-66</a></li>
-          <li class="navigation-item mobile-only"><router-link to="#">WhatsApp</router-link></li>
-          <li class="navigation-item mobile-only"><router-link to="#">Telegram</router-link></li>
-          <li class="navigation-item mobile-only"><router-link to="https://vk.com/chezakod">ВКонтакте</router-link></li>
+          <li class="navigation-item mobile-only">
+            <router-link to="#">WhatsApp</router-link>
+          </li>
+          <li class="navigation-item mobile-only">
+            <router-link to="#">Telegram</router-link>
+          </li>
+          <li class="navigation-item mobile-only">
+            <router-link to="https://vk.com/chezakod">ВКонтакте</router-link>
+          </li>
         </ul>
 
         <!-- Кнопки -->
@@ -54,9 +74,15 @@
             </button>
             <ul class="contacts-dropdown">
               <li><a href="tel:+79998887766" class="contact-link">+7 (999) 888-77-66</a></li>
-              <li><router-link to="#" class="contact-link">WhatsApp</router-link></li>
-              <li><router-link to="#" class="contact-link">Telegram</router-link></li>
-              <li><router-link to="https://vk.com/chezakod" class="contact-link">ВКонтакте</router-link></li>
+              <li>
+                <router-link to="#" class="contact-link">WhatsApp</router-link>
+              </li>
+              <li>
+                <router-link to="#" class="contact-link">Telegram</router-link>
+              </li>
+              <li>
+                <router-link to="https://vk.com/chezakod" class="contact-link">ВКонтакте</router-link>
+              </li>
             </ul>
           </div>
         </div>
@@ -71,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import Form from "@/components/Form.vue";
 
 const isPopupOpen = ref(false);
@@ -386,7 +412,8 @@ const toggleMenu = () => {
     font-size: 16px;
     padding: 10px 20px;
   }
-  .contacts-btn{
+
+  .contacts-btn {
     display: none;
   }
 
@@ -428,12 +455,13 @@ const toggleMenu = () => {
     opacity: 1;
     visibility: visible;
     transform: none;
-    
+
   }
-  .dropdown-menu a{
+
+  .dropdown-menu a {
     background: #cf1034;
-  color: white;
-  border-radius: 5px;
+    color: white;
+    border-radius: 5px;
   }
 
   .contacts-btn-wrapper:hover .contacts-dropdown {

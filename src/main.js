@@ -1,9 +1,36 @@
-import './assets/styles/main.css'
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import './assets/styles/main.css';
+import {ViteSSG} from 'vite-ssg';
+import App from './App.vue';
+import {routes} from './routes.js';
+import {TemplateParamsPlugin} from '@unhead/vue/plugins';
 
-const app = createApp(App)
+export const createApp = ViteSSG(
+    App,
+    {
+        routes: routes,
+        scrollBehavior(to, from, savedPosition) {
+            if (to.hash) {
+                return {
+                    el: to.hash
+                }
+            } else {
+                return {
+                    top: 0
+                }
+            }
+        },
+        base: "/yulya/"
+    },
+    (ctx) => {
+        ctx.app.config.globalProperties.$router = ctx.router
 
-app.use(router)
-app.mount('#app')
+        ctx.head.push({
+            titleTemplate: "%s %sep %siteName",
+            templateParams: {
+                sep: "·",
+                siteName: "Чеширский КОД"
+            }
+        });
+        ctx.head.use(TemplateParamsPlugin);
+    },
+)

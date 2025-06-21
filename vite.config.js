@@ -1,44 +1,121 @@
-import { fileURLToPath, URL } from 'node:url'
+import {fileURLToPath, URL} from 'node:url'
 
-import { defineConfig } from 'vite'
+import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import {VitePWA} from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
-  base: "/yulya/", // Устанавливаем относительные пути
-  build: {
-    outDir: "dist", // Папка для сборки
-    assetsDir: "assets", // Каталог для CSS/JS
-  },
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    },
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://chezakod.ru',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        configure: (proxy, options) => {
-          proxy.on('error', (err, req, res) => {
-            console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            console.log('Sending Request to the Target:', req.method, req.url);
-          });
-          proxy.on('proxyRes', (proxyRes, req, res) => {
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
-          });
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd(), "VITE");
+    return {
+        plugins: [
+            vue(),
+            vueDevTools(),
+            VitePWA({
+                registerType: 'autoUpdate',
+                includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+                manifest: {
+                    name: 'Чеширский код',
+                    short_name: 'Чеширский код',
+                    description: 'Организация и проведение квестов',
+                    theme_color: '#ffffff',
+                    icons: [
+                        {
+                            src: 'pwa-192x192.png',
+                            sizes: '192x192',
+                            type: 'image/png'
+                        },
+                        {
+                            src: 'pwa-512x512.png',
+                            sizes: '512x512',
+                            type: 'image/png'
+                        }
+                    ]
+                }
+            })
+        ],
+        base: "/yulya/",
+        build: {
+            outDir: "dist",
+            assetsDir: "assets",
+        },
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url))
+            },
+        },
+        ssgOptions: {
+            script: 'async',
+            formatting: 'minify',
+            crittersOptions: {
+                reduceInlineStyles: false,
+            },
+            async includedRoutes() {
+                let routes = [
+                    '/',
+                    '/about',
+                    '/quests',
+                    '/sert',
+                    '/action',
+                    '/action-games',
+                    '/events',
+                    '/show-programs'
+                ];
+                const apiUrl = env.VITE_API_URL;
+                await fetch(apiUrl + "/quests/?category=child")
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("ERR");
+                        }
+                    })
+                    .then(data => {
+                        if (data.result && Array.isArray(data.result)) {
+                            data.result.forEach(item => {
+                                if (item.slug) {
+                                    routes.push(`/child-quests/${item.slug}`);
+                                }
+                            });
+                        } else {
+                            throw new Error("ERR");
+                        }
+                    })
+
+                await fetch(apiUrl + "/quests/?category=quest")
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                    })
+                    .then(data => {
+                        if (data.result && Array.isArray(data.result)) {
+                            data.result.forEach(item => {
+                                if (item.slug) {
+                                    routes.push(`/quests/${item.slug}`);
+                                }
+                            });
+                        }
+                    })
+
+                await fetch(apiUrl + "/quests/?category=action")
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                    })
+                    .then(data => {
+                        if (data.result && Array.isArray(data.result)) {
+                            data.result.forEach(item => {
+                                if (item.slug) {
+                                    routes.push(`/action-games/${item.slug}`);
+                                }
+                            });
+                        }
+                    });
+                return routes;
+            }
         }
-      }
     }
-  }
-})
+});

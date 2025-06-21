@@ -24,37 +24,37 @@
 
         <!-- Варианты ответа (radio) -->
         <ul v-if="questions[currentQuestion].type === 'radio'" class="answer-list">
-          <li v-for="(answer, index) in questions[currentQuestion].answers" 
+          <li v-for="(answer, index) in questions[currentQuestion].answers"
               :key="index"
               :class="{ 
                 'selected': selectedAnswers[currentQuestion] === answer,
                 'error': errors[currentQuestion] && !selectedAnswers[currentQuestion]
               }">
-            <input type="radio" 
-                   :value="answer" 
-                   v-model="selectedAnswers[currentQuestion]" 
-                   @change="validateAndNext"
-                   :id="'radio-' + index" />
-            <label :for="'radio-' + index">{{ answer }}</label>
+            <!--            <input type="radio" -->
+            <!--                   :value="answer" -->
+            <!--                   v-model="selectedAnswers[currentQuestion]" -->
+            <!--                   @change="validateAndNext"-->
+            <!--                   :id="'radio-' + index" />-->
+            <label>{{ answer }}</label>
           </li>
         </ul>
 
         <!-- Варианты ответа (checkbox) -->
         <ul v-if="questions[currentQuestion].type === 'checkbox'" class="answer-list">
-          <li v-for="(answer, index) in questions[currentQuestion].answers" 
+          <li v-for="(answer, index) in questions[currentQuestion].answers"
               :key="index"
               :class="{ 
-                'selected': selectedAnswers[currentQuestion].includes(answer),
-                'error': errors[currentQuestion] && (!selectedAnswers[currentQuestion] || selectedAnswers[currentQuestion].length === 0)
+                'selected': selectedAnswers[currentQuestion].includes(answer)
+                // 'error': errors[currentQuestion] && (!selectedAnswers[currentQuestion] || selectedAnswers[currentQuestion].length === 0)
               }"
               @click="toggleCheckboxAnswer(answer)">
             <label class="custom-checkbox">
-              <input type="checkbox" 
-                     :value="answer" 
-                     v-model="selectedAnswers[currentQuestion]"
-                     @change="validateField"
-                     :id="'checkbox-' + index" />
-              <span class="checkmark"></span>
+              <!--              <input type="checkbox" -->
+              <!--                     :value="answer" -->
+              <!--                     v-model="selectedAnswers[currentQuestion]"-->
+              <!--                     @change="validateField"-->
+              <!--                     :id="'checkbox-' + index" />-->
+              <!--              <span class="checkmark"></span>-->
               {{ answer }}
             </label>
           </li>
@@ -62,13 +62,13 @@
 
         <!-- Ввод текста -->
         <div v-else-if="questions[currentQuestion].type === 'text'" class="text-input-wrapper">
-          <input type="text" 
-                 v-model="selectedAnswers[currentQuestion]" 
+          <input type="text"
+                 v-model="selectedAnswers[currentQuestion]"
                  :placeholder="questions[currentQuestion].placeholder || 'Введите ваш ответ'"
                  @input="validateField"
                  @keyup.enter="validateAndNext"
                  :class="{ 'error': errors[currentQuestion] }"
-                 ref="textInput" />
+                 ref="textInput"/>
           <div class="input-focus-effect"></div>
         </div>
 
@@ -81,7 +81,7 @@
                  @input="validateField"
                  @keyup.enter="validateAndNext"
                  :class="{ 'error': errors[currentQuestion] }"
-                 ref="phoneInput" />
+                 ref="phoneInput"/>
           <div class="input-focus-effect"></div>
         </div>
 
@@ -92,26 +92,26 @@
                  :min="minDate"
                  @change="validateField"
                  :class="{ 'error': errors[currentQuestion] }"
-                 ref="dateInput" />
+                 ref="dateInput"/>
           <div class="input-focus-effect"></div>
         </div>
 
         <!-- Кнопки навигации -->
         <div class="navigation-buttons">
-          <button v-if="currentQuestion > 0" 
+          <button v-if="currentQuestion > 0"
                   @click="previousQuestion"
                   class="nav-btn prev-btn">
             <span class="btn-icon">←</span>
             Назад
           </button>
-          <button v-if="!isLastQuestion" 
+          <button v-if="!isLastQuestion"
                   @click="validateAndNext"
                   class="nav-btn next-btn"
                   :disabled="!canProceed">
             Вперед
             <span class="btn-icon">→</span>
           </button>
-          <button v-if="isLastQuestion" 
+          <button v-if="isLastQuestion"
                   @click="submitForm"
                   class="nav-btn submit-btn"
                   :disabled="!canProceed || isSubmitting">
@@ -125,7 +125,7 @@
         <div class="thank-you-icon">✓</div>
         <h1>Спасибо за вашу заявку!</h1>
         <p>Мы свяжемся с вами в ближайшее время.</p>
-        <button class="close-btn" @click="$emit('close')">Закрыть</button>
+        <!--        <button class="close-btn" @click="$emit('close')">Закрыть</button>-->
       </div>
     </transition>
   </div>
@@ -133,10 +133,12 @@
 
 <script>
 import axios from "axios";
-import { mask } from 'vue-the-mask';
+import pkg from 'vue-the-mask';
+
+const {mask} = pkg;
 
 export default {
-  directives: { mask },
+  directives: {mask},
   data() {
     return {
       currentQuestion: 0,
@@ -149,49 +151,63 @@ export default {
           question: "Укажите количество играющих гостей",
           type: "radio",
           answers: ["1-6 человек", "6-15 человек", "16 и более человек", "Не знаю"],
-          required: true
+          required: true,
+          fmd: "txt",
+          txt: "Количество игроков"
         },
         {
           question: "Укажите возраст игроков",
           type: "radio",
           answers: ["3-6 лет", "6-10 лет", "10-14 лет", "от 15 либо взрослые", "Сильный разброс"],
-          required: true
+          required: true,
+          fmd: "txt",
+          txt: "Возраст"
         },
         {
           question: "Какие активности вас интересуют?",
           type: "checkbox",
           answers: ["Картинг", "Экшн игры", "Квесты", "Детские квесты", "Лаундж зона", "День рождения", "Корпоратив", "Караоке", "Шоу программы"],
           required: true,
-          minSelections: 1
+          minSelections: 1,
+          fmd: "txt",
+          txt: "Категория"
         },
         {
           question: "Желаемая длительность мероприятия",
           type: "radio",
           answers: ["1-2,5 часа", "2,5-3,5 часа", "4-6 часов"],
-          required: true
+          required: true,
+          fmd: "txt",
+          txt: "Длительность"
         },
         {
           question: "Желаемая дата мероприятия",
           type: "date",
-          required: true
+          required: true,
+          fmd: "txt",
+          txt: "Дата"
         },
         {
           question: "Введите ваше имя",
           type: "text",
           required: true,
           placeholder: "Введите ваше имя",
-          minLength: 2
+          minLength: 2,
+          fmd: "name"
         },
         {
           question: "Введите ваш контактный номер",
           type: "phone",
-          required: true
+          required: true,
+          fmd: "phone"
         },
         {
           question: "Как с вами связаться?",
           type: "radio",
           answers: ["Звонок", "WhatsApp", "Telegram"],
-          required: true
+          required: true,
+          fmd: "txt",
+          txt: "Способ связи"
         }
       ]
     };
@@ -203,11 +219,11 @@ export default {
     canProceed() {
       const currentAnswer = this.selectedAnswers[this.currentQuestion];
       if (!currentAnswer) return false;
-      
+
       if (Array.isArray(currentAnswer)) {
         return currentAnswer.length > 0;
       }
-      
+
       return true;
     }
   },
@@ -292,7 +308,7 @@ export default {
           this.scrollToCenter();
         });
       }
-      
+
     },
     previousQuestion() {
       if (this.currentQuestion > 0) {
@@ -318,7 +334,7 @@ export default {
 
       const answers = this.selectedAnswers[this.currentQuestion];
       const index = answers.indexOf(answer);
-      
+
       if (index === -1) {
         answers.push(answer);
       } else {
@@ -340,18 +356,24 @@ export default {
       this.isSubmitting = true;
       try {
         const formData = new FormData();
+        let txt = "";
         Object.entries(this.selectedAnswers).forEach(([index, value]) => {
           const question = this.questions[index];
-          formData.append(question.question, Array.isArray(value) ? value.join(', ') : value);
+          if (question.fmd == "txt") {
+            txt += `${question.txt}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+          } else {
+            formData.append(question.fmd, value);
+          }
+        });
+        formData.append("textarea", txt);
+
+        const response = await axios.post(import.meta.env.VITE_HOST + '/api/v1/feedback/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
 
-        // const response = await axios.post('https://chezakod.ru/child/form.php', formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // });
-
-        if (response.data.success) {
+        if (response.data.status === "ok") {
           this.currentQuestion++;
         } else {
           throw new Error(response.data.message || 'Ошибка при отправке формы');
@@ -588,6 +610,8 @@ input.error {
 .thank-you-card {
   text-align: center;
   padding: 40px;
+  background: white;
+  border-radius: 25px;
 }
 
 .thank-you-icon {

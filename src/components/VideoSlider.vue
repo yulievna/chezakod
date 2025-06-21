@@ -4,16 +4,16 @@
     <button class="arrow left" @click="prevVideo">❮</button>
     <div class="carousel-container" ref="carousel">
       <div
-        class="video-item"
-        v-for="(video, index) in videos"
-        :key="index"
+          class="video-item"
+          v-for="(video, index) in videos"
+          :key="index"
       >
         <video
-          :src="video.src"
-          autoplay
-          muted
-          loop
-          playsinline
+            :src="video.src"
+            autoplay
+            muted
+            loop
+            playsinline
         ></video>
       </div>
     </div>
@@ -22,14 +22,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import {onMounted, ref} from "vue";
 
 const videos = [
-  { src: "https://chezakod.ru/upload/video/5.mp4" },
-  { src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4" },
-  { src: "https://chezakod.ru/upload/video/5.mp4" },
-  { src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4" },
-    { src: "https://chezakod.ru/upload/video/5.mp4" },
+  {src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"},
+  {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"},
+  {src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"},
+  {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"},
+  {src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"},
 ];
 
 const carousel = ref(null);
@@ -39,7 +39,7 @@ const gap = 20;
 
 const updateCarousel = () => {
   if (!carousel.value) return;
-  
+
   const offset = -currentIndex.value * (videoWidth + gap);
   carousel.value.style.transition = "transform 0.5s ease-in-out";
   carousel.value.style.transform = `translateX(${offset}px)`;
@@ -61,13 +61,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.title{
+.title {
   color: #CF1034;
   font-size: 36px;
   font-weight: 600;
   text-align: center;
   margin-bottom: 30px;
 }
+
 .video-carousel {
   position: relative;
   width: 100%;
@@ -91,7 +92,7 @@ onMounted(() => {
   align-items: center;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
@@ -105,7 +106,7 @@ onMounted(() => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   width: 40px;
@@ -121,7 +122,7 @@ onMounted(() => {
 }
 
 .arrow:hover {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   transform: translateY(-50%) scale(1.1);
 }
 

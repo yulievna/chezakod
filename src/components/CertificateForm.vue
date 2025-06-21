@@ -3,22 +3,22 @@
     <div class="certificate-form__overlay" @click="closeForm"></div>
     <div class="certificate-form__content">
       <button class="certificate-form__close" @click="closeForm">×</button>
-      
+
       <h2 class="certificate-form__title">Заявка на сертификат</h2>
-      
+
       <div v-if="!isSubmitted" class="certificate-form__form">
         <div class="form-group">
           <label for="name">Ваше имя</label>
           <div class="input-wrapper">
-            <input 
-              type="text" 
-              id="name" 
-              v-model="formData.name" 
-              required
-              placeholder="Введите ваше имя"
-              @input="validateField('name')"
-              @blur="validateField('name')"
-              :class="{ 'error': errors.name }"
+            <input
+                type="text"
+                id="name"
+                v-model="formData.name"
+                required
+                placeholder="Введите ваше имя"
+                @input="validateField('name')"
+                @blur="validateField('name')"
+                :class="{ 'error': errors.name }"
             >
             <div class="input-focus-effect"></div>
           </div>
@@ -27,18 +27,18 @@
         <div class="form-group">
           <label for="phone">Телефон</label>
           <div class="input-wrapper">
-            <input 
-              type="tel" 
-              id="phone" 
-              v-model="formData.phone" 
-              v-mask="'+7 (###) ###-##-##'"
-              required
-              placeholder="+7 (___) ___-__-__"
-              @input="handlePhoneInput"
-              @blur="validateField('phone')"
-              @keyup.enter="submitForm"
-              :class="{ 'error': errors.phone }"
-              ref="phoneInput"
+            <input
+                type="tel"
+                id="phone"
+                v-model="formData.phone"
+                v-mask="'+7 (###) ###-##-##'"
+                required
+                placeholder="+7 (___) ___-__-__"
+                @input="handlePhoneInput"
+                @blur="validateField('phone')"
+                @keyup.enter="submitForm"
+                :class="{ 'error': errors.phone }"
+                ref="phoneInput"
             >
             <div class="input-focus-effect"></div>
           </div>
@@ -48,15 +48,15 @@
           <label>Номинал сертификата</label>
           <div class="nominal-selector">
             <div class="nominal-options">
-              <button 
-                v-for="nominal in availableNominals" 
-                :key="nominal"
-                @click="selectNominal(nominal)"
-                :class="{ 
+              <button
+                  v-for="nominal in availableNominals"
+                  :key="nominal"
+                  @click="selectNominal(nominal)"
+                  :class="{
                   'selected': formData.nominal === nominal,
                   'error': errors.nominal
                 }"
-                class="nominal-option"
+                  class="nominal-option"
               >
                 {{ nominal }} ₽
               </button>
@@ -65,11 +65,11 @@
           <span v-if="errors.nominal" class="error-message">{{ errors.nominal }}</span>
         </div>
 
-        <button 
-          type="submit" 
-          class="certificate-form__submit" 
-          @click="submitForm" 
-          :disabled="isSubmitting || !isFormValid"
+        <button
+            type="submit"
+            class="certificate-form__submit"
+            @click="submitForm"
+            :disabled="isSubmitting || !isFormValid"
         >
           {{ isSubmitting ? 'Отправка...' : 'Заказать сертификат' }}
         </button>
@@ -86,8 +86,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
-import { mask } from 'vue-the-mask'
+import {computed, nextTick, ref, watch} from 'vue'
 
 const props = defineProps({
   isOpen: {
@@ -122,9 +121,9 @@ const phoneInput = ref(null)
 const availableNominals = [2500, 3000, 3500]
 
 const isFormValid = computed(() => {
-  return formData.value.name.trim() && 
-         isValidPhone(formData.value.phone) && 
-         formData.value.nominal
+  return formData.value.name.trim() &&
+      isValidPhone(formData.value.phone) &&
+      formData.value.nominal
 })
 
 watch(() => props.isOpen, (newVal) => {
@@ -137,15 +136,15 @@ watch(() => props.isOpen, (newVal) => {
 
 const handlePhoneInput = () => {
   let cleaned = formData.value.phone.replace(/\D/g, '')
-  
+
   if (cleaned.startsWith('8') && cleaned.length === 11) {
     cleaned = '7' + cleaned.slice(1)
   }
-  
+
   if (cleaned.length >= 1) {
     formData.value.phone = `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`
   }
-  
+
   validateField('phone')
 }
 const isValidPhone = (phone) => {
@@ -155,7 +154,7 @@ const isValidPhone = (phone) => {
 
 const validateField = (field) => {
   errors.value[field] = ''
-  
+
   if (field === 'name') {
     if (!formData.value.name.trim()) {
       errors.value.name = 'Введите ваше имя'
@@ -163,7 +162,7 @@ const validateField = (field) => {
       errors.value.name = 'Имя слишком короткое'
     }
   }
-  
+
   if (field === 'phone') {
     if (!formData.value.phone) {
       errors.value.phone = 'Введите номер телефона'
@@ -171,7 +170,7 @@ const validateField = (field) => {
       errors.value.phone = 'Введите корректный номер'
     }
   }
-  
+
   if (field === 'nominal') {
     if (!formData.value.nominal) {
       errors.value.nominal = 'Выберите номинал'
@@ -207,32 +206,32 @@ const submitForm = async () => {
   validateField('name')
   validateField('phone')
   validateField('nominal')
-  
+
   if (Object.values(errors.value).some(error => error)) return
-  
+
   isSubmitting.value = true
-  
+
   try {
     const submitData = {
       ...formData.value,
       phone: formData.value.phone.replace(/\D/g, '')
     }
-    
+
     const formDataToSend = new FormData()
     formDataToSend.append('name', submitData.name)
     formDataToSend.append('phone', submitData.phone)
     formDataToSend.append('nominal', submitData.nominal)
-    
-    const response = await fetch('https://chezakod.ru/api/v1/sert', {
+
+    const response = await fetch(import.meta.env.VITE_HOST + '/api/v1/sert', {
       method: 'POST',
       body: formDataToSend
     })
-    
+
     if (!response.ok) {
       const errorData = await response.json()
       throw new Error(errorData.message || 'Ошибка при отправке формы')
     }
-    
+
     const result = await response.json()
     emit('submit', result)
     isSubmitted.value = true

@@ -1,86 +1,91 @@
 <script setup>
-  import Accordion from '../components/Accordion.vue';
-  import Header from '@/components/Header.vue';
-  import Footer from '@/components/Footer.vue';
-  import Map from '@/components/Map.vue';
-  import ImgSlider from '@/components/ImgSlider.vue';
-  import Review from '@/components/Review.vue';
-  import VideoSlider from "@/components/VideoSlider.vue";
-  import Form from "@/components/Form.vue";
+import Accordion from '../components/Accordion.vue';
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
+import Map from '@/components/Map.vue';
+import ImgSlider from '@/components/ImgSlider.vue';
+import Review from '@/components/Review.vue';
+import VideoSlider from "@/components/VideoSlider.vue";
+import Form from "@/components/Form.vue";
 
-  import discount1 from '@/assets/images/discount1.jpg';
-  import discount2 from '@/assets/images/discount2.jpg';
-  import discount3 from '@/assets/images/discount3.jpg';
-  import discount4 from '@/assets/images/discount4.jpg';
-  import discount5 from '@/assets/images/discount5.jpg';
-  import discount6 from '@/assets/images/discount6.jpg';
-  import discount7 from '@/assets/images/discount7.jpg';
-  import sl2 from '@/assets/images/sl2.jpg';
-  import korporativ from '@/assets/images/korporativ.jpg';
-  import sl3 from '@/assets/images/sl3.jpg';
+import discount1 from '@/assets/images/discount1.jpg';
+import discount2 from '@/assets/images/discount2.jpg';
+import discount3 from '@/assets/images/discount3.jpg';
+import discount4 from '@/assets/images/discount4.jpg';
+import discount5 from '@/assets/images/discount5.jpg';
+import discount6 from '@/assets/images/discount6.jpg';
+import discount7 from '@/assets/images/discount7.jpg';
+import sl2 from '@/assets/images/sl2.jpg';
+import korporativ from '@/assets/images/korporativ.jpg';
+import sl3 from '@/assets/images/sl3.jpg';
 
-  import quests from '@/assets/images/quest__2.jpg';
-  import action from '@/assets/images/action.jpg';
-  import karting from '@/assets/images/chego.jpg';
-  import karaoke from '@/assets/images/party.jpg';
-  import children from '@/assets/images/children.jpg';
+import quests from '@/assets/images/quest__2.jpg';
+import action from '@/assets/images/action.jpg';
+import karting from '@/assets/images/chego.jpg';
+import karaoke from '@/assets/images/party.jpg';
+import children from '@/assets/images/children.jpg';
+import {useHead} from "@unhead/vue";
+
+useHead({
+  title: "Чеширский КОД · корпорация развлечений",
+  titleTemplate: null
+})
+
+const imageUrls = [
+  sl2,
+  korporativ,
+  sl3,
+];
 
 
-  const imageUrls = [
-    sl2,
-    korporativ,
-    sl3,
-  ];
+const imagePrograms = [
+  {
+    src: discount1,
+    alt: 'Легкий четверг',
+    id: 'easy-thursday'
+  },
+  {
+    src: discount2,
+    alt: 'Программа лояльности',
+    id: 'loyalty-program'
+  },
+  {
+    src: discount3,
+    alt: 'Билет',
+    id: 'ticket'
+  },
+  {
+    src: discount4,
+    alt: 'Скидка в день рождения',
+    id: 'birthday'
+  },
+  {
+    src: discount5,
+    alt: 'Акции Party KOD',
+    id: 'party-kod'
+  },
+  {
+    src: discount6,
+    alt: 'Жмурки',
+    id: 'zhmurki'
+  },
+  {
+    src: discount7,
+    alt: 'Классным руководителям',
+    id: 'teachers'
+  }
+];
 
+const videos = [
+  {
+    src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"
+  },
+  {
+    src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"
+  },
+];
 
-  const imagePrograms = [
-    {
-      src: discount1,
-      alt: 'Легкий четверг',
-      id: 'easy-thursday'
-    },
-    {
-      src: discount2,
-      alt: 'Программа лояльности',
-      id: 'loyalty-program'
-    },
-    {
-      src: discount3,
-      alt: 'Билет',
-      id: 'ticket'
-    },
-    {
-      src: discount4,
-      alt: 'Скидка в день рождения',
-      id: 'birthday'
-    },
-    {
-      src: discount5,
-      alt: 'Акции Party KOD',
-      id: 'party-kod'
-    },
-    {
-      src: discount6,
-      alt: 'Жмурки',
-      id: 'zhmurki'
-    },
-    {
-      src: discount7,
-      alt: 'Классным руководителям',
-      id: 'teachers'
-    }
-  ];
-
-  const videos = [
-    {
-      src: "https://chezakod.ru/upload/video/5.mp4"
-    },
-    {
-      src: "https://chezakod.ru/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"
-    },
-  ];
-
-  </script>
+</script>
 
 <template>
   <Header></Header>
@@ -88,7 +93,9 @@
   <section class="main">
     <div class="container">
       <ul class="servises__list">
-        <li class="main-slider"><ImgSlider :images="imageUrls"></ImgSlider></li>
+        <li class="main-slider">
+          <ImgSlider :images="imageUrls"></ImgSlider>
+        </li>
         <router-link
             class="serviсes__el quests"
             to="/quests"
@@ -118,7 +125,9 @@
         >
           <span class="overlay">Картинг</span>
         </a>
-        <li class="programs"><ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider></li>
+        <li class="programs">
+          <ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider>
+        </li>
         <li class="serviсes__el kids-party" :style="{ backgroundImage: `url(${children})` }">
           <router-link class="overlay" to="/">Детские праздники</router-link>
         </li>
@@ -268,18 +277,36 @@
   border-radius: 10px;
 }
 
-.action-games { grid-area: games; }
-.quests { grid-area: quests; }
-.karting { grid-area: karting; }
-.karaoke { grid-area: karaoke; }
+.action-games {
+  grid-area: games;
+}
+
+.quests {
+  grid-area: quests;
+}
+
+.karting {
+  grid-area: karting;
+}
+
+.karaoke {
+  grid-area: karaoke;
+}
+
 .programs {
   grid-area: programs;
   overflow: hidden;
   transition: transform 0.5s ease;
   border-radius: 10px;
 }
-.adult-party { grid-area: adult; }
-.kids-party { grid-area: kids; }
+
+.adult-party {
+  grid-area: adult;
+}
+
+.kids-party {
+  grid-area: kids;
+}
 
 /* Stats */
 .about-stats {
@@ -364,9 +391,10 @@
     margin: 30px auto;
   }
 
-  .serviсes__el{
+  .serviсes__el {
     height: 150px;
   }
+
   .overlay {
     font-size: 32px;
     padding: 8px 12px;
@@ -383,13 +411,15 @@
 }
 
 @media (max-width: 480px) {
-  .container{
+  .container {
     padding: 0 15px;
   }
- .about-stats{
-   display: grid;
-   grid-template-columns: repeat(2, 1fr);
- }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .stat-card:last-child {
     grid-column: 1 / -1;
     justify-self: center;

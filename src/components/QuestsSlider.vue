@@ -7,10 +7,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel/dist/assets/owl.theme.default.css';
-import 'owl.carousel';
+import {nextTick, onMounted, ref} from 'vue';
 
 // Определяем пропсы
 const props = defineProps({
@@ -30,30 +27,32 @@ const setCarouselRef = (el) => {
   carouselRef.value = el;
 };
 
-onMounted(() => {
-  nextTick(() => {
-    if (carouselRef.value) {
-      const owl = $(carouselRef.value).owlCarousel({
-        loop: true,
-        margin: 0,
-        nav: false,
-        dots: true,
-        autoplay: false,
-        autoplayTimeout: 4000,
-        autoplayHoverPause: true,
-        items: 1,
-      });
+onMounted(async () => {
+  await nextTick();
+  await import('owl.carousel/dist/assets/owl.carousel.css');
+  await import('owl.carousel/dist/assets/owl.theme.default.css');
+  await import('owl.carousel');
+  if (carouselRef.value) {
+    const owl = $(carouselRef.value).owlCarousel({
+      loop: true,
+      margin: 0,
+      nav: false,
+      dots: true,
+      autoplay: false,
+      autoplayTimeout: 4000,
+      autoplayHoverPause: true,
+      items: 1,
+    });
 
-      // Добавляем обработчики для точек навигации только для текущей карусели
-      $(carouselRef.value).find('.owl-dot').each(function (index) {
-        $(this).hover(
-            function () {
-              owl.trigger('to.owl.carousel', [index, 300]); // Переключаем слайд
-            }
-        );
-      });
-    }
-  });
+    // Добавляем обработчики для точек навигации только для текущей карусели
+    $(carouselRef.value).find('.owl-dot').each(function (index) {
+      $(this).hover(
+          function () {
+            owl.trigger('to.owl.carousel', [index, 300]); // Переключаем слайд
+          }
+      );
+    });
+  }
 });
 </script>
 

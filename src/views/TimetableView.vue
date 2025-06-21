@@ -1,27 +1,32 @@
 <template>
-  <Header />
+  <Header/>
   <div class="timetable-page">
     <div class="container">
       <h1 class="page-title">Расписание</h1>
-      <TimetableEmbed :questIds="questIds" />
+      <TimetableEmbed :questIds="questIds"/>
     </div>
   </div>
-  <Footer />
+  <Footer/>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {onMounted, ref} from 'vue';
 import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import TimetableEmbed from '@/components/TimetableEmbed.vue';
+import {useHead} from "@unhead/vue";
 
 const questIds = ref([]);
+
+useHead({
+  title: "Расписание"
+});
 
 onMounted(async () => {
   try {
     // Fetch all quests from the API
-    const response = await axios.get('https://chezakod.ru/api/v2/quests/');
+    const response = await axios.get(import.meta.env.VITE_API_URL + '/quests/');
     if (response.data && response.data.result) {
       // Extract quest IDs from the response
       questIds.value = response.data.result.map(quest => quest.id);
@@ -57,7 +62,7 @@ onMounted(async () => {
   .container {
     padding: 0 15px;
   }
-  
+
   .page-title {
     font-size: 24px;
     margin: 20px 0;

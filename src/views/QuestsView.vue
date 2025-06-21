@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import {onMounted, onServerPrefetch, ref} from 'vue';
 import axios from 'axios';
 
 import Header from '@/components/Header.vue';
@@ -8,6 +8,7 @@ import Map from '@/components/Map.vue';
 import Quests from '@/components/Quests.vue';
 import Lounge from '@/components/Lounge.vue';
 import TimetableEmbed from '@/components/TimetableEmbed.vue';
+import {useHead} from "@unhead/vue";
 
 const quests = ref([]);
 const lounges = ref([]);
@@ -16,14 +17,15 @@ const timetableQuestIds = ref([]);
 
 const loadQuests = async (category) => {
   try {
-    const url = category === 'child' 
-      ? 'https://chezakod.ru/api/v2/quests/?category=child'
-      : 'https://chezakod.ru/api/v2/quests/';
-    
+    const url = category === 'child'
+        ? import.meta.env.VITE_API_URL + '/quests/?category=child'
+        : import.meta.env.VITE_API_URL + '/quests/';
+
     const responseQ = await axios.get(url);
     quests.value = responseQ.data.result.map((q) => ({
-      id: q.slug,
+      id: q.id,
       questId: q.id,
+      slug: q.slug,
       name: q.name.replace(/&quot;/g, '"'),
       age: `${q.age_min}+`,
       images: [q.main_image, ...(q.photo || [])],
@@ -39,16 +41,15 @@ const loadQuests = async (category) => {
     console.error('Ошибка при загрузке квестов:', error);
   }
 };
+
 const switchCategory = (category) => {
   activeCategory.value = category;
   loadQuests(category);
 };
 
-onMounted(async () => {
-  await loadQuests('regular');
-  
+const loadLounges = async () => {
   try {
-    const responseL = await axios.get('https://chezakod.ru/api/v2/vip/');
+    const responseL = await axios.get(import.meta.env.VITE_API_URL + '/vip/');
     lounges.value = responseL.data.result.map((l) => ({
       id: l.id,
       photo: l.photo,
@@ -64,16 +65,30 @@ onMounted(async () => {
   } catch (error) {
     console.error('Ошибка при загрузке лаундж-зон:', error);
   }
+};
+
+useHead({
+  title: "Квесты"
+});
+
+onServerPrefetch(async () => {
+  await loadQuests('regular');
+  await loadLounges();
+})
+
+onMounted(async () => {
+  await loadQuests('regular');
+  await loadLounges();
 
   // Load timetable script
   const script = document.createElement('script');
-  script.src = 'https://chezakod.ru/f/build/embed.js';
+  script.src = import.meta.env.VITE_HOST + '/f/build/embed.js';
   script.async = true;
   document.body.appendChild(script);
 });
 </script>
 <template>
-  <Header />
+  <Header/>
   <div class="quests-page">
     <div class="container">
       <h1 class="page-title">Квесты</h1>
@@ -101,17 +116,17 @@ onMounted(async () => {
   <section class="schedule">
     <div class="container">
       <h1 class="title">Расписание</h1>
-      <TimetableEmbed :questIds="timetableQuestIds" />
+      <TimetableEmbed :questIds="timetableQuestIds"/>
     </div>
   </section>
   <section class="lounges" id="lounges">
     <div class="container">
       <h2 class="page-title">Лаундж зоны</h2>
-      <Lounge :lounges="lounges" />
+      <Lounge :lounges="lounges"/>
     </div>
   </section>
-  <Map />
-  <Footer />
+  <Map/>
+  <Footer/>
 </template>
 
 <style scoped>
@@ -160,9 +175,11 @@ onMounted(async () => {
 .title {
   margin: 3rem auto;
 }
-.lounges{
+
+.lounges {
   margin-bottom: 1.5rem;
 }
+
 @media (max-width: 768px) {
   .page-title, .title {
     margin: 1.5rem auto;

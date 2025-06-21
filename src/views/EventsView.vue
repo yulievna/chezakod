@@ -1,20 +1,22 @@
 <template>
   <div class="events-page">
-    <Header />
+    <Header/>
 
     <!-- Hero Section -->
-    <section 
-      class="hero"
-      :class="activeEventType"
+    <section
+        class="hero"
+        :class="activeEventType"
     >
       <div class="container">
         <h1 class="hero__title">
           {{ activeEventType === 'corporate' ? 'Корпоратив от Чеширского' : 'День рождения с квестами' }}
         </h1>
         <p class="hero__subtitle">
-          {{ activeEventType === 'corporate'
-            ? 'Незабываемые мероприятия для вашей команды'
-            : 'Лучшие шоу и квесты для детей' }}
+          {{
+            activeEventType === 'corporate'
+                ? 'Незабываемые мероприятия для вашей команды'
+                : 'Лучшие шоу и квесты для детей'
+          }}
         </p>
       </div>
     </section>
@@ -23,15 +25,15 @@
     <section class="event-type-toggle">
       <div class="container">
         <div class="toggle-buttons">
-          <button 
-            :class="{ 'active': activeEventType === 'corporate' }" 
-            @click="switchToCorporate()"
+          <button
+              :class="{ 'active': activeEventType === 'corporate' }"
+              @click="switchToCorporate()"
           >
             Корпоративы
           </button>
-          <button 
-            :class="{ 'active': activeEventType === 'birthday' }" 
-            @click="switchToBirthday()"
+          <button
+              :class="{ 'active': activeEventType === 'birthday' }"
+              @click="switchToBirthday()"
           >
             Дни рождения
           </button>
@@ -47,20 +49,20 @@
           <div class="main-info">
             <div class="card">
               <h2 class="card__title">САЛАТ-ШОУ на Вашем празднике</h2>
-              
+
               <div class="shows-list">
                 <h3 class="section-title">Корпоратив по мотивам популярных ТВ-шоу:</h3>
                 <div class="shows-grid">
-                  <div 
-                    v-for="(show, index) in shows" 
-                    :key="'show-'+index" 
-                    class="show-card"                    
-                    :class="{
+                  <div
+                      v-for="(show, index) in shows"
+                      :key="'show-'+index"
+                      class="show-card"
+                      :class="{
                       'show-card--active': activeShow === index,
                       'show-card--even': index % 2 === 0,
                       'show-card--odd': index % 2 !== 0
-                    }" 
-                    @click="selectShow(index)"
+                    }"
+                      @click="selectShow(index)"
                   >
                     <div class="show-card__icon">
                       <img :src="show.icon" :alt="show.name" loading="lazy">
@@ -75,13 +77,14 @@
 
               <div class="description">
                 <p class="highlight-text">
-                  Мы смешали лучшие игровые моменты, пропитали интригой, приправили харизмой ведущего и украсили усами Якубовича. 
+                  Мы смешали лучшие игровые моменты, пропитали интригой, приправили харизмой ведущего и украсили усами
+                  Якубовича.
                   САЛАТ-ШОУ на Ваш праздник готов! Крутите барабан!
                 </p>
               </div>
             </div>
             <div class="slider-section">
-              <ImgSlider :images="eventImages" />
+              <ImgSlider :images="eventImages"/>
             </div>
           </div>
 
@@ -90,13 +93,13 @@
             <div class="card">
               <h3 class="card__title">КАК ПРОХОДИТ?</h3>
               <div class="process-steps">
-                <div 
-                  v-for="(step, index) in steps" 
-                  :key="'step-'+index" 
-                  class="step"
-                  :class="{ 'step--active': activeStep === index }"
-                  @mouseenter="setActiveStep(index)"
-                  @mouseleave="resumeAutoSlide()"
+                <div
+                    v-for="(step, index) in steps"
+                    :key="'step-'+index"
+                    class="step"
+                    :class="{ 'step--active': activeStep === index }"
+                    @mouseenter="setActiveStep(index)"
+                    @mouseleave="resumeAutoSlide()"
                 >
                   <div class="step__number">{{ index + 1 }}</div>
                   <p>{{ step.description }}</p>
@@ -104,10 +107,10 @@
               </div>
               <div class="steps-slider">
                 <transition name="fade" mode="out-in">
-                  <div 
-                    v-if="steps[activeStep]"
-                    :key="'step-image-'+activeStep"
-                    class="steps-slider__image steps-slider__image--active"
+                  <div
+                      v-if="steps[activeStep]"
+                      :key="'step-image-'+activeStep"
+                      class="steps-slider__image steps-slider__image--active"
                   >
                     <img :src="steps[activeStep].image" :alt="steps[activeStep].description" loading="lazy">
                   </div>
@@ -118,18 +121,18 @@
             <div class="card">
               <h3 class="card__title">СКОЛЬКО ДЛИТСЯ?</h3>
               <div class="duration-options">
-                <div 
-                  class="duration-option" 
-                  :class="{ 'duration-option--active': selectedDuration === '1h' }" 
-                  @click="selectedDuration = '1h'"
+                <div
+                    class="duration-option"
+                    :class="{ 'duration-option--active': selectedDuration === '1h' }"
+                    @click="selectedDuration = '1h'"
                 >
                   <h4>1 час</h4>
                   <p>6-8 шоу</p>
                 </div>
-                <div 
-                  class="duration-option" 
-                  :class="{ 'duration-option--active': selectedDuration === '1.5h' }" 
-                  @click="selectedDuration = '1.5h'"
+                <div
+                    class="duration-option"
+                    :class="{ 'duration-option--active': selectedDuration === '1.5h' }"
+                    @click="selectedDuration = '1.5h'"
                 >
                   <h4>1.5 часа</h4>
                   <p>8-10 шоу</p>
@@ -141,15 +144,15 @@
               <h3 class="card__title">СКОЛЬКО СТОИТ?</h3>
               <div class="pricing-tabs">
                 <div class="tabs-header">
-                  <button 
-                    :class="{ 'active': activeTab === 'weekday' }" 
-                    @click="activeTab = 'weekday'"
+                  <button
+                      :class="{ 'active': activeTab === 'weekday' }"
+                      @click="activeTab = 'weekday'"
                   >
                     Будни
                   </button>
-                  <button 
-                    :class="{ 'active': activeTab === 'weekend' }" 
-                    @click="activeTab = 'weekend'"
+                  <button
+                      :class="{ 'active': activeTab === 'weekend' }"
+                      @click="activeTab = 'weekend'"
                   >
                     Выходные
                   </button>
@@ -184,7 +187,8 @@
             <div class="card">
               <h3 class="card__title">ГДЕ ПРОХОДИТ?</h3>
               <div class="location-info">
-                <p>Шоу может проходить на любых площадках Чеширский код. Мы подбираем подходящее под Ваше мероприятие помещение на одном из наших филиалов.</p>
+                <p>Шоу может проходить на любых площадках Чеширский код. Мы подбираем подходящее под Ваше мероприятие
+                  помещение на одном из наших филиалов.</p>
                 <p class="highlight">Стоимость аренды в этом случае дополнительно НЕ оплачивается.</p>
                 <p>Так же возможен выезд на вашу площадку.</p>
                 <p class="highlight">Стоимость выезда за пределы Красноярска +3000₽</p>
@@ -205,16 +209,16 @@
               <div class="step-number">1</div>
               <h2>Выберите игры</h2>
               <p class="step-description">
-                Активные и интеллектуальные развлечения сделают детский праздник запоминающимся и необычным. 
+                Активные и интеллектуальные развлечения сделают детский праздник запоминающимся и необычным.
                 А наш менеджер поможет разработать идеальный игровой сценарий для детей!
               </p>
             </div>
-            
+
             <div class="games-grid">
-              <div 
-                v-for="game in games" 
-                :key="'game-'+game.id" 
-                class="game-card"
+              <div
+                  v-for="game in games"
+                  :key="'game-'+game.id"
+                  class="game-card"
               >
                 <img :src="game.image" :alt="game.title" loading="lazy">
                 <div class="game-card__content">
@@ -233,12 +237,15 @@
               <img src="@/assets/images/lounge.png" alt="Иконка зала" loading="lazy" class="lounge-icon">
               <h2>Выберите Lounge зону для праздника</h2>
               <p class="step-description">
-                Уютная зона, где можно расслабиться как после игры, так и во время неё. Родители могут наблюдать за игрой или просто отдохнуть, пока дети участвуют в экшн-квесте. Сервированная стеклянной посудой, с чаем и кипятком — всё готово для комфортного празднования. Вам остается только принести любимые угощения и напитки. Отличное решение для дней рождения, семейных мероприятий и корпоративов!
+                Уютная зона, где можно расслабиться как после игры, так и во время неё. Родители могут наблюдать за
+                игрой или просто отдохнуть, пока дети участвуют в экшн-квесте. Сервированная стеклянной посудой, с чаем
+                и кипятком — всё готово для комфортного празднования. Вам остается только принести любимые угощения и
+                напитки. Отличное решение для дней рождения, семейных мероприятий и корпоративов!
               </p>
               <router-link to="/quests#lounges" class="btn-more">Посмотреть залы</router-link>
 
             </div>
-            
+
 
           </div>
 
@@ -251,12 +258,12 @@
                 Сделайте праздник еще более особенным с нашими дополнительными услугами
               </p>
             </div>
-            
+
             <div class="services-grid">
-              <div 
-                v-for="service in additionalServices" 
-                :key="'service-'+service.id" 
-                class="service-card"
+              <div
+                  v-for="service in additionalServices"
+                  :key="'service-'+service.id"
+                  class="service-card"
               >
                 <div class="service-card__icon">
                   <img :src="service.icon" :alt="service.name" loading="lazy">
@@ -278,9 +285,9 @@
                 Оставьте заявку, и наш менеджер свяжется с вами для уточнения деталей
               </p>
             </div>
-            
+
             <div class="booking-form">
-              <Form />
+              <Form/>
             </div>
           </div>
         </div>
@@ -299,17 +306,18 @@
       </div>
     </section>
 
-    <Footer />
+    <Footer/>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import {onMounted, onServerPrefetch, ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import ImgSlider from '@/components/ImgSlider.vue'
 import Form from '@/components/Form.vue'
 import axios from 'axios'
+import {useHead} from "@unhead/vue";
 
 // Import images
 import korporativ from '@/assets/images/korporativ.jpg'
@@ -361,7 +369,7 @@ const steps = [
   },
   {
     description: 'Играете в выпавшее шоу',
-    image: korporativ7 
+    image: korporativ7
   }
 ]
 
@@ -428,7 +436,7 @@ const additionalServices = [
     description: 'Аниматор – добрый персонаж квеста – в игровой форме поможет детям справиться с трудными задачами, сложными переходами и сюжетной линией',
     icon: animator
   }
-  
+
 ]
 const games = [
   {
@@ -448,7 +456,7 @@ const games = [
   {
     id: 3,
     title: 'Шоу-программы',
-    description: 'Увлекательные интерактивные шоу с аниматорами, конкурсами и сюрпризами', 
+    description: 'Увлекательные интерактивные шоу с аниматорами, конкурсами и сюрпризами',
     image: showImage,
     link: '/show-programs'
   }
@@ -492,10 +500,9 @@ const switchToBirthday = () => {
   activeEventType.value = 'birthday'
 }
 
-// Lifecycle hooks
-onMounted(async () => {
+const init = async () => {
   try {
-    const responseL = await axios.get('https://chezakod.ru/api/v2/vip/')
+    const responseL = await axios.get(import.meta.env.VITE_API_URL + '/vip/')
     lounges.value = responseL.data.result.map((l) => ({
       id: l.id,
       photo: l.photo,
@@ -523,7 +530,15 @@ onMounted(async () => {
     ]
   }
   startAutoSlide()
-})
+};
+// Lifecycle hooks
+
+useHead({
+  title: "Мероприятия"
+});
+
+onMounted(init);
+onServerPrefetch(init);
 
 // onBeforeUnmount(() => {
 //   stopAutoSlide()
@@ -586,6 +601,7 @@ onMounted(async () => {
   justify-content: center;
   gap: 20px;
 }
+
 .slider-section {
   grid-column: span 2;
   width: 100%;
@@ -593,6 +609,7 @@ onMounted(async () => {
   height: 830px;
   margin: 0 auto;
 }
+
 .toggle-buttons button {
   padding: 15px 30px;
   border: 2px solid #CF1034;
@@ -933,21 +950,23 @@ onMounted(async () => {
   background: white;
   color: #CF1034;
 }
-.steps-slider__image img{
+
+.steps-slider__image img {
   border-radius: 10px;
   margin-top: 20px;
 }
+
 /* Responsive styles */
 @media (max-width: 1200px) {
   .container {
     padding: 0 20px;
   }
-  
+
   .content-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .shows-grid {
     grid-template-columns: repeat(2, 1fr);
   }

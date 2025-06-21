@@ -2,7 +2,7 @@
   <section class="reviews-container">
     <div class="reviews-title">
       <h2>Отзывы наших клиентов на </h2>
-      <img class="gis" src="@/assets/images/Light_ENG2x.png" alt="2GIS" loading="lazy" />
+      <img class="gis" src="@/assets/images/Light_ENG2x.png" alt="2GIS" loading="lazy"/>
     </div>
 
     <div class="carousel-container">
@@ -12,11 +12,9 @@
 
       <div class="reviews-wrapper" ref="carousel">
         <div
-          class="review-card"
-          v-for="(review, index) in duplicatedReviews"
-          :key="index"
-          :class="{ 'active': currentIndex === index }"
-          @click="selectReview(index)"
+            class="review-card active"
+            v-for="(review, index) in duplicatedReviews"
+            :key="index"
         >
           <div class="review-header">
             <div class="review-avatar">
@@ -28,11 +26,11 @@
             </div>
             <span class="review-rating">
               <span
-                v-for="star in 5"
-                :key="star"
-                class="star"
-                :class="{ filled: star <= review.rating }"
-                >★</span
+                  v-for="star in 5"
+                  :key="star"
+                  class="star"
+                  :class="{ filled: star <= review.rating }"
+              >★</span
               >
             </span>
           </div>
@@ -51,19 +49,19 @@
 
     <div class="carousel-dots">
       <button
-        v-for="(_, index) in reviews"
-        :key="index"
-        class="dot"
-        :class="{ active: currentIndex === index }"
-        @click="goToReview(index)"
-        :aria-label="'Go to review ' + (index + 1)"
+          v-for="(_, index) in reviews"
+          :key="index"
+          class="dot"
+          :class="{ active: currentIndex === index }"
+          @click="goToReview(index)"
+          :aria-label="'Go to review ' + (index + 1)"
       ></button>
     </div>
   </section>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import {onMounted, ref} from "vue";
 
 export default {
   name: "ReviewsCarousel",
@@ -297,9 +295,11 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.reviews-title img{
+
+.reviews-title img {
   width: 120px;
 }
+
 .carousel-container {
   display: flex;
   align-items: center;
@@ -307,11 +307,13 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.review-link{
+
+.review-link {
   align-self: start;
   color: #869791;
   margin-top: auto;
 }
+
 .reviews-wrapper {
   display: flex;
   gap: 15px;
@@ -342,7 +344,7 @@ export default {
 }
 
 .review-name {
-  color: #000;
+  color: white;
 }
 
 .review-rating .star {
@@ -388,6 +390,7 @@ export default {
 .arrow.right {
   right: 10px;
 }
+
 /* Адаптив для мобильных устройств */
 @media (max-width: 768px) {
   .reviews-container {

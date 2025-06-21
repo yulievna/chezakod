@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue';
+import {onMounted, watch} from 'vue';
 
 const props = defineProps({
   questIds: {
@@ -16,14 +16,14 @@ const props = defineProps({
 
 const loadTimetableScript = () => {
   // Remove existing script if any
-  const existingScript = document.querySelector('script[src="https://chezakod.ru/f/build/embed.js"]');
+  const existingScript = document.querySelector(`script[src="${import.meta.env.VITE_HOST}/f/build/embed.js"]`);
   if (existingScript) {
     existingScript.remove();
   }
 
   // Create and append new script
   const script = document.createElement('script');
-  script.src = 'https://chezakod.ru/f/build/embed.js';
+  script.src = `${import.meta.env.VITE_HOST}/f/build/embed.js`;
   script.async = true;
   document.body.appendChild(script);
 };
@@ -44,7 +44,8 @@ watch(() => props.questIds, () => {
   min-height: 100px;
 
 }
-.timetable{
-    border-radius: 10px;
+
+.timetable {
+  border-radius: 10px;
 }
 </style> 

@@ -1,7 +1,7 @@
 <template>
-    <Header></Header>
+  <Header></Header>
   <div class="promotions">
-    
+
 
     <nav class="promotions__nav">
       <ul class="promotions__nav-list">
@@ -65,7 +65,7 @@
             <h2 class="promotion-card__title">Программа лояльности «Чеширский Код»</h2>
           </div>
           <p class="promotion-card__description">
-            Во всех филиалах сети «Чеширский Код» действует единая программа лояльности для гостей. 
+            Во всех филиалах сети «Чеширский Код» действует единая программа лояльности для гостей.
             Посещая нас, вы копите баллы в своём аккаунте Telegram-бота. 1 балл = 1 рубль.
           </p>
           <div class="promotion-card__details">
@@ -78,16 +78,20 @@
               </ul>
             </div>
             <div class="promotion-card__bonus">
-              <h3 class="promotion-card__subtitle">При каждом посещении компании ваш бонусный баланс будет увеличиваться:</h3>
+              <h3 class="promotion-card__subtitle">При каждом посещении компании ваш бонусный баланс будет
+                увеличиваться:</h3>
               <ul class="promotion-card__bonus-list">
                 <li>+ 5% вернётся баллами от стоимости квестов, экшн-игр, заездов на картинге, лофт-караоке</li>
-                <li>+ 1% - от стоимости любых других услуг – аренда залов, шоу-программы, дополнительные услуги и т.д.</li>
+                <li>+ 1% - от стоимости любых других услуг – аренда залов, шоу-программы, дополнительные услуги и т.д.
+                </li>
               </ul>
             </div>
             <div class="promotion-card__restrictions">
               <h3 class="promotion-card__subtitle">Ограничения:</h3>
               <ul class="promotion-card__restrictions-list">
-                <li>Вывести баллы для оплаты товаров и услуг компаний, не принадлежащих корпорации «Чеширский Код», или обналичить их нельзя;</li>
+                <li>Вывести баллы для оплаты товаров и услуг компаний, не принадлежащих корпорации «Чеширский Код», или
+                  обналичить их нельзя;
+                </li>
                 <li>Списать баллы возможно при бронировании по телефону 2-333-999 и на сайте chezakod.ru;</li>
                 <li>Баллы не суммируются с другими акциями.</li>
               </ul>
@@ -156,7 +160,9 @@
             <div class="promotion-card__conditions-wrapper">
               <h3 class="promotion-card__subtitle">Условия акции:</h3>
               <ul class="promotion-card__conditions">
-                <li>Скидка действительна при условии предъявления паспорта или свидетельства о рождении администратору на локации.</li>
+                <li>Скидка действительна при условии предъявления паспорта или свидетельства о рождении администратору
+                  на локации.
+                </li>
                 <li>Срок действия скидки – 3 дня до и 3 дня после дня рождения.</li>
                 <li>Не распространяется на дополнительные услуги.</li>
                 <li>Скидки и акции не суммируются.</li>
@@ -191,7 +197,9 @@
               <h3 class="promotion-card__subtitle">Акции:</h3>
               <ul class="promotion-card__conditions">
                 <li>Пятый час в подарок.</li>
-                <li>10% скидка имениннику. Действует 3 дня до и 3 дня после дня рождения, распространяется на аренду залов.</li>
+                <li>10% скидка имениннику. Действует 3 дня до и 3 дня после дня рождения, распространяется на аренду
+                  залов.
+                </li>
                 <li>Для получения скидки необходимо предоставить подтверждающий документ.</li>
                 <li>Акции и скидки не суммируются.</li>
               </ul>
@@ -225,7 +233,9 @@
               <h3 class="promotion-card__subtitle">Условия акции:</h3>
               <ul class="promotion-card__conditions">
                 <li>Стоимость игры рассчитывается по количеству участников в команде, без учета именинника.</li>
-                <li>Скидка действительна при условии предъявления паспорта или свидетельства о рождении администратору на локации.</li>
+                <li>Скидка действительна при условии предъявления паспорта или свидетельства о рождении администратору
+                  на локации.
+                </li>
                 <li>Срок действия акции – 3 дня до и 3 дня после дня рождения.</li>
                 <li>Скидка распространяется на команды от 5 игроков.</li>
                 <li>Скидки и акции не суммируются.</li>
@@ -256,8 +266,12 @@
             <div class="promotion-card__features-wrapper">
               <h3 class="promotion-card__subtitle">Наши возможности:</h3>
               <ul class="promotion-card__features">
-                <li>Различные форматы игр, банкетные залы и все необходимое для Вашего мероприятия есть в любом из наших филиалов: Алексеева, Мира, Робеспьера, Комсомолл на Белинского.</li>
-                <li>Нужна активность на вашей территории? Ведущие, диджеи и фотографы Чеширского приедут к Вам со своей программой.</li>
+                <li>Различные форматы игр, банкетные залы и все необходимое для Вашего мероприятия есть в любом из наших
+                  филиалов: Алексеева, Мира, Робеспьера, Комсомолл на Белинского.
+                </li>
+                <li>Нужна активность на вашей территории? Ведущие, диджеи и фотографы Чеширского приедут к Вам со своей
+                  программой.
+                </li>
                 <li>Для классов действуют специальные цены!</li>
               </ul>
             </div>
@@ -276,17 +290,23 @@
     </div>
 
     <div class="promotions__note">
-      <p>Скидки и акции не суммируются. Все сертификаты/купоны/флаера/прочие рекламные и скидочные инструменты действуют только при бронировании на официальном сайте chezakod.ru или по телефону +7 (391) 269-92-23</p>
+      <p>Скидки и акции не суммируются. Все сертификаты/купоны/флаера/прочие рекламные и скидочные инструменты действуют
+        только при бронировании на официальном сайте chezakod.ru или по телефону +7 (391) 269-92-23</p>
     </div>
   </div>
   <Footer></Footer>
 </template>
 
-<script setup> 
-import { onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+<script setup>
+import {onMounted, watch} from 'vue';
+import {useRoute} from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import {useHead} from "@unhead/vue";
+
+useHead({
+  title: "Акции"
+});
 
 const route = useRoute();
 
@@ -294,7 +314,7 @@ const scrollToPromotion = (hash) => {
   if (hash) {
     const element = document.getElementById(hash.slice(1));
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({behavior: 'smooth'});
     }
   }
 };
@@ -308,7 +328,7 @@ onMounted(() => {
       e.preventDefault();
       const targetId = this.getAttribute('href');
       const targetElement = document.querySelector(targetId);
-      
+
       if (targetElement) {
         targetElement.scrollIntoView({
           behavior: 'smooth',
@@ -331,7 +351,7 @@ onMounted(() => {
         });
       }
     });
-  }, { threshold: 0.5 });
+  }, {threshold: 0.5});
 
   document.querySelectorAll('.promotion-card').forEach(card => {
     observer.observe(card);
@@ -608,9 +628,10 @@ watch(() => route.hash, (newHash) => {
 }
 
 @media (max-width: 768px) {
-  .promotions{
+  .promotions {
     padding: 0;
   }
+
   .promotions__nav {
     display: none;
   }

@@ -8,7 +8,8 @@
       {{ error }}
     </div>
     <div v-else-if="game" class="game-info">
-      <div class="game-header" :style="{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${headerImage})` }">
+      <div class="game-header"
+           :style="{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url(${headerImage})` }">
         <div class="container">
           <span class="age">{{ game.age_min }}+</span>
 
@@ -19,15 +20,15 @@
             </div>
             <div class="game-chars">
               <div class="char-item">
-                <img :src="players" alt="Players" />
+                <img :src="players" alt="Players"/>
                 <span>{{ game.players.min }}-{{ game.players.max }}</span>
               </div>
               <div class="char-item">
-                <img :src="time" alt="Time" />
+                <img :src="time" alt="Time"/>
                 <span>{{ game.duration }} мин</span>
               </div>
               <div class="char-item">
-                <img :src="difficulty" alt="Difficulty" />
+                <img :src="difficulty" alt="Difficulty"/>
                 <span>Легкий</span>
               </div>
             </div>
@@ -38,7 +39,7 @@
       <div class="container">
         <div class="game-content">
           <div class="slider">
-            <ImgSlider :images="game.photo" />
+            <ImgSlider :images="game.photo"/>
           </div>
 
           <div class="game-details">
@@ -53,9 +54,9 @@
               <h3>Дополнительные услуги</h3>
               <div class="services-list">
                 <div
-                  v-for="service in game.additional_services"
-                  :key="service.id"
-                  class="service-item"
+                    v-for="service in game.additional_services"
+                    :key="service.id"
+                    class="service-item"
                 >
                   <span class="service-name">{{ service.name }}</span>
                   <span class="service-price">{{ service.price }} ₽</span>
@@ -75,7 +76,7 @@
             <h3>Локация</h3>
             <p>{{ game.location.address }}</p>
             <div class="contact-info">
-              <a  :href="game.location.links['2gis']" target="_blank" class="location-link">2GIS</a>
+              <a :href="game.location.links['2gis']" target="_blank" class="location-link">2GIS</a>
               <a :href="game.location.links.ymaps" target="_blank" class="location-link">Яндекс Карты</a>
             </div>
           </div>
@@ -86,7 +87,7 @@
       <section class="schedule">
         <div class="container">
           <h2 class="title">Расписание</h2>
-          <TimetableEmbed :questIds="[game.id]" />
+          <TimetableEmbed :questIds="[game.id]"/>
         </div>
       </section>
     </div>
@@ -95,8 +96,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import {computed, onMounted, onServerPrefetch, ref} from 'vue';
+import {useRoute} from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import TimetableEmbed from '@/components/TimetableEmbed.vue';
@@ -106,30 +107,41 @@ import ImgSlider from '@/components/ImgSlider.vue';
 import players from '@/assets/images/players.png';
 import time from '@/assets/images/time.png';
 import difficulty from '@/assets/images/difficulty.png';
+import {useHead} from "@unhead/vue";
 
 const route = useRoute();
 const game = ref(null);
 const loading = ref(true);
 const error = ref(null);
+const head = ref({
+  title: "Загрузка...",
+  description: "",
+  titleTemplate: null
+});
 
 // Текущая игра
 const gameId = computed(() => route.params.id);
 const headerImage = computed(() => game.value?.main_image);
 
-onMounted(async () => {
+const init = async () => {
   try {
     loading.value = true;
     error.value = null;
-    
-    const response = await fetch('https://chezakod.ru/api/v2/quests/?category=action');
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/quests/?slug=${gameId.value}`);
     const data = await response.json();
-    
+
     if (!data.status) {
       throw new Error(data.error || 'Ошибка при загрузке данных');
     }
-    
-    game.value = data.result.find((g) => g.id.toString() === gameId.value);
-    
+
+    game.value = data.result;
+    head.value = {
+      title: game.value.name,
+      description: game.value.description,
+      titleTemplate: "%s %sep экшн-игра %sep %siteName"
+    };
+
     if (!game.value) {
       throw new Error('Игра не найдена');
     }
@@ -139,7 +151,17 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
+}
+
+useHead({
+  title: computed(() => head.value.title),
+  titleTemplate: computed(() => head.value.titleTemplate),
+})
+
+onMounted(init);
+
+onServerPrefetch(init);
+
 </script>
 
 <style scoped>

@@ -1,29 +1,29 @@
 <template>
-  <Header />
+  <Header/>
   <section class="action-games">
     <div class="container">
       <h1 class="page-title">Экшн Игры</h1>
-      <Quests :quests="actionGames" basePath="/action-games" />
+      <Quests :quests="actionGames" basePath="/action-games"/>
     </div>
   </section>
   <section class="schedule">
     <div class="container">
       <h2 class="page-title">Расписание</h2>
-      <TimetableEmbed :questIds="timetableQuestIds" />
+      <TimetableEmbed :questIds="timetableQuestIds"/>
     </div>
   </section>
   <section class="lounges">
     <div class="container">
       <h2 class="page-title">Лаундж зоны</h2>
-      <Lounge :lounges="lounges" />
+      <Lounge :lounges="lounges"/>
     </div>
   </section>
-  <Map />
-  <Footer />
+  <Map/>
+  <Footer/>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {onMounted, onServerPrefetch, ref} from 'vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Quests from '@/components/Quests.vue';
@@ -40,11 +40,16 @@ import img5 from '@/assets/images/jmurki2.jpg';
 import img6 from '@/assets/images/jmurki3.jpg';
 import img7 from '@/assets/images/playkod1.jpeg';
 import img8 from '@/assets/images/playkod2.jpeg';
+import {useHead} from "@unhead/vue";
 
+useHead({
+  title: "Экшн-игры"
+})
 
 const actionGames = ref([
   {
     id: "14428",
+    slug: "zhmurki",
     name: "Жмурки",
     age: "12+",
     players: "4-4",
@@ -56,6 +61,7 @@ const actionGames = ref([
   },
   {
     id: "11519850",
+    slug: "action-kod",
     name: "ACTION:KOD",
     age: "14+",
     players: "2-4",
@@ -67,10 +73,11 @@ const actionGames = ref([
   },
   {
     id: "12507544",
+    slug: "play-kod",
     name: "PLAY KOD",
     age: "3+",
     players: "1-6",
-    time: "50 мин", 
+    time: "50 мин",
     difficulty: "Легкий",
     images: [img7, img8],
     address: "ул. Ленина, 1",
@@ -80,11 +87,9 @@ const actionGames = ref([
 const lounges = ref([]);
 const timetableQuestIds = ref(['14428', '11519850', '12507544']);
 
-
-onMounted(async () => {
-
+const loadLounges = async () => {
   try {
-    const responseL = await axios.get('https://chezakod.ru/api/v2/vip/');
+    const responseL = await axios.get(import.meta.env.VITE_API_URL + '/vip/');
     lounges.value = responseL.data.result.map((l) => ({
       id: l.id,
       photo: l.photo,
@@ -100,19 +105,27 @@ onMounted(async () => {
   } catch (error) {
     console.error('Ошибка при загрузке лаундж-зон:', error);
   }
+};
+
+onServerPrefetch(loadLounges);
+
+onMounted(async () => {
+
+  await loadLounges();
 
   // Load timetable script
   const script = document.createElement('script');
-  script.src = 'https://chezakod.ru/f/build/embed.js';
+  script.src = import.meta.env.VITE_HOST + '/f/build/embed.js';
   script.async = true;
   document.body.appendChild(script);
 });
 </script>
 
 <style scoped>
-.lounges{
+.lounges {
   margin-bottom: 1.5rem;
 }
+
 .container {
   width: 100%;
   max-width: 1200px;

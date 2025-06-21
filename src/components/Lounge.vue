@@ -3,10 +3,10 @@
     <div class="container">
       <div class="lounge__list">
         <div
-          v-for="lounge in lounges"
-          :key="lounge.id"
-          class="lounge__el"
-          :style="{ backgroundImage: `url(${lounge.photo[0] || lounge.image})` }"
+            v-for="lounge in lounges"
+            :key="lounge.id"
+            class="lounge__el"
+            :style="{ backgroundImage: `url(${lounge.photo[0] || lounge.image})` }"
         >
           <div class="lounge__overlay">
             <div class="lounge__info">
@@ -14,26 +14,26 @@
                 {{ lounge.location?.address || lounge.address }}
               </div>
               <div class="lounge__links">
-                <a 
-                  v-if="lounge.location?.links?.ymaps" 
-                  :href="lounge.location.links.ymaps" 
-                  target="_blank" 
-                  class="lounge__map-link"
+                <a
+                    v-if="lounge.location?.links?.ymaps"
+                    :href="lounge.location.links.ymaps"
+                    target="_blank"
+                    class="lounge__map-link"
                 >
                   Яндекс Карты
                 </a>
-                <a 
-                  v-if="lounge.location?.links?.['2gis']" 
-                  :href="lounge.location.links['2gis']" 
-                  target="_blank" 
-                  class="lounge__map-link"
+                <a
+                    v-if="lounge.location?.links?.['2gis']"
+                    :href="lounge.location.links['2gis']"
+                    target="_blank"
+                    class="lounge__map-link"
                 >
                   2GIS
                 </a>
               </div>
-              <button 
-                class="lounge__book-btn"
-                @click="openGallery(lounge)"
+              <button
+                  class="lounge__book-btn"
+                  @click="openGallery(lounge)"
               >
                 Посмотреть
               </button>
@@ -48,34 +48,34 @@
       <div class="gallery-modal__content" @click.stop>
         <button class="gallery-modal__close" @click="closeGallery">&times;</button>
         <div class="gallery-modal__main">
-          <button 
-            class="gallery-modal__arrow gallery-modal__arrow--prev"
-            @click="prevPhoto"
-            :disabled="currentPhotoIndex === 0"
+          <button
+              class="gallery-modal__arrow gallery-modal__arrow--prev"
+              @click="prevPhoto"
+              :disabled="currentPhotoIndex === 0"
           >
             &#10094;
           </button>
-          <img 
-            :src="currentPhoto" 
-            :alt="selectedLounge.location?.name || 'Лаундж зона'"
-            class="gallery-modal__image"
+          <img
+              :src="currentPhoto"
+              :alt="selectedLounge.location?.name || 'Лаундж зона'"
+              class="gallery-modal__image"
           >
-          <button 
-            class="gallery-modal__arrow gallery-modal__arrow--next"
-            @click="nextPhoto"
-            :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
+          <button
+              class="gallery-modal__arrow gallery-modal__arrow--next"
+              @click="nextPhoto"
+              :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
           >
             &#10095;
           </button>
         </div>
         <div class="gallery-modal__thumbnails">
-          <img 
-            v-for="(photo, index) in selectedLounge.photo" 
-            :key="index"
-            :src="photo"
-            :alt="`Фото ${index + 1}`"
-            :class="{ 'active': currentPhotoIndex === index }"
-            @click="currentPhotoIndex = index"
+          <img
+              v-for="(photo, index) in selectedLounge.photo"
+              :key="index"
+              :src="photo"
+              :alt="`Фото ${index + 1}`"
+              :class="{ 'active': currentPhotoIndex === index }"
+              @click="currentPhotoIndex = index"
           >
         </div>
       </div>
@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import {computed, ref} from 'vue';
 
 const props = defineProps({
   lounges: {
@@ -214,7 +214,7 @@ const prevPhoto = () => {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  width: 75%;
   margin-top: 15px;
   position: relative;
   overflow: hidden;
@@ -228,10 +228,10 @@ const prevPhoto = () => {
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent
   );
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }

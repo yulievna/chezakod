@@ -4,21 +4,41 @@
       <div class="footer-content">
         <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
-          <img class="logo" src="../assets/images/logo-white.svg" alt="Logo" />
+          <img class="logo" src="../assets/images/logo-white.svg" alt="Logo"/>
         </router-link>
 
         <!-- Меню -->
         <ul class="footer-menu">
-          <li class="footer-item"><router-link to="/quests">Квесты</router-link></li>
-          <li class="footer-item"><router-link to="/#">Экшн игры</router-link></li>
-          <li class="footer-item"><router-link to="/#">Картинг</router-link></li>
-          <li class="footer-item"><router-link to="/#">Караоке</router-link></li>
-          <li class="footer-item"><router-link to="/#">Шоу программы</router-link></li>
-          <li class="footer-item"><router-link to="/#">Мероприятия</router-link></li>
-          <li class="footer-item"><router-link to="/#">Расписание</router-link></li>
-          <li class="footer-item"><router-link to="/#">Сертификаты</router-link></li>
-          <li class="footer-item"><router-link to="/#">Акции</router-link></li>
-          <li class="footer-item"><router-link to="/#">О нас</router-link></li>
+          <li class="footer-item">
+            <router-link to="/quests">Квесты</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Экшн игры</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Картинг</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Караоке</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Шоу программы</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Мероприятия</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Расписание</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Сертификаты</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">Акции</router-link>
+          </li>
+          <li class="footer-item">
+            <router-link to="/#">О нас</router-link>
+          </li>
         </ul>
 
         <!-- Контакты -->
@@ -29,7 +49,7 @@
             <a href="#" class="social-link">Telegram</a>
             <a href="#" class="social-link">ВКонтакте</a>
           </div>
-<!--          <button class="book-btn" @click="togglePopup">Забронировать</button>-->
+          <!--          <button class="book-btn" @click="togglePopup">Забронировать</button>-->
         </div>
       </div>
 
@@ -42,8 +62,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import Form from "@/components/Form.vue";
+import {ref} from "vue";
 
 const isPopupOpen = ref(false);
 

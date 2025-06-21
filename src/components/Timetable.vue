@@ -2,11 +2,11 @@
   <div class="timetable">
     <div class="container">
       <div v-for="questId in questIds" :key="questId" class="quest-schedule">
-        <iframe 
-          :src="`https://chezakod.ru/quest/${questId}/timetable/`" 
-          :style="{ height: '1820px' }"
-          style="width: 100%; border: none;"
-          @load="onIframeLoad"
+        <iframe
+            :src="`${import.meta.env.VITE_HOST}/quest/${questId}/timetable/`"
+            :style="{ height: '1820px' }"
+            style="width: 100%; border: none;"
+            @load="onIframeLoad"
         ></iframe>
       </div>
     </div>
@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
 
 const props = defineProps({
   questIds: {
