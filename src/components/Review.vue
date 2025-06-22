@@ -5,64 +5,67 @@
       <img class="gis" src="@/assets/images/Light_ENG2x.png" alt="2GIS" loading="lazy"/>
     </div>
 
-    <div class="carousel-container">
-      <button class="arrow left" @click="prevReview" aria-label="Previous review">
-        <span class="arrow-icon">❮</span>
-      </button>
-
-      <div class="reviews-wrapper" ref="carousel">
-        <div
-            class="review-card active"
-            v-for="(review, index) in duplicatedReviews"
-            :key="index"
-        >
-          <div class="review-header">
+    <swiper-container
+        :init="false"
+        :loop="true"
+        :pagination="{
+          clickable: true
+        }"
+        :navigation="true"
+        :autoplay="{
+          delay: 3000,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true
+        }"
+        :slidesPerView="3"
+        :centeredSlides="true"
+        class="swiper-reviews"
+        :spaceBetween="30"
+    >
+      <swiper-slide
+          class="review-card"
+          v-for="(review, index) in reviews"
+          :key="review.id"
+          @click="goToReview(index)"
+      >
+        <!--        <div style="width: 200px; height: 200px; background: green">{{ review.id }}</div>-->
+        <div class="review-header">
+          <div class="review-info">
             <div class="review-avatar">
               {{ review.user.charAt(0) }}
             </div>
-            <div class="review-info">
+            <div class="review-data">
               <span class="review-name">{{ review.user }}</span>
               <span class="review-date">{{ review.date }}</span>
             </div>
-            <span class="review-rating">
-              <span
-                  v-for="star in 5"
-                  :key="star"
-                  class="star"
-                  :class="{ filled: star <= review.rating }"
-              >★</span
-              >
-            </span>
           </div>
-          <p class="review-text">{{ review.text }}</p>
-          <a class="review-link" href="{{ review.link }}" target="_blank">
-            <span class="link-icon">📍</span>
-            Отзыв на 2GIS
-          </a>
+          <span class="review-rating">
+                      <span
+                          v-for="star in 5"
+                          :key="star"
+                          class="star"
+                          :class="{ filled: star <= review.rating }"
+                      >★</span
+                      >
+                    </span>
         </div>
-      </div>
+        <p class="review-text">{{ review.text }}</p>
+        <a class="review-link" :href="review.link" target="_blank">
+          <span class="link-icon">📍</span>
+          Отзыв на 2GIS
+        </a>
+      </swiper-slide>
 
-      <button class="arrow right" @click="nextReview" aria-label="Next review">
-        <span class="arrow-icon">❯</span>
-      </button>
-    </div>
-
-    <div class="carousel-dots">
-      <button
-          v-for="(_, index) in reviews"
-          :key="index"
-          class="dot"
-          :class="{ active: currentIndex === index }"
-          @click="goToReview(index)"
-          :aria-label="'Go to review ' + (index + 1)"
-      ></button>
-    </div>
+    </swiper-container>
   </section>
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {register} from "swiper/element/bundle";
+import {onMounted, ref} from "vue";
 import axios, {HttpStatusCode} from "axios";
+
+register();
 
 const props = defineProps({
   quest: Number,
@@ -78,7 +81,6 @@ const loadReviews = async () => {
     const resp = await axios.get(import.meta.env.VITE_API_URL + "/review/get/", props);
     if (resp.status === HttpStatusCode.Ok && resp.data.status) {
       reviews.value = resp.data.result;
-      duplicatedReviews.value = [...reviews.value, ...reviews.value];
     } else {
       throw new Error("Сервер вернул ошибку");
     }
@@ -87,138 +89,145 @@ const loadReviews = async () => {
   }
 }
 
-const duplicatedReviews = ref([]);
-const currentIndex = ref(0);
-const carousel = ref(null);
-let startX = 0;
-let isDragging = false;
-let currentTranslate = 0;
-let autoplayInterval = null;
-
-const updateTranslate = () => {
-  const itemWidth = carousel.value.clientWidth / 2.2;
-  currentTranslate = -currentIndex.value * itemWidth;
-  carousel.value.style.transform = `translateX(${currentTranslate}px)`;
-};
-
-const nextReview = () => {
-  currentIndex.value++;
-  if (currentIndex.value >= reviews.value.length) {
-    setTimeout(() => {
-      currentIndex.value = 0;
-      carousel.value.style.transition = "none";
-      updateTranslate();
-    }, 300);
-  }
-  carousel.value.style.transition = "transform 0.4s ease";
-  updateTranslate();
-};
-
-const prevReview = () => {
-  if (currentIndex.value === 0) {
-    currentIndex.value = reviews.value.length;
-    carousel.value.style.transition = "none";
-    updateTranslate();
-    setTimeout(() => {
-      currentIndex.value--;
-      carousel.value.style.transition = "transform 0.4s ease";
-      updateTranslate();
-    }, 50);
-  } else {
-    currentIndex.value--;
-    carousel.value.style.transition = "transform 0.4s ease";
-    updateTranslate();
-  }
-};
-
-const goToReview = (index) => {
-  currentIndex.value = index;
-  carousel.value.style.transition = "transform 0.4s ease";
-  updateTranslate();
-};
-
-const selectReview = (index) => {
-  goToReview(index);
-};
-
-const handleMouseDown = (event) => {
-  isDragging = true;
-  startX = event.clientX;
-  carousel.value.style.transition = "none";
-};
-
-const handleMouseMove = (event) => {
-  if (!isDragging) return;
-  const moveX = event.clientX - startX;
-  carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
-};
-
-const handleMouseUp = (event) => {
-  if (!isDragging) return;
-  isDragging = false;
-  const moveX = event.clientX - startX;
-
-  if (moveX < -50) nextReview();
-  if (moveX > 50) prevReview();
-  updateTranslate();
-};
-
-const handleTouchStart = (event) => {
-  startX = event.touches[0].clientX;
-  isDragging = true;
-  carousel.value.style.transition = "none";
-};
-
-const handleTouchMove = (event) => {
-  if (!isDragging) return;
-  const moveX = event.touches[0].clientX - startX;
-  carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
-};
-
-const handleTouchEnd = (event) => {
-  if (!isDragging) return;
-  isDragging = false;
-  const moveX = event.changedTouches[0].clientX - startX;
-
-  if (moveX < -50) nextReview();
-  if (moveX > 50) prevReview();
-  updateTranslate();
-};
-
-const startAutoplay = () => {
-  autoplayInterval = setInterval(nextReview, 5000);
-};
-
-const stopAutoplay = () => {
-  clearInterval(autoplayInterval);
-};
+let swiperEl;
 
 onMounted(async () => {
   await loadReviews();
-  updateTranslate();
-  carousel.value.addEventListener("mousedown", handleMouseDown);
-  carousel.value.addEventListener("mousemove", handleMouseMove);
-  carousel.value.addEventListener("mouseup", handleMouseUp);
-  carousel.value.addEventListener("mouseleave", handleMouseUp);
-  carousel.value.addEventListener("touchstart", handleTouchStart);
-  carousel.value.addEventListener("touchmove", handleTouchMove);
-  carousel.value.addEventListener("touchend", handleTouchEnd);
-  // startAutoplay();
-});
+  swiperEl = document.querySelector(".swiper-reviews");
+  swiperEl.initialize();
+})
 
-// onUnmounted(() => {
-//   carousel.value.removeEventListener("mousedown", handleMouseDown);
-//   carousel.value.removeEventListener("mousemove", handleMouseMove);
-//   carousel.value.removeEventListener("mouseup", handleMouseUp);
-//   carousel.value.removeEventListener("mouseleave", handleMouseUp);
-//   carousel.value.removeEventListener("touchstart", handleTouchStart);
-//   carousel.value.removeEventListener("touchmove", handleTouchMove);
-//   carousel.value.removeEventListener("touchend", handleTouchEnd);
-//   stopAutoplay();
-// });
+const goToReview = (idx) => {
+  swiperEl.swiper.slideToLoop(idx);
+}
+
 </script>
 
 <style scoped>
+
+swiper-container {
+  --swiper-theme-color: var(--primary-color) !important;
+}
+
+swiper-container::part(pagination) {
+  position: static !important;
+}
+
+swiper-slide.swiper-slide-active {
+  transform: scale(1);
+  opacity: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.reviews-container {
+  text-align: center;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  margin: 30px auto;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reviews-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reviews-title img {
+  width: 120px;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  height: 400px;
+  background: #2a2a2a;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s ease-in-out;
+  cursor: pointer;
+  opacity: 0.8;
+  margin: 20px 0;
+  transform: scale(0.85);
+  justify-content: space-between;
+}
+
+.review-header {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.review-info {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.review-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-avatar {
+  width: 40px;
+  height: 40px;
+  background: #cf1034;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.review-name {
+  color: white;
+}
+
+.review-date {
+  font-size: 12px;
+  color: #999;
+}
+
+.review-rating .star {
+  color: #ccc;
+  font-size: 18px;
+}
+
+.review-rating .star.filled {
+  color: #cf1034;
+}
+
+.review-text {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.review-link {
+  color: #869791;
+}
+
+/*
+
+
+
+
 .reviews-container {
   text-align: center;
   padding: 30px 15px;
@@ -247,27 +256,10 @@ onMounted(async () => {
   width: 120px;
 }
 
-.carousel-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-
 .review-link {
   align-self: start;
   color: #869791;
   margin-top: auto;
-}
-
-.reviews-wrapper {
-  display: flex;
-  gap: 15px;
-  transition: transform 0.4s ease;
-  cursor: grab;
-  padding: 10px 0;
-  width: 70%;
 }
 
 .review-card {
@@ -275,19 +267,23 @@ onMounted(async () => {
   flex-direction: column;
   background: #fff;
   padding: 15px;
+  height: 400px;
   border-radius: 10px;
-  width: 33.33%;
-  flex: 0 0 33.33%;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.4s ease-in-out;
+  cursor: pointer;
+  opacity: 0.8;
+  margin: 20px 0;
+  transform: scale(0.85);
 }
 
 .review-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   font-size: 16px;
   font-weight: bold;
+  position: relative;
 }
 
 .review-name {
@@ -308,37 +304,10 @@ onMounted(async () => {
   font-size: 14px;
   color: #333;
   margin-bottom: 20px;
+  max-height: 400px;
+  overflow: auto;
 }
 
-/* Стрелки */
-.arrow {
-  background: none;
-  border: none;
-  font-size: 30px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  color: #cf1034;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  opacity: 0.7;
-}
-
-.arrow:hover {
-  opacity: 1;
-  color: #d41a40;
-}
-
-.arrow.left {
-  left: 10px;
-}
-
-.arrow.right {
-  right: 10px;
-}
-
-/* Адаптив для мобильных устройств */
 @media (max-width: 768px) {
   .reviews-container {
     padding: 20px 10px;
@@ -359,18 +328,7 @@ onMounted(async () => {
     width: 100px;
   }
 
-  .carousel-container {
-    padding: 0 10px;
-  }
-
-  .reviews-wrapper {
-    width: 100%;
-    padding: 10px 0;
-  }
-
   .review-card {
-    width: 100%;
-    flex: 0 0 100%;
     padding: 15px;
   }
 
@@ -389,19 +347,6 @@ onMounted(async () => {
 
   .review-link {
     font-size: 12px;
-  }
-
-  .arrow {
-    font-size: 20px;
-    opacity: 0.8;
-  }
-
-  .arrow.left {
-    left: 0;
-  }
-
-  .arrow.right {
-    right: 0;
   }
 }
 
@@ -439,13 +384,8 @@ onMounted(async () => {
   .review-link {
     font-size: 11px;
   }
-
-  .arrow {
-    font-size: 18px;
-  }
 }
 
-/* Добавляем поддержку ландшафтной ориентации */
 @media (max-height: 600px) and (orientation: landscape) {
   .reviews-container {
     padding: 15px 5px;
@@ -470,12 +410,7 @@ onMounted(async () => {
   }
 }
 
-/* Улучшаем отображение на планшетах */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .review-card {
-    width: 50%;
-    flex: 0 0 50%;
-  }
 
   .reviews-title h2 {
     font-size: 22px;
@@ -510,66 +445,10 @@ onMounted(async () => {
   color: #666;
 }
 
-.review-card {
-  cursor: pointer;
-  transition: all 0.3s ease;
-  transform: scale(0.95);
-  opacity: 0.8;
-}
-
-.review-card:hover {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.review-card.active {
-  transform: scale(1);
-  opacity: 1;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.arrow-icon {
-  font-size: 24px;
-  transition: transform 0.3s ease;
-}
-
-.arrow:hover .arrow-icon {
-  transform: scale(1.2);
-}
-
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #ddd;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.dot:hover {
-  background: #cf1034;
-  transform: scale(1.2);
-}
-
-.dot.active {
-  background: #cf1034;
-  transform: scale(1.2);
-}
-
 .link-icon {
   margin-right: 5px;
 }
 
-/* Улучшенная адаптивность */
 @media (max-width: 768px) {
   .review-avatar {
     width: 35px;
@@ -588,18 +467,8 @@ onMounted(async () => {
   .review-text {
     font-size: 13px;
   }
-
-  .arrow-icon {
-    font-size: 20px;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-  }
 }
 
-/* Добавляем поддержку тёмной темы */
 @media (prefers-color-scheme: dark) {
   .review-card {
     background: #2a2a2a;
@@ -612,18 +481,8 @@ onMounted(async () => {
   .review-text {
     color: #fff;
   }
-
-  .dot {
-    background: #444;
-  }
-
-  .dot:hover,
-  .dot.active {
-    background: #cf1034;
-  }
 }
 
-/* Улучшаем доступность */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -631,5 +490,5 @@ onMounted(async () => {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
+} */
 </style>
