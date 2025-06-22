@@ -208,29 +208,7 @@ const loadQuestData = async () => {
     loading.value = true;
     error.value = null;
 
-    // Check if we're in a child quest route
-    isChildQuest.value = route.path.includes('/child-quests/');
-
-    // First get all quests to find the one with matching slug
-    const allQuestsUrl = isChildQuest.value
-        ? import.meta.env.VITE_API_URL + '/quests/?category=child'
-        : import.meta.env.VITE_API_URL + '/quests/';
-
-    const allQuestsResponse = await axios.get(allQuestsUrl);
-    if (!allQuestsResponse.data.status || !allQuestsResponse.data.result) {
-      throw new Error('Не удалось загрузить список квестов');
-    }
-
-    // Find the quest with matching slug
-    const matchingQuest = allQuestsResponse.data.result.find(q => q.slug === props.id);
-    if (!matchingQuest) {
-      throw new Error('Квест не найден');
-    }
-
-    // Now get the full quest data using its ID
-    const questUrl = isChildQuest.value
-        ? `${import.meta.env.VITE_API_URL}/quests/?id=${matchingQuest.id}&category=child`
-        : `${import.meta.env.VITE_API_URL}/quests/?id=${matchingQuest.id}`;
+    const questUrl = `${import.meta.env.VITE_API_URL}/quests/?slug=${props.id}`;
 
     const response = await axios.get(questUrl);
     if (response.data.status && response.data.result) {

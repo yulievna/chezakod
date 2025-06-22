@@ -1,4 +1,4 @@
-<template>
+<template> <!-- TODO: сделать чтобы не листался за границу -->
   <h1 class="title">Смотри наши видео</h1>
   <div class="video-carousel">
     <button class="arrow left" @click="prevVideo">❮</button>

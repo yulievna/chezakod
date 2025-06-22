@@ -43,16 +43,10 @@ const props = defineProps({
     type: String,
     required: true
   },
-  isChildQuest: {
-    type: Boolean,
-    default: false
-  }
 });
 
 const getQuestPath = (slug) => {
-  return props.isChildQuest
-      ? `/child-quests/${slug}`
-      : `${props.basePath}/${slug}`;
+  return `${props.basePath}/${slug}`;
 };
 
 const goToAboutQuest = (slug) => {

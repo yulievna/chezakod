@@ -11,7 +11,7 @@
 
         <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
-          <img class="logo" src="../assets/images/logo.svg" alt="Logo"/>
+          <img class="logo" src="@/assets/images/logo.svg" alt="Logo"/>
         </router-link>
 
         <!-- Меню -->
@@ -51,13 +51,13 @@
           <!-- Контакты (в мобильной версии) -->
           <li class="navigation-item mobile-only"><a href="tel:+79998887766">+7 (999) 888-77-66</a></li>
           <li class="navigation-item mobile-only">
-            <router-link to="#">WhatsApp</router-link>
+            <a href="https://wa.me/">WhatsApp</a> <!-- TODO: Контакты -->
           </li>
           <li class="navigation-item mobile-only">
-            <router-link to="#">Telegram</router-link>
+            <a href="https://t.me/">Telegram</a>
           </li>
           <li class="navigation-item mobile-only">
-            <router-link to="https://vk.com/chezakod">ВКонтакте</router-link>
+            <a href="https://vk.com/chezakod">ВКонтакте</a>
           </li>
         </ul>
 

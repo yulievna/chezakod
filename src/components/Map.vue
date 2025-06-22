@@ -4,6 +4,7 @@
 
 <script>
 import {onMounted} from "vue";
+import axios, {HttpStatusCode} from "axios";
 
 export default {
   setup() {
@@ -213,40 +214,88 @@ export default {
           ]
         });
 
-        var markers = [];
+        function markerInfo(location) {
+          const container = document.createElement('div')
+          container.className = 'address-item'
 
-        window.eqfeed_callback = function (results) {
-          for (var i = 0; i < results.features.length; i++) {
-            var coords = results.features[i].geometry.coordinates;
-            var contentInfo = results.features[i].properties.addressItem;
-            var latLng = new google.maps.LatLng(coords[1], coords[0]);
+          // Close button (optional)
+          // const btnClose = document.createElement('div')
+          // btnClose.className = 'btn-close'
+          // container.appendChild(btnClose)
 
-            var marker = new google.maps.Marker({
-              position: latLng,
-              map: map,
-              icon: "src/assets/images/pointer-min.png",
-              info: contentInfo,
-              id: i,
-              animation: google.maps.Animation.DROP,
-            });
+          // Address text
+          const addressText = document.createElement('div')
+          addressText.className = 'address-text'
+          addressText.innerHTML = location.address
+          container.appendChild(addressText)
 
-            var infoWindow = new google.maps.InfoWindow({
-              pixelOffset: new google.maps.Size(0, 74),
-              maxWidth: 195,
-            });
+          // Elements (comments + quests)
+          location.elements.forEach(element => {
+            if (element.comment) {
+              const note = document.createElement('div')
+              note.className = 'note'
+              note.textContent = element.comment
+              container.appendChild(note)
+            }
 
-            google.maps.event.addListener(marker, "click", function () {
-              infoWindow.setContent(this.info);
-              infoWindow.open(map, this);
-            });
+            const questBox = document.createElement('div')
+            questBox.className = 'btn-quest-box'
 
-            markers.push(marker);
+            element.quests.forEach(quest => {
+              const link = document.createElement('a')
+              link.href = '#'
+              link.className = 'btn-red'
+              link.textContent = quest
+              questBox.appendChild(link)
+            })
+
+            container.appendChild(questBox)
+          })
+
+          return container
+        }
+
+        let markers = [];
+
+        axios.get(import.meta.env.VITE_API_URL + "/location/").then((response) => {
+          if (response.status === HttpStatusCode.Ok && response.data.status) {
+            let result = response.data.result;
+            for (let i = 0; i < result.length; i++) {
+              const coords = result[i].coordinates;
+              const contentInfo = markerInfo(result[i]);
+              const latLng = new google.maps.LatLng(coords[0], coords[1]);
+
+              const marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                icon: "src/assets/images/pointer-min.png",
+                info: contentInfo,
+                id: i,
+                animation: google.maps.Animation.DROP,
+              });
+
+              let infoWindow = new google.maps.InfoWindow({
+                pixelOffset: new google.maps.Size(0, 74),
+                maxWidth: 195,
+              });
+
+              google.maps.event.addListener(marker, "click", function () {
+                if (window.prev_infowindow) {
+                  window.prev_infowindow.close();
+                }
+                window.prev_infowindow = infoWindow;
+                infoWindow.setContent(this.info);
+                infoWindow.open(map, this);
+              });
+
+              markers.push(marker);
+            }
+          } else {
+            throw new Error("Ошибка сервера");
           }
-        };
-
-        const scriptData = document.createElement("script");
-        scriptData.src = "src/scripts/data.js?v=3";
-        document.head.appendChild(scriptData);
+        }).catch((error) => {
+          console.error(`Ошибка при получении локаций: ${error}`)
+        })
       };
     });
   },
@@ -267,18 +316,6 @@ export default {
 
 .address-text {
 
-}
-
-.address-item .btn-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 26px;
-  height: 26px;
-  background-image: url('images/button_close-min.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
 }
 
 .address-item .address-text {

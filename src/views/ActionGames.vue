@@ -30,7 +30,7 @@ import Quests from '@/components/Quests.vue';
 import Map from "@/components/Map.vue";
 import TimetableEmbed from "@/components/TimetableEmbed.vue";
 import Lounge from "@/components/Lounge.vue";
-import axios from "axios";
+import axios, {HttpStatusCode} from "axios";
 
 import img1 from '@/assets/images/sl1.jpg';
 import img2 from '@/assets/images/sl2.jpg';
@@ -46,44 +46,32 @@ useHead({
   title: "Экшн-игры"
 })
 
-const actionGames = ref([
-  {
-    id: "14428",
-    slug: "zhmurki",
-    name: "Жмурки",
-    age: "12+",
-    players: "4-4",
-    time: "60 мин",
-    difficulty: "Легкий",
-    images: [img4, img5, img6],
-    address: "ул. Ленина, 1",
-    contact: '+7 (391) 986-85-16',
-  },
-  {
-    id: "11519850",
-    slug: "action-kod",
-    name: "ACTION:KOD",
-    age: "14+",
-    players: "2-4",
-    time: "70 мин",
-    difficulty: "Легкий",
-    images: [img1, img2, img3],
-    address: "ул. Ленина, 1",
-    contact: '+7 (391) 986-85-16',
-  },
-  {
-    id: "12507544",
-    slug: "play-kod",
-    name: "PLAY KOD",
-    age: "3+",
-    players: "1-6",
-    time: "50 мин",
-    difficulty: "Легкий",
-    images: [img7, img8],
-    address: "ул. Ленина, 1",
-    contact: '+7 (391) 986-85-16',
+const actionGames = ref([]);
+
+const loadGames = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/quests/?category=action");
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      actionGames.value = resp.data.result.map((i) => ({
+        id: i.id,
+        slug: i.slug,
+        name: i.name,
+        age: `${i.age_min}+`,
+        players: `${i.players.min}-${i.players.max}`,
+        time: `${i.duration} мин`,
+        difficulty: "Лёгкий", // TODO: решить что делать со сложностью
+        address: i.location.address,
+        contact: '+7 (391) 986-85-16',
+        images: i.photo
+      }));
+    } else {
+      throw new Error("Ошибка сервера");
+    }
+  } catch (error) {
+    console.error(error);
   }
-]);
+}
+
 const lounges = ref([]);
 const timetableQuestIds = ref(['14428', '11519850', '12507544']);
 
@@ -107,10 +95,14 @@ const loadLounges = async () => {
   }
 };
 
-onServerPrefetch(loadLounges);
+onServerPrefetch(async () => {
+  await loadGames();
+  await loadLounges();
+});
 
 onMounted(async () => {
 
+  await loadGames();
   await loadLounges();
 
   // Load timetable script

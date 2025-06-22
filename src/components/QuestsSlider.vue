@@ -1,4 +1,4 @@
-<template>
+<template> <!-- TODO: пофиксить пролистывание картинок -->
   <div :ref="setCarouselRef" :class="`owl-carousel owl-theme carousel-${uniqueId}`">
     <div v-for="(image, index) in images" :key="index" class="quest-item">
       <img :src="image" :alt="'Image ' + (index + 1)">

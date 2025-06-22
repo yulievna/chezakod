@@ -1,4 +1,4 @@
-<template>
+<template> <!-- TODO: пофиксить мобильную версию -->
   <section class="lounge">
     <div class="container">
       <div class="lounge__list">

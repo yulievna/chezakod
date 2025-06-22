@@ -1,4 +1,4 @@
-<template>
+<template> <!-- TODO: привести к единому виду, добавить точечки или стрелки везде -->
   <div ref="carouselRef" class="owl-carousel owl-theme">
     <div v-for="(image, index) in images" :key="index" class="item">
       <img

@@ -1,4 +1,4 @@
-<template>
+<template> <!-- TODO: пофиксить форму -->
   <div class="quiz-container">
     <transition name="fade" mode="out-in">
       <!-- Блок с вопросами -->

@@ -26,14 +26,14 @@ const loadQuests = async (category) => {
       id: q.id,
       questId: q.id,
       slug: q.slug,
-      name: q.name.replace(/&quot;/g, '"'),
+      name: q.name,
       age: `${q.age_min}+`,
       images: [q.main_image, ...(q.photo || [])],
       players: `${q.players.min}-${q.players.max} игрока`,
       time: `${q.duration} минут`,
       difficulty: 'Средний',
       contact: '+7 (391) 269-92-23',
-      address: q.location.address.replace(/&quot;/g, '"'),
+      address: q.location.address,
     }));
 
     timetableQuestIds.value = responseQ.data.result.map((q) => q.id);
@@ -108,8 +108,7 @@ onMounted(async () => {
       </div>
       <Quests
           :quests="quests"
-          basePath="/quests"
-          :isChildQuest="activeCategory === 'child'"
+          :basePath="activeCategory === 'child' ? '/child-quests' : '/quests'"
       />
     </div>
   </div>

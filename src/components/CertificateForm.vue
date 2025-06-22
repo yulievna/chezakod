@@ -1,4 +1,4 @@
-<template>
+<template> <!-- TODO: пофиксить форму сертификатов -->
   <div class="certificate-form" v-if="isOpen">
     <div class="certificate-form__overlay" @click="closeForm"></div>
     <div class="certificate-form__content">

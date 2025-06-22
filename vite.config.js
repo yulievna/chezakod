@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
                 }
             })
         ],
-        base: "/yulya/",
+        base: mode === "production" ? "/yulya/" : "/",
         build: {
             outDir: "dist",
             assetsDir: "assets",
