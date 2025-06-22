@@ -18,7 +18,6 @@ const loadFAQ = async () => {
       throw new Error("Сервер вернул ошибку");
     }
   } catch (error) { console.error(`Ошибка во время получения часто задаваемых вопросов: ${error}`) }
-  console.log(questions.value)
 }
 
 onServerPrefetch(loadFAQ);

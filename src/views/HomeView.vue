@@ -272,8 +272,11 @@ const videos = [
 
 .main-slider {
   grid-area: slider;
-  overflow: hidden;
   transition: transform 0.5s ease;
+  border-radius: 10px;
+}
+
+.main-slider * {
   border-radius: 10px;
 }
 

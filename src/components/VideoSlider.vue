@@ -1,67 +1,103 @@
 <template> <!-- TODO: сделать чтобы не листался за границу -->
   <h1 class="title">Смотри наши видео</h1>
-  <div class="video-carousel">
-    <button class="arrow left" @click="prevVideo">❮</button>
-    <div class="carousel-container" ref="carousel">
-      <div
-          class="video-item"
-          v-for="(video, index) in videos"
-          :key="index"
-      >
-        <video
-            :src="video.src"
-            autoplay
-            muted
-            loop
-            playsinline
-        ></video>
-      </div>
-    </div>
-    <button class="arrow right" @click="nextVideo">❯</button>
-  </div>
+  <swiper-container
+      :loop="true"
+      :navigation="true"
+      :pagination="true"
+      :slidesPerView="'auto'"
+      :centeredSlides="true"
+      :centeredSlidesBounds="true"
+      @swiperinit="onSwiperInit"
+      @swiperslidechange="handleSlideChange"
+  >
+    <swiper-slide
+        class="video-item"
+        v-for="(video, index) in videos"
+        :key="index"
+    >
+      <video
+          :ref="el => videoRefs[index] = el"
+          :src="video.src"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+      ></video>
+    </swiper-slide>
+  </swiper-container>
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {register} from 'swiper/element/bundle';
+import {ref} from "vue";
 
-const videos = [
+register();
+
+const videos = ref([
   {src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"},
   {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"},
-  {src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"},
-  {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"},
-  {src: import.meta.env.VITE_HOST + "/upload/video/5.mp4"},
-];
+  {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/2party.mp4"},
+  {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/лето.MP4"},
+  {src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/7 years.mp4"},
+]);
 
-const carousel = ref(null);
-const currentIndex = ref(0);
-const videoWidth = 1200;
-const gap = 20;
+const videoRefs = [];
 
-const updateCarousel = () => {
-  if (!carousel.value) return;
+function onSwiperInit(event) {
+  playActiveOnly(event.detail[0]);
+}
 
-  const offset = -currentIndex.value * (videoWidth + gap);
-  carousel.value.style.transition = "transform 0.5s ease-in-out";
-  carousel.value.style.transform = `translateX(${offset}px)`;
-};
+function handleSlideChange(event) {
+  playActiveOnly(event.detail[0]);
+}
 
-const nextVideo = () => {
-  currentIndex.value = (currentIndex.value + 1) % videos.length;
-  updateCarousel();
-};
+function playActiveOnly(swiperInstance) {
+  const activeIndex = swiperInstance.realIndex;
+  videos.value.forEach((_, index) => {
+    const videoEl = videoRefs[index];
+    if (!videoEl) return;
+    if (index === activeIndex) {
+      videoEl.play().catch(() => {
+      });
+    } else {
+      videoEl.pause();
+      videoEl.currentTime = 0;
+    }
+  });
+}
 
-const prevVideo = () => {
-  currentIndex.value = (currentIndex.value - 1 + videos.length) % videos.length;
-  updateCarousel();
-};
-
-onMounted(() => {
-  updateCarousel();
-});
 </script>
 
 <style scoped>
-.title {
+
+.video-item {
+  width: 90%;
+  max-width: 1500px;
+  border-radius: 20px;
+  aspect-ratio: 16 / 9;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  position: relative;
+}
+
+.video-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--primary-color), transparent 90%);
+}
+
+swiper-container {
+  --swiper-theme-color: var(--primary-color) !important;
+}
+
+swiper-slide:not(.swiper-slide-active) {
+  transform: scale(0.65);
+  filter: brightness(0.3);
+}
+
+/* .title {
   color: #CF1034;
   font-size: 36px;
   font-weight: 600;
@@ -84,23 +120,7 @@ onMounted(() => {
   gap: 20px;
 }
 
-.video-item {
-  width: 1200px;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
 
-.video-item video {
-  width: 100%;
-  height: 660px;
-  object-fit: cover;
-}
 
 .arrow {
   position: absolute;
@@ -132,5 +152,5 @@ onMounted(() => {
 
 .arrow.right {
   right: 10px;
-}
+} */
 </style>
