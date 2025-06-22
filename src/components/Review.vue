@@ -18,11 +18,11 @@
         >
           <div class="review-header">
             <div class="review-avatar">
-              {{ review.name.charAt(0) }}
+              {{ review.user.charAt(0) }}
             </div>
             <div class="review-info">
-              <span class="review-name">{{ review.name }}</span>
-              <span class="review-date">{{ getRandomDate() }}</span>
+              <span class="review-name">{{ review.user }}</span>
+              <span class="review-date">{{ review.date }}</span>
             </div>
             <span class="review-rating">
               <span
@@ -35,7 +35,7 @@
             </span>
           </div>
           <p class="review-text">{{ review.text }}</p>
-          <a class="review-link" href="#" @click.prevent="open2GIS">
+          <a class="review-link" href="{{ review.link }}" target="_blank">
             <span class="link-icon">📍</span>
             Отзыв на 2GIS
           </a>
@@ -60,215 +60,162 @@
   </section>
 </template>
 
-<script>
-import {onMounted, ref} from "vue";
+<script setup>
+import {computed, onMounted, ref} from "vue";
+import axios, {HttpStatusCode} from "axios";
 
-export default {
-  name: "ReviewsCarousel",
-  setup() {
-    const reviews = ref([
-      {
-        name: "Никита",
-        rating: 5,
-        text: "Пятого дня, по совету проверенных камрадов, прошли квест 'Логос'. Ощущения - атас. Прошли за чуть больше часа: задания на подумать, проявить своё внимание и смекалку. Чудесный администратор, всегда поможет, если где-нибудь застряли. Советуем всей компанией.",
-      },
-      {
-        name: "Виктория",
-        rating: 5,
-        text: "Была на квесте «Петля времени» очень понравился! Очень хороший антураж, сама локация, загадки! Написано 14+ но и взрослого человека затянет! Сама локация уютненькая, приятная девушка администратор приветливо встретила, все объяснила, и впустила в квест) туалет с музыкой вообще шикарен!",
-      },
-      {
-        name: "Данил",
-        rating: 5,
-        text: "Квесты супер. Все понравилось. Было великолепно. Очень надеюсь, что смогу найти время прийти на квест снова.",
-      },
-      {
-        name: "Степан",
-        rating: 4,
-        text: "Ну ниче так",
-      },
-      {
-        name: "Юрий",
-        rating: 5,
-        text: "Очень понравилось! Были приглашены на детский день рождения, оказалось участвовать интересно и взрослым. Однозначно рекомендую! Единственное пожелание: заменить баскетбольные мячи на резиновые, а то такими не только ребенка можно покалечить, но и взрослого.",
-      },
-      {
-        name: "Максим",
-        rating: 5,
-        text: "В очередной раз приехали семьёй на квест. Все очень понравилось. Приедем вновь)",
-      },
-      {
-        name: "Яна",
-        rating: 4,
-        text: "Интересный квест, было страшно и смешно. Придем еще! От всей души посмеялись, хотелось бы новых квестов.",
-      },
-      {
-        name: "Виктор",
-        rating: 5,
-        text: "Вчера был с классом на 'жмурках'. Сказать что мне понравилось - ничего не сказать. Какая атмосфера! Красота! Особенно 200 квадратных метров в темноте... В общем, КЛАССНО!",
-      },
-    ]);
+const props = defineProps({
+  quest: Number,
+  location: Number,
+  count: Number,
+  rating: Array
+});
 
-    const duplicatedReviews = ref([...reviews.value, ...reviews.value]);
-    const currentIndex = ref(0);
-    const carousel = ref(null);
-    let startX = 0;
-    let isDragging = false;
-    let currentTranslate = 0;
-    let autoplayInterval = null;
+let reviews = ref([]);
 
-    const updateTranslate = () => {
-      const itemWidth = carousel.value.clientWidth / 2.2;
-      currentTranslate = -currentIndex.value * itemWidth;
-      carousel.value.style.transform = `translateX(${currentTranslate}px)`;
-    };
+const loadReviews = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/review/get/", props);
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      reviews.value = resp.data.result;
+      duplicatedReviews.value = [...reviews.value, ...reviews.value];
+    } else {
+      throw new Error("Сервер вернул ошибку");
+    }
+  } catch (error) {
+    console.error(`Ошибка при получении отзывов: ${error}`);
+  }
+}
 
-    const nextReview = () => {
-      currentIndex.value++;
-      if (currentIndex.value >= reviews.value.length) {
-        setTimeout(() => {
-          currentIndex.value = 0;
-          carousel.value.style.transition = "none";
-          updateTranslate();
-        }, 300);
-      }
-      carousel.value.style.transition = "transform 0.4s ease";
-      updateTranslate();
-    };
+const duplicatedReviews = ref([]);
+const currentIndex = ref(0);
+const carousel = ref(null);
+let startX = 0;
+let isDragging = false;
+let currentTranslate = 0;
+let autoplayInterval = null;
 
-    const prevReview = () => {
-      if (currentIndex.value === 0) {
-        currentIndex.value = reviews.value.length;
-        carousel.value.style.transition = "none";
-        updateTranslate();
-        setTimeout(() => {
-          currentIndex.value--;
-          carousel.value.style.transition = "transform 0.4s ease";
-          updateTranslate();
-        }, 50);
-      } else {
-        currentIndex.value--;
-        carousel.value.style.transition = "transform 0.4s ease";
-        updateTranslate();
-      }
-    };
-
-    const goToReview = (index) => {
-      currentIndex.value = index;
-      carousel.value.style.transition = "transform 0.4s ease";
-      updateTranslate();
-    };
-
-    const selectReview = (index) => {
-      goToReview(index);
-    };
-
-    const handleMouseDown = (event) => {
-      isDragging = true;
-      startX = event.clientX;
-      carousel.value.style.transition = "none";
-    };
-
-    const handleMouseMove = (event) => {
-      if (!isDragging) return;
-      const moveX = event.clientX - startX;
-      carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
-    };
-
-    const handleMouseUp = (event) => {
-      if (!isDragging) return;
-      isDragging = false;
-      const moveX = event.clientX - startX;
-
-      if (moveX < -50) nextReview();
-      if (moveX > 50) prevReview();
-      updateTranslate();
-    };
-
-    const handleTouchStart = (event) => {
-      startX = event.touches[0].clientX;
-      isDragging = true;
-      carousel.value.style.transition = "none";
-    };
-
-    const handleTouchMove = (event) => {
-      if (!isDragging) return;
-      const moveX = event.touches[0].clientX - startX;
-      carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
-    };
-
-    const handleTouchEnd = (event) => {
-      if (!isDragging) return;
-      isDragging = false;
-      const moveX = event.changedTouches[0].clientX - startX;
-
-      if (moveX < -50) nextReview();
-      if (moveX > 50) prevReview();
-      updateTranslate();
-    };
-
-    const startAutoplay = () => {
-      autoplayInterval = setInterval(nextReview, 5000);
-    };
-
-    const stopAutoplay = () => {
-      clearInterval(autoplayInterval);
-    };
-
-    const getRandomDate = () => {
-      const dates = [
-        "2 недели назад",
-        "1 месяц назад",
-        "2 месяца назад",
-        "3 месяца назад",
-        "4 месяца назад",
-        "5 месяцев назад",
-        "6 месяцев назад"
-      ];
-      return dates[Math.floor(Math.random() * dates.length)];
-    };
-
-    const open2GIS = () => {
-      window.open("https://2gis.ru/", "_blank");
-    };
-
-    onMounted(() => {
-      updateTranslate();
-      carousel.value.addEventListener("mousedown", handleMouseDown);
-      carousel.value.addEventListener("mousemove", handleMouseMove);
-      carousel.value.addEventListener("mouseup", handleMouseUp);
-      carousel.value.addEventListener("mouseleave", handleMouseUp);
-      carousel.value.addEventListener("touchstart", handleTouchStart);
-      carousel.value.addEventListener("touchmove", handleTouchMove);
-      carousel.value.addEventListener("touchend", handleTouchEnd);
-      // startAutoplay();
-    });
-
-    // onUnmounted(() => {
-    //   carousel.value.removeEventListener("mousedown", handleMouseDown);
-    //   carousel.value.removeEventListener("mousemove", handleMouseMove);
-    //   carousel.value.removeEventListener("mouseup", handleMouseUp);
-    //   carousel.value.removeEventListener("mouseleave", handleMouseUp);
-    //   carousel.value.removeEventListener("touchstart", handleTouchStart);
-    //   carousel.value.removeEventListener("touchmove", handleTouchMove);
-    //   carousel.value.removeEventListener("touchend", handleTouchEnd);
-    //   stopAutoplay();
-    // });
-
-    return {
-      reviews,
-      duplicatedReviews,
-      currentIndex,
-      carousel,
-      nextReview,
-      prevReview,
-      goToReview,
-      selectReview,
-      getRandomDate,
-      open2GIS
-    };
-  },
+const updateTranslate = () => {
+  const itemWidth = carousel.value.clientWidth / 2.2;
+  currentTranslate = -currentIndex.value * itemWidth;
+  carousel.value.style.transform = `translateX(${currentTranslate}px)`;
 };
+
+const nextReview = () => {
+  currentIndex.value++;
+  if (currentIndex.value >= reviews.value.length) {
+    setTimeout(() => {
+      currentIndex.value = 0;
+      carousel.value.style.transition = "none";
+      updateTranslate();
+    }, 300);
+  }
+  carousel.value.style.transition = "transform 0.4s ease";
+  updateTranslate();
+};
+
+const prevReview = () => {
+  if (currentIndex.value === 0) {
+    currentIndex.value = reviews.value.length;
+    carousel.value.style.transition = "none";
+    updateTranslate();
+    setTimeout(() => {
+      currentIndex.value--;
+      carousel.value.style.transition = "transform 0.4s ease";
+      updateTranslate();
+    }, 50);
+  } else {
+    currentIndex.value--;
+    carousel.value.style.transition = "transform 0.4s ease";
+    updateTranslate();
+  }
+};
+
+const goToReview = (index) => {
+  currentIndex.value = index;
+  carousel.value.style.transition = "transform 0.4s ease";
+  updateTranslate();
+};
+
+const selectReview = (index) => {
+  goToReview(index);
+};
+
+const handleMouseDown = (event) => {
+  isDragging = true;
+  startX = event.clientX;
+  carousel.value.style.transition = "none";
+};
+
+const handleMouseMove = (event) => {
+  if (!isDragging) return;
+  const moveX = event.clientX - startX;
+  carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
+};
+
+const handleMouseUp = (event) => {
+  if (!isDragging) return;
+  isDragging = false;
+  const moveX = event.clientX - startX;
+
+  if (moveX < -50) nextReview();
+  if (moveX > 50) prevReview();
+  updateTranslate();
+};
+
+const handleTouchStart = (event) => {
+  startX = event.touches[0].clientX;
+  isDragging = true;
+  carousel.value.style.transition = "none";
+};
+
+const handleTouchMove = (event) => {
+  if (!isDragging) return;
+  const moveX = event.touches[0].clientX - startX;
+  carousel.value.style.transform = `translateX(${currentTranslate + moveX}px)`;
+};
+
+const handleTouchEnd = (event) => {
+  if (!isDragging) return;
+  isDragging = false;
+  const moveX = event.changedTouches[0].clientX - startX;
+
+  if (moveX < -50) nextReview();
+  if (moveX > 50) prevReview();
+  updateTranslate();
+};
+
+const startAutoplay = () => {
+  autoplayInterval = setInterval(nextReview, 5000);
+};
+
+const stopAutoplay = () => {
+  clearInterval(autoplayInterval);
+};
+
+onMounted(async () => {
+  await loadReviews();
+  updateTranslate();
+  carousel.value.addEventListener("mousedown", handleMouseDown);
+  carousel.value.addEventListener("mousemove", handleMouseMove);
+  carousel.value.addEventListener("mouseup", handleMouseUp);
+  carousel.value.addEventListener("mouseleave", handleMouseUp);
+  carousel.value.addEventListener("touchstart", handleTouchStart);
+  carousel.value.addEventListener("touchmove", handleTouchMove);
+  carousel.value.addEventListener("touchend", handleTouchEnd);
+  // startAutoplay();
+});
+
+// onUnmounted(() => {
+//   carousel.value.removeEventListener("mousedown", handleMouseDown);
+//   carousel.value.removeEventListener("mousemove", handleMouseMove);
+//   carousel.value.removeEventListener("mouseup", handleMouseUp);
+//   carousel.value.removeEventListener("mouseleave", handleMouseUp);
+//   carousel.value.removeEventListener("touchstart", handleTouchStart);
+//   carousel.value.removeEventListener("touchmove", handleTouchMove);
+//   carousel.value.removeEventListener("touchend", handleTouchEnd);
+//   stopAutoplay();
+// });
 </script>
 
 <style scoped>
