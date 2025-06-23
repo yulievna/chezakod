@@ -25,7 +25,6 @@
           playsinline
           preload="auto"
       ></video>
-      <div style="width: 100%; height: 100%; background: green"></div>
     </swiper-slide>
   </swiper-container>
 </template>

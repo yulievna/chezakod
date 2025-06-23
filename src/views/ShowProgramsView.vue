@@ -55,37 +55,64 @@
           <div v-if="selectedShow" class="gallery-modal" @click="closeGallery">
             <div class="gallery-modal__content" @click.stop>
               <button class="gallery-modal__close" @click="closeGallery">&times;</button>
-              <div class="gallery-modal__main">
-                <button
-                    class="gallery-modal__arrow gallery-modal__arrow--prev"
-                    @click="prevPhoto"
-                    :disabled="currentPhotoIndex === 0"
-                >
-                  &#10094;
-                </button>
-                <img
-                    :src="currentPhoto"
-                    :alt="selectedShow.name"
-                    class="gallery-modal__image"
-                >
-                <button
-                    class="gallery-modal__arrow gallery-modal__arrow--next"
-                    @click="nextPhoto"
-                    :disabled="currentPhotoIndex === selectedShow.gallery.length - 1"
-                >
-                  &#10095;
-                </button>
-              </div>
-              <div class="gallery-modal__thumbnails">
-                <img
+              <swiper-container
+                  :navigation="true"
+                  thumbs-swiper=".show-thumbs"
+                  class="swiper-show"
+              >
+                <swiper-slide
                     v-for="(photo, index) in selectedShow.gallery"
                     :key="index"
-                    :src="photo"
-                    :alt="`Фото ${index + 1}`"
-                    :class="{ 'active': currentPhotoIndex === index }"
-                    @click="currentPhotoIndex = index"
                 >
-              </div>
+                  <img :src="photo" :alt="`Фото ${index + 1}`">
+                </swiper-slide>
+              </swiper-container>
+              <swiper-container
+                  class="show-thumbs"
+                  :slidesPerView="6"
+                  :free-mode="true"
+                  :watchSlidesProgress="true"
+                  :spaceBetween="10"
+              >
+                <swiper-slide
+                    v-for="(photo, index) in selectedShow.gallery"
+                    :key="index"
+                    class="thumbs-slide"
+                >
+                  <img :src="photo" :alt="`Фото ${index + 1}`">
+                </swiper-slide>
+              </swiper-container>
+              <!--              <div class="gallery-modal__main">-->
+              <!--                <button-->
+              <!--                    class="gallery-modal__arrow gallery-modal__arrow&#45;&#45;prev"-->
+              <!--                    @click="prevPhoto"-->
+              <!--                    :disabled="currentPhotoIndex === 0"-->
+              <!--                >-->
+              <!--                  &#10094;-->
+              <!--                </button>-->
+              <!--                <img-->
+              <!--                    :src="currentPhoto"-->
+              <!--                    :alt="selectedShow.name"-->
+              <!--                    class="gallery-modal__image"-->
+              <!--                >-->
+              <!--                <button-->
+              <!--                    class="gallery-modal__arrow gallery-modal__arrow&#45;&#45;next"-->
+              <!--                    @click="nextPhoto"-->
+              <!--                    :disabled="currentPhotoIndex === selectedShow.gallery.length - 1"-->
+              <!--                >-->
+              <!--                  &#10095;-->
+              <!--                </button>-->
+              <!--              </div>-->
+              <!--              <div class="gallery-modal__thumbnails">-->
+              <!--                <img-->
+              <!--                    v-for="(photo, index) in selectedShow.gallery"-->
+              <!--                    :key="index"-->
+              <!--                    :src="photo"-->
+              <!--                    :alt="`Фото ${index + 1}`"-->
+              <!--                    :class="{ 'active': currentPhotoIndex === index }"-->
+              <!--                    @click="currentPhotoIndex = index"-->
+              <!--                >-->
+              <!--              </div>-->
             </div>
           </div>
 
@@ -126,6 +153,10 @@ import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import {useHead} from "@unhead/vue";
+import {register} from "swiper/element/bundle";
+
+register();
+
 
 const showPrograms = ref([]);
 const miniShows = ref([]);
@@ -133,36 +164,15 @@ const selectedMiniShow = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const selectedShow = ref(null)
-const selectedLounge = ref(null);
-const currentPhotoIndex = ref(0);
-
-const currentPhoto = computed(() => {
-  if (!selectedShow.value?.gallery?.length) return '';
-  return selectedShow.value.gallery[currentPhotoIndex.value];
-});
 
 const openGallery = (show) => {
   selectedShow.value = show;
-  currentPhotoIndex.value = 0;
   document.body.style.overflow = 'hidden';
 };
 
 const closeGallery = () => {
   selectedShow.value = null;
-  currentPhotoIndex.value = 0;
   document.body.style.overflow = '';
-};
-
-const nextPhoto = () => {
-  if (currentPhotoIndex.value < selectedShow.value.gallery.length - 1) {
-    currentPhotoIndex.value++;
-  }
-};
-
-const prevPhoto = () => {
-  if (currentPhotoIndex.value > 0) {
-    currentPhotoIndex.value--;
-  }
 };
 
 const loadShows = async () => {
@@ -213,6 +223,27 @@ onMounted(loadShows);
 </script>
 
 <style scoped>
+
+swiper-container * {
+  border-radius: 20px;
+}
+
+swiper-slide.thumbs-slide img {
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+swiper-slide.thumbs-slide img:hover {
+  opacity: 0.8;
+}
+
+swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
+  border: 2px solid #cf1034;
+  opacity: 1;
+}
+
 .mini-shows {
   margin-top: 60px;
 }
@@ -403,8 +434,8 @@ onMounted(loadShows);
 
 .modal-close {
   position: absolute;
-  top: 15px;
-  right: 20px;
+  top: -5px;
+  right: 5px;
   background: none;
   border: none;
   font-size: 28px;
@@ -719,7 +750,6 @@ onMounted(loadShows);
 }
 
 .gallery-modal__content {
-  background: #fff;
   padding: 20px;
   border-radius: 16px;
   position: relative;
@@ -728,17 +758,17 @@ onMounted(loadShows);
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0;
 }
 
 .gallery-modal__close {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: -20px;
+  right: -10px;
   background: none;
   border: none;
-  font-size: 28px;
-  color: #333;
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   z-index: 2;
   width: 40px;
@@ -751,7 +781,7 @@ onMounted(loadShows);
 }
 
 .gallery-modal__close:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .gallery-modal__main {

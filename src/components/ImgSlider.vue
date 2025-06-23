@@ -1,15 +1,16 @@
 <template> <!-- TODO: привести к единому виду, добавить точечки или стрелки везде -->
   <swiper-container
-      :pagination="{
-        clickable: true
-      }"
+      :pagination="props.pagination ? {
+        clickable: props.paginationClickable
+      } : false"
       class="swiper-slider"
-      loop="true"
-      :autoplay="{
-        delay: 3000,
+      :loop="props.loop"
+      :autoplay="props.autoplay ? {
+        delay: props.autoplayDelay,
         disableOnInteraction: false,
         pauseOnMouseEnter: true
-      }"
+      } : false"
+      :navigation="props.navigation"
   >
     <swiper-slide
         v-for="(image, index) in images"
@@ -42,6 +43,30 @@ const props = defineProps({
   isPromoSlider: {
     type: Boolean,
     default: false
+  },
+  loop: {
+    type: Boolean,
+    default: true
+  },
+  navigation: {
+    type: Boolean,
+    default: false
+  },
+  pagination: {
+    type: Boolean,
+    default: true
+  },
+  autoplay: {
+    type: Boolean,
+    default: true
+  },
+  autoplayDelay: {
+    type: Number,
+    default: 3000
+  },
+  paginationClickable: {
+    type: Boolean,
+    default: true
   }
 });
 
