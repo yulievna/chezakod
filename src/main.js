@@ -19,11 +19,10 @@ export const createApp = ViteSSG(
                 }
             }
         },
-        base: import.meta.env.PROD ? "/yulya/" : "/"
+        base: import.meta.env.MODE === "production" ? "/yulya/" : "/"
     },
     (ctx) => {
         ctx.app.config.globalProperties.$router = ctx.router
-
         ctx.head.push({
             titleTemplate: "%s %sep %siteName",
             templateParams: {

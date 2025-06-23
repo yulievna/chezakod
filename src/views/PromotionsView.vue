@@ -5,285 +5,52 @@
 
     <nav class="promotions__nav">
       <ul class="promotions__nav-list">
-        <li><a href="#easy-thursday">Легкий четверг</a></li>
-        <li><a href="#loyalty-program">Программа лояльности</a></li>
-        <li><a href="#ticket">Билет</a></li>
-        <li><a href="#birthday">Скидка в день рождения</a></li>
-        <li><a href="#party-kod">Акции Party KOD</a></li>
-        <li><a href="#zhmurki">Жмурки</a></li>
-        <li><a href="#teachers">Классным руководителям</a></li>
+        <li v-for="action in actions" :key="`action-nav-${action.id}`">
+          <a :href="`#action-${action.id}`">{{ action.name }}</a>
+        </li>
       </ul>
     </nav>
-
     <div class="promotions__container">
-      <div class="promotion-card" id="easy-thursday">
+      <div class="promotion-card"
+           :id="`action-${action.id}`"
+           v-for="action in actions"
+           :key="action.id"
+      >
         <div class="promotion-card__image">
-          <img src="@/assets/images/discount1.jpg" alt="Легкий четверг" class="promotion-card__img">
+          <img :src="action.image" :alt="action.name" class="promotion-card__img">
         </div>
         <div class="promotion-card__content">
           <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Легкий четверг</h2>
-            <div class="promotion-card__price">2800 ₽</div>
+            <h2 class="promotion-card__title">{{ action.name }}</h2>
+            <div class="promotion-card__price" v-if="action.price">{{ action.price }}</div>
           </div>
           <p class="promotion-card__description">
-            Все квесты по четвергам по цене 2800 р.!<br>
-            На команду от 2 до 4 человек.
+            {{ action.text }}
           </p>
           <div class="promotion-card__details">
-            <div class="promotion-card__promo">
+            <div class="promotion-card__promo" v-if="action.promocode">
               <span class="promo-label">Промокод</span>
-              <span class="promo-code">"Легкий Четверг"</span>
+              <span class="promo-code">"{{ action.promocode }}"</span>
             </div>
-            <div class="promotion-card__conditions-wrapper">
-              <h3 class="promotion-card__subtitle">Условия акции:</h3>
+            <div class="promotion-card__conditions-wrapper" v-if="action.list.elements.length > 0">
+              <h3 class="promotion-card__subtitle">{{ action.list.title ? action.list.title : 'Условия' }}:</h3>
               <ul class="promotion-card__conditions">
-                <li>Дополнительные участники оплачиваются отдельно.</li>
-                <li>Не распространяется в праздничный день.</li>
-                <li>Не распространяется на время позже 21:30</li>
-                <li>Скидки и акции не суммируются.</li>
+                <li v-for="(element, index) in action.list.elements" :key="index">{{ element }}</li>
               </ul>
             </div>
-            <p class="promotion-card__note">
-              Акция не распространяется на экшн-игры Жмурки и ACTION:KOD
+            <p class="promotion-card__note" v-if="action.limit">
+              {{ action.limit }}
             </p>
-            <div class="promotion-card__contact">
-              <a href="tel:+73912699223" class="contact-button">
-                <span class="contact-button__text">Забронировать</span>
-                <span class="contact-button__phone">+7 (391) 269-92-23</span>
+            <div class="promotion-card__contact" v-if="action.button.main">
+              <a :href="action.button.link.url" class="contact-button" v-if="action.button.link.is_out" :style="{ background: action.button.color}">
+                <span class="contact-button__text">{{ action.button.main }}</span>
+                <span class="contact-button__phone" v-if="action.button.second">{{ action.button.second }}</span>
               </a>
+              <router-link :to="action.button.link.url" v-else :style="{ background: action.button.color}" class="contact-button">
+                <span class="contact-button__text">{{ action.button.main }}</span>
+                <span class="contact-button__phone" v-if="action.button.second">{{ action.button.second }}</span>
+              </router-link>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="promotion-card" id="loyalty-program">
-        <div class="promotion-card__image">
-          <img src="@/assets/images/discount2.jpg" alt="Программа лояльности" class="promotion-card__img">
-        </div>
-        <div class="promotion-card__content">
-          <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Программа лояльности «Чеширский Код»</h2>
-          </div>
-          <p class="promotion-card__description">
-            Во всех филиалах сети «Чеширский Код» действует единая программа лояльности для гостей.
-            Посещая нас, вы копите баллы в своём аккаунте Telegram-бота. 1 балл = 1 рубль.
-          </p>
-          <div class="promotion-card__details">
-            <div class="promotion-card__features-wrapper">
-              <h3 class="promotion-card__subtitle">Наш бот – это удобный сервис для вас:</h3>
-              <ul class="promotion-card__features">
-                <li>Копить и тратить баллы, отслеживать свой баланс;</li>
-                <li>Выбирать и бронировать услуги компании;</li>
-                <li>Получать свои фотоснимки по итогам игр сразу в свой личный аккаунт.</li>
-              </ul>
-            </div>
-            <div class="promotion-card__bonus">
-              <h3 class="promotion-card__subtitle">При каждом посещении компании ваш бонусный баланс будет
-                увеличиваться:</h3>
-              <ul class="promotion-card__bonus-list">
-                <li>+ 5% вернётся баллами от стоимости квестов, экшн-игр, заездов на картинге, лофт-караоке</li>
-                <li>+ 1% - от стоимости любых других услуг – аренда залов, шоу-программы, дополнительные услуги и т.д.
-                </li>
-              </ul>
-            </div>
-            <div class="promotion-card__restrictions">
-              <h3 class="promotion-card__subtitle">Ограничения:</h3>
-              <ul class="promotion-card__restrictions-list">
-                <li>Вывести баллы для оплаты товаров и услуг компаний, не принадлежащих корпорации «Чеширский Код», или
-                  обналичить их нельзя;
-                </li>
-                <li>Списать баллы возможно при бронировании по телефону 2-333-999 и на сайте chezakod.ru;</li>
-                <li>Баллы не суммируются с другими акциями.</li>
-              </ul>
-            </div>
-            <a href="https://t.me/ChezakodBot" target="_blank" class="telegram-button">
-              <span class="telegram-button__text">Перейти в Telegram-бот</span>
-              <span class="telegram-button__bonus">+200 баллов при регистрации</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="promotion-card" id="ticket">
-        <div class="promotion-card__image">
-          <img src="@/assets/images/discount4.jpg" alt="Билет" class="promotion-card__img">
-        </div>
-        <div class="promotion-card__content">
-          <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Билет</h2>
-            <div class="promotion-card__price">3000 ₽</div>
-          </div>
-          <p class="promotion-card__description">
-            Билет на квест-комнату по цене 3000 р.!<br>
-            На команду от 2 до 4 человек.
-          </p>
-          <div class="promotion-card__details">
-            <div class="promotion-card__promo">
-              <span class="promo-label">Промокод</span>
-              <span class="promo-code">"Билет"</span>
-            </div>
-            <div class="promotion-card__conditions-wrapper">
-              <h3 class="promotion-card__subtitle">Условия акции:</h3>
-              <ul class="promotion-card__conditions">
-                <li>Дополнительные участники оплачиваются отдельно.</li>
-                <li>Не распространяется в праздничный день.</li>
-                <li>Не распространяется на время позже 21:30</li>
-                <li>Скидки и акции не суммируются.</li>
-              </ul>
-            </div>
-            <p class="promotion-card__note">
-              Акция не распространяется на экшн-игры Жмурки и ACTION:KOD
-            </p>
-            <div class="promotion-card__contact">
-              <a href="tel:+73912699223" class="contact-button">
-                <span class="contact-button__text">Забронировать</span>
-                <span class="contact-button__phone">+7 (391) 269-92-23</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="promotion-card" id="birthday">
-        <div class="promotion-card__image">
-          <img src="@/assets/images/discount3.jpg" alt="Скидка в день рождения" class="promotion-card__img">
-        </div>
-        <div class="promotion-card__content">
-          <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Скидка в день рождения</h2>
-            <div class="promotion-card__price">10%</div>
-          </div>
-          <p class="promotion-card__description">
-            У вас День рождения? Дарим скидку 10% на любой квест!
-          </p>
-          <div class="promotion-card__details">
-            <div class="promotion-card__conditions-wrapper">
-              <h3 class="promotion-card__subtitle">Условия акции:</h3>
-              <ul class="promotion-card__conditions">
-                <li>Скидка действительна при условии предъявления паспорта или свидетельства о рождении администратору
-                  на локации.
-                </li>
-                <li>Срок действия скидки – 3 дня до и 3 дня после дня рождения.</li>
-                <li>Не распространяется на дополнительные услуги.</li>
-                <li>Скидки и акции не суммируются.</li>
-              </ul>
-            </div>
-            <p class="promotion-card__note">
-              Акция не распространяется на экшн-игры Жмурки и ACTION:KOD
-            </p>
-            <div class="promotion-card__contact">
-              <a href="tel:+73912699223" class="contact-button">
-                <span class="contact-button__text">Забронировать</span>
-                <span class="contact-button__phone">+7 (391) 269-92-23</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="promotion-card" id="party-kod">
-        <div class="promotion-card__image">
-          <img src="@/assets/images/discount5.jpg" alt="Party KOD" class="promotion-card__img">
-        </div>
-        <div class="promotion-card__content">
-          <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Party KOD лофт-караоке</h2>
-          </div>
-          <p class="promotion-card__description">
-            Во всех залах Party KOD действуют акции:
-          </p>
-          <div class="promotion-card__details">
-            <div class="promotion-card__conditions-wrapper">
-              <h3 class="promotion-card__subtitle">Акции:</h3>
-              <ul class="promotion-card__conditions">
-                <li>Пятый час в подарок.</li>
-                <li>10% скидка имениннику. Действует 3 дня до и 3 дня после дня рождения, распространяется на аренду
-                  залов.
-                </li>
-                <li>Для получения скидки необходимо предоставить подтверждающий документ.</li>
-                <li>Акции и скидки не суммируются.</li>
-              </ul>
-            </div>
-            <div class="promotion-card__contact">
-              <a href="tel:+79311074636" class="contact-button">
-                <span class="contact-button__text">Забронировать</span>
-                <span class="contact-button__phone">+7 (931) 107-46-36</span>
-              </a>
-            </div>
-            <p class="promotion-card__note">
-              Адрес филиала: ул. Партизана Железняка, 26в.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="promotion-card" id="zhmurki">
-        <div class="promotion-card__image">
-          <img src="@/assets/images/discount6.jpg" alt="Жмурки" class="promotion-card__img">
-        </div>
-        <div class="promotion-card__content">
-          <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Жмурки</h2>
-          </div>
-          <p class="promotion-card__description">
-            У Вас День рождения? Именинник играет бесплатно!
-          </p>
-          <div class="promotion-card__details">
-            <div class="promotion-card__conditions-wrapper">
-              <h3 class="promotion-card__subtitle">Условия акции:</h3>
-              <ul class="promotion-card__conditions">
-                <li>Стоимость игры рассчитывается по количеству участников в команде, без учета именинника.</li>
-                <li>Скидка действительна при условии предъявления паспорта или свидетельства о рождении администратору
-                  на локации.
-                </li>
-                <li>Срок действия акции – 3 дня до и 3 дня после дня рождения.</li>
-                <li>Скидка распространяется на команды от 5 игроков.</li>
-                <li>Скидки и акции не суммируются.</li>
-              </ul>
-            </div>
-            <div class="promotion-card__contact">
-              <a href="tel:+73912699223" class="contact-button">
-                <span class="contact-button__text">Забронировать</span>
-                <span class="contact-button__phone">+7 (391) 269-92-23</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="promotion-card" id="teachers">
-        <div class="promotion-card__image">
-          <img src="@/assets/images/discount7.jpg" alt="Классным руководителям" class="promotion-card__img">
-        </div>
-        <div class="promotion-card__content">
-          <div class="promotion-card__header">
-            <h2 class="promotion-card__title">Классным руководителям и представителям родительского комитета</h2>
-          </div>
-          <p class="promotion-card__description">
-            Ищите место, где организовать выпускной, школьный праздник или вечеринку для класса?
-          </p>
-          <div class="promotion-card__details">
-            <div class="promotion-card__features-wrapper">
-              <h3 class="promotion-card__subtitle">Наши возможности:</h3>
-              <ul class="promotion-card__features">
-                <li>Различные форматы игр, банкетные залы и все необходимое для Вашего мероприятия есть в любом из наших
-                  филиалов: Алексеева, Мира, Робеспьера, Комсомолл на Белинского.
-                </li>
-                <li>Нужна активность на вашей территории? Ведущие, диджеи и фотографы Чеширского приедут к Вам со своей
-                  программой.
-                </li>
-                <li>Для классов действуют специальные цены!</li>
-              </ul>
-            </div>
-            <div class="promotion-card__contact">
-              <a href="tel:+73912699223" class="contact-button">
-                <span class="contact-button__text">Забронировать</span>
-                <span class="contact-button__phone">+7 (391) 269-92-23</span>
-              </a>
-            </div>
-            <p class="promotion-card__note">
-              Подробности по телефону 2-333-999
-            </p>
           </div>
         </div>
       </div>
@@ -298,17 +65,32 @@
 </template>
 
 <script setup>
-import {onMounted, watch} from 'vue';
+import {onMounted, watch, onServerPrefetch, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import {useHead} from "@unhead/vue";
+import axios, {HttpStatusCode} from "axios";
 
 useHead({
   title: "Акции"
 });
 
 const route = useRoute();
+let actions = ref([]);
+
+const loadActions = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/action/");
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      actions.value = resp.data.result;
+    } else {
+      throw new Error("Ошибка сервера");
+    }
+  } catch (err) {
+    console.error(`Ошибка при получении акций: ${err}`);
+  }
+}
 
 const scrollToPromotion = (hash) => {
   if (hash) {
@@ -319,7 +101,10 @@ const scrollToPromotion = (hash) => {
   }
 };
 
-onMounted(() => {
+onServerPrefetch(loadActions);
+
+onMounted(async () => {
+  await loadActions();
   scrollToPromotion(route.hash);
 
   // Плавная прокрутка при клике на ссылки
