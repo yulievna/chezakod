@@ -25,6 +25,8 @@ import karting from '@/assets/images/chego.jpg';
 import karaoke from '@/assets/images/party.jpg';
 import children from '@/assets/images/children.jpg';
 import {useHead} from "@unhead/vue";
+import {onMounted, onServerPrefetch, ref} from "vue";
+import axios, {HttpStatusCode} from "axios";
 
 useHead({
   title: "Чеширский КОД · корпорация развлечений",
@@ -84,6 +86,45 @@ const videos = [
     src: import.meta.env.VITE_HOST + "/kiosk/video/actionkod/Action_Kod_Zhmurki_1min.mp4"
   },
 ];
+
+let stat = ref({});
+let vk_sub = ref(null);
+
+const loadStat = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/stat/");
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      stat.value = resp.data.result;
+    } else {
+      throw new Error("Сервер вернул ошибку");
+    }
+  } catch (err) {
+    console.error(`Ошибка при получении статистики: ${err}`);
+  }
+}
+
+const loadVkSub = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/vk/public_sub_count/");
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      vk_sub.value = resp.data.result.sub_count;
+    } else {
+      throw new Error("Сервер вернул ошибку");
+    }
+  } catch (err) {
+    console.error(`Ошибка при получении количества подписчиков: ${err}`);
+  }
+}
+
+onMounted(async () => {
+  await loadStat();
+  await loadVkSub();
+})
+
+onServerPrefetch(async () => {
+  await loadStat();
+  await loadVkSub();
+})
 
 </script>
 
@@ -145,11 +186,11 @@ const videos = [
         <p class="stat-text">Года работаем</p>
       </div>
       <div class="stat-card">
-        <h3 class="stat-number">32</h3>
+        <h3 class="stat-number">{{ (stat.quests ? stat.quests : 42).toLocaleString("ru-RU") }}</h3>
         <p class="stat-text">Квестов и мероприятий</p>
       </div>
       <div class="stat-card">
-        <h3 class="stat-number">28 296</h3>
+        <h3 class="stat-number">{{ (stat.bookings ? stat.bookings : 37955).toLocaleString("ru-RU") }}</h3>
         <p class="stat-text">Проведено квестов и мероприятий</p>
       </div>
       <div class="stat-card">
@@ -157,7 +198,7 @@ const videos = [
         <p class="stat-text">Гарантия веселья</p>
       </div>
       <a href="https://vk.com/chezakod" class="stat-card">
-        <h3 class="stat-number">17 354</h3>
+        <h3 class="stat-number">{{ (vk_sub ? vk_sub : 17337).toLocaleString("ru-RU") }}</h3>
         <p class="stat-text">Подписчиков в ВК</p>
       </a>
     </div>

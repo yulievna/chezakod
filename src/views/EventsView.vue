@@ -301,7 +301,7 @@
         <div class="contact-info">
           <h2>Забронировать мероприятие</h2>
           <p class="contact-types">выездной квест | ваш офис | база отдыха</p>
-          <a href="tel:2-333-999" class="phone-number">2-333-999</a>
+          <a :href="`tel:${contacts.phone.value}`" class="phone-number">{{ contacts.phone.text ? contacts.phone.text : contacts.phone.value }}</a>
         </div>
       </div>
     </section>
@@ -345,6 +345,8 @@ import showImage from '@/assets/images/showImage.png'
 import photographer from '@/assets/images/photografer.png'
 import instructor from '@/assets/images/instructor.png'
 import animator from '@/assets/images/animator.png'
+
+import contacts from "@/contacts.js";
 
 // Reactive state
 const activeEventType = ref('corporate')

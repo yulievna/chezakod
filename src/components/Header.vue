@@ -49,15 +49,14 @@
           </li>
 
           <!-- Контакты (в мобильной версии) -->
-          <li class="navigation-item mobile-only"><a href="tel:+79998887766">+7 (999) 888-77-66</a></li>
-          <li class="navigation-item mobile-only">
-            <a href="https://wa.me/">WhatsApp</a> <!-- TODO: Контакты -->
-          </li>
-          <li class="navigation-item mobile-only">
-            <a href="https://t.me/">Telegram</a>
-          </li>
-          <li class="navigation-item mobile-only">
-            <a href="https://vk.com/chezakod">ВКонтакте</a>
+          <li class="navigation-item mobile-only" v-for="(contact, key, index) in contacts" :key="index">
+            <template v-if="!contact.hide">
+              <a :href="`tel:${contact.value}`"
+                 v-if="contact.type === 'phone'">{{ contact.text ? contact.text : contact.value }}</a>
+              <a :href="`mailto:${contact.value}`"
+                 v-else-if="contact.type === 'email'">{{ contact.text ? contact.text : contact.value }}</a>
+              <a :href="contact.value" v-else>{{ contact.text ? contact.text : contact.value }}</a>
+            </template>
           </li>
         </ul>
 
@@ -73,15 +72,19 @@
               <span class="btn-hover-effect"></span>
             </button>
             <ul class="contacts-dropdown">
-              <li><a href="tel:+79998887766" class="contact-link">+7 (999) 888-77-66</a></li>
-              <li>
-                <router-link to="#" class="contact-link">WhatsApp</router-link>
-              </li>
-              <li>
-                <router-link to="#" class="contact-link">Telegram</router-link>
-              </li>
-              <li>
-                <router-link to="https://vk.com/chezakod" class="contact-link">ВКонтакте</router-link>
+              <li v-for="(contact, key, index) in contacts" :key="index">
+                <template v-if="!contact.hide">
+                  <a :href="`tel:${contact.value}`"
+                     v-if="contact.type === 'phone'" class="contact-link">{{
+                      contact.text ? contact.text : contact.value
+                    }}</a>
+                  <a :href="`mailto:${contact.value}`"
+                     v-else-if="contact.type === 'email'"
+                     class="contact-link">{{ contact.text ? contact.text : contact.value }}</a>
+                  <a :href="contact.value" v-else class="contact-link">{{
+                      contact.text ? contact.text : contact.value
+                    }}</a>
+                </template>
               </li>
             </ul>
           </div>
@@ -99,6 +102,7 @@
 <script setup>
 import {ref} from "vue";
 import Form from "@/components/Form.vue";
+import contacts from "@/contacts.js";
 
 const isPopupOpen = ref(false);
 const isMenuOpen = ref(false);
