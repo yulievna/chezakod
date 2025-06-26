@@ -96,20 +96,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Form from '@/components/Form.vue'
+import {ref} from "vue";
+import Form from "@/components/Form.vue";
+import contacts from "@/contacts.js";
 
-const isPopupOpen = ref(false)
-const isMenuOpen = ref(false)
+const isPopupOpen = ref(false);
+const isMenuOpen = ref(false);
 
 const togglePopup = () => {
-  isPopupOpen.value = !isPopupOpen.value
+  isPopupOpen.value = !isPopupOpen.value;
 }
 
 const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
+  isMenuOpen.value = !isMenuOpen.value;
+};
 </script>
+
 
 <style scoped>
 /* Общие стили */

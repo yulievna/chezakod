@@ -46,45 +46,74 @@
     <!-- Photo Gallery Modal -->
     <div v-if="selectedLounge" class="gallery-modal" @click="closeGallery">
       <div class="gallery-modal__content" @click.stop>
-        <button class="gallery-modal__close" @click="closeGallery">&times;</button>
-        <div class="gallery-modal__main">
-          <button
-              class="gallery-modal__arrow gallery-modal__arrow--prev"
-              @click="prevPhoto"
-              :disabled="currentPhotoIndex === 0"
-          >
-            &#10094;
-          </button>
-          <img
-              :src="currentPhoto"
-              :alt="selectedLounge.location?.name || 'Лаундж зона'"
-              class="gallery-modal__image"
-          >
-          <button
-              class="gallery-modal__arrow gallery-modal__arrow--next"
-              @click="nextPhoto"
-              :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"
-          >
-            &#10095;
-          </button>
-        </div>
-        <div class="gallery-modal__thumbnails">
-          <img
+        <button class="gallery-modal__close" @click="closeGallery" style="font-size: 48pt">&times;</button>
+        <swiper-container
+            :navigation="true"
+            thumbs-swiper=".lounge-thumbs"
+        >
+          <swiper-slide
               v-for="(photo, index) in selectedLounge.photo"
               :key="index"
-              :src="photo"
-              :alt="`Фото ${index + 1}`"
-              :class="{ 'active': currentPhotoIndex === index }"
-              @click="currentPhotoIndex = index"
           >
-        </div>
+            <img :src="photo" :alt="`Фото ${index + 1}`">
+          </swiper-slide>
+        </swiper-container>
+        <swiper-container
+            class="lounge-thumbs"
+            :slidesPerView="6"
+            :free-mode="true"
+            :watchSlidesProgress="true"
+            :spaceBetween="10"
+        >
+          <swiper-slide
+              v-for="(photo, index) in selectedLounge.photo"
+              :key="index"
+              class="thumbs-slide"
+          >
+            <img :src="photo" :alt="`Фото ${index + 1}`">
+          </swiper-slide>
+        </swiper-container>
+        <!--        <div class="gallery-modal__main">-->
+        <!--          <button-->
+        <!--              class="gallery-modal__arrow gallery-modal__arrow&#45;&#45;prev"-->
+        <!--              @click="prevPhoto"-->
+        <!--              :disabled="currentPhotoIndex === 0"-->
+        <!--          >-->
+        <!--            &#10094;-->
+        <!--          </button>-->
+        <!--          <img-->
+        <!--              :src="currentPhoto"-->
+        <!--              :alt="selectedLounge.location?.name || 'Лаундж зона'"-->
+        <!--              class="gallery-modal__image"-->
+        <!--          >-->
+        <!--          <button-->
+        <!--              class="gallery-modal__arrow gallery-modal__arrow&#45;&#45;next"-->
+        <!--              @click="nextPhoto"-->
+        <!--              :disabled="currentPhotoIndex === selectedLounge.photo.length - 1"-->
+        <!--          >-->
+        <!--            &#10095;-->
+        <!--          </button>-->
+        <!--        </div>-->
+        <!--        <div class="gallery-modal__thumbnails">-->
+        <!--          <img-->
+        <!--              v-for="(photo, index) in selectedLounge.photo"-->
+        <!--              :key="index"-->
+        <!--              :src="photo"-->
+        <!--              :alt="`Фото ${index + 1}`"-->
+        <!--              :class="{ 'active': currentPhotoIndex === index }"-->
+        <!--              @click="currentPhotoIndex = index"-->
+        <!--          >-->
+        <!--        </div>-->
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import {ref} from 'vue';
+import {register} from "swiper/element/bundle";
+
+register();
 
 const props = defineProps({
   lounges: {
@@ -94,39 +123,42 @@ const props = defineProps({
 });
 
 const selectedLounge = ref(null);
-const currentPhotoIndex = ref(0);
-
-const currentPhoto = computed(() => {
-  if (!selectedLounge.value?.photo?.length) return '';
-  return selectedLounge.value.photo[currentPhotoIndex.value];
-});
 
 const openGallery = (lounge) => {
   selectedLounge.value = lounge;
-  currentPhotoIndex.value = 0;
   document.body.style.overflow = 'hidden';
 };
 
 const closeGallery = () => {
   selectedLounge.value = null;
-  currentPhotoIndex.value = 0;
   document.body.style.overflow = '';
 };
 
-const nextPhoto = () => {
-  if (currentPhotoIndex.value < selectedLounge.value.photo.length - 1) {
-    currentPhotoIndex.value++;
-  }
-};
 
-const prevPhoto = () => {
-  if (currentPhotoIndex.value > 0) {
-    currentPhotoIndex.value--;
-  }
-};
 </script>
 
 <style scoped>
+
+swiper-container * {
+  border-radius: 20px;
+}
+
+swiper-slide.thumbs-slide img {
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+swiper-slide.thumbs-slide img:hover {
+  opacity: 0.8;
+}
+
+swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
+  border: 2px solid #cf1034;
+  opacity: 1;
+}
+
 .lounge__list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -338,144 +370,19 @@ const prevPhoto = () => {
   width: 90%;
   max-width: 1200px;
   background: #1a1a1a;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 20px;
 }
 
 .gallery-modal__close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: -60px;
+  right: -20px;
   background: none;
   border: none;
   font-size: 30px;
   color: #fff;
   cursor: pointer;
   z-index: 2;
-}
-
-.gallery-modal__main {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.gallery-modal__image {
-  max-width: 100%;
-  max-height: 70vh;
-  object-fit: contain;
-  border-radius: 5px;
-}
-
-.gallery-modal__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #fff;
-  font-size: 24px;
-  padding: 15px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.gallery-modal__arrow:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.gallery-modal__arrow--prev {
-  left: 10px;
-}
-
-.gallery-modal__arrow--next {
-  right: 10px;
-}
-
-.gallery-modal__thumbnails {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 10px 0;
-  justify-content: center;
-  scrollbar-width: thin;
-  scrollbar-color: #cf1034 #1a1a1a;
-}
-
-.gallery-modal__thumbnails::-webkit-scrollbar {
-  height: 6px;
-}
-
-.gallery-modal__thumbnails::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 3px;
-}
-
-.gallery-modal__thumbnails::-webkit-scrollbar-thumb {
-  background: #cf1034;
-  border-radius: 3px;
-}
-
-.gallery-modal__thumbnails img {
-  width: 80px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 5px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: all 0.3s ease;
-}
-
-.gallery-modal__thumbnails img:hover {
-  opacity: 0.8;
-}
-
-.gallery-modal__thumbnails img.active {
-  opacity: 1;
-  border: 2px solid #cf1034;
-}
-
-@media (max-width: 768px) {
-  .gallery-modal__content {
-    width: 95%;
-    padding: 15px;
-  }
-
-  .gallery-modal__arrow {
-    padding: 10px;
-    font-size: 20px;
-  }
-
-  .gallery-modal__thumbnails img {
-    width: 60px;
-    height: 45px;
-  }
-}
-
-@media (max-width: 480px) {
-  .gallery-modal {
-    padding: 10px;
-  }
-
-  .gallery-modal__content {
-    padding: 10px;
-  }
-
-  .gallery-modal__close {
-    font-size: 24px;
-  }
-
-  .gallery-modal__arrow {
-    padding: 8px;
-    font-size: 18px;
-  }
-
-  .gallery-modal__thumbnails img {
-    width: 50px;
-    height: 38px;
-  }
 }
 </style>

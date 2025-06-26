@@ -32,7 +32,7 @@ const loadQuests = async (category) => {
       players: `${q.players.min}-${q.players.max} игрока`,
       time: `${q.duration} минут`,
       difficulty: 'Средний',
-      contact: '+7 (391) 269-92-23',
+      // contact: '+7 (391) 269-92-23',
       address: q.location.address,
     }));
 

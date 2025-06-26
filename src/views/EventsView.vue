@@ -84,7 +84,7 @@
               </div>
             </div>
             <div class="slider-section">
-              <ImgSlider :images="eventImages"/>
+              <ImgSlider :images="eventImages" :navigation="true" :autoplay-delay="5000"/>
             </div>
           </div>
 
@@ -301,7 +301,7 @@
         <div class="contact-info">
           <h2>Забронировать мероприятие</h2>
           <p class="contact-types">выездной квест | ваш офис | база отдыха</p>
-          <a href="tel:2-333-999" class="phone-number">2-333-999</a>
+          <a :href="`tel:${contacts.phone.value}`" class="phone-number">{{ contacts.phone.text ? contacts.phone.text : contacts.phone.value }}</a>
         </div>
       </div>
     </section>
@@ -345,6 +345,8 @@ import showImage from '@/assets/images/showImage.png'
 import photographer from '@/assets/images/photografer.png'
 import instructor from '@/assets/images/instructor.png'
 import animator from '@/assets/images/animator.png'
+
+import contacts from "@/contacts.js";
 
 // Reactive state
 const activeEventType = ref('corporate')
@@ -459,6 +461,20 @@ const games = [
     description: 'Увлекательные интерактивные шоу с аниматорами, конкурсами и сюрпризами',
     image: showImage,
     link: '/show-programs'
+  },
+  {
+    id: 4,
+    title: 'Картинг',
+    description: 'Захватывающий дух скоростной электро-картинг с игровыми элементами',
+    image: showImage,
+    link: 'https://kartingchego.ru'
+  },
+  {
+    id: 5,
+    title: 'Лофт-караоке',
+    description: 'Уютные залы в уникальном стиле с караоке-системой',
+    image: showImage,
+    link: 'https://party-kod.ru'
   }
 ]
 
@@ -517,17 +533,6 @@ const init = async () => {
     }))
   } catch (error) {
     console.error('Ошибка при загрузке випок:', error)
-    // Fallback data if API fails
-    lounges.value = [
-      {
-        id: 1,
-        photo: questImage,
-        location: {
-          name: 'Основной зал',
-          address: 'ул. Примерная, 123'
-        }
-      }
-    ]
   }
   startAutoSlide()
 };
@@ -606,8 +611,13 @@ onServerPrefetch(init);
   grid-column: span 2;
   width: 100%;
   max-width: 756px;
-  height: 830px;
+  height: 615px;
   margin: 0 auto;
+  border-radius: 20px;
+}
+
+.slider-section * {
+  border-radius: 20px;
 }
 
 .toggle-buttons button {

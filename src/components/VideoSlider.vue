@@ -7,6 +7,7 @@
       :slidesPerView="'auto'"
       :centeredSlides="true"
       :centeredSlidesBounds="true"
+      class="swiper-video"
       @swiperinit="onSwiperInit"
       @swiperslidechange="handleSlideChange"
   >
@@ -14,11 +15,11 @@
         class="video-item"
         v-for="(video, index) in videos"
         :key="index"
+        @click="goToVideo(index)"
     >
       <video
           :ref="el => videoRefs[index] = el"
           :src="video.src"
-          autoplay
           muted
           loop
           playsinline
@@ -30,7 +31,7 @@
 
 <script setup>
 import {register} from 'swiper/element/bundle';
-import {ref} from "vue";
+import {ref, onMounted } from "vue";
 
 register();
 
@@ -43,6 +44,11 @@ const videos = ref([
 ]);
 
 const videoRefs = [];
+let swiperEl;
+
+onMounted(() => {
+  swiperEl = document.querySelector(".swiper-video");
+})
 
 function onSwiperInit(event) {
   playActiveOnly(event.detail[0]);
@@ -50,6 +56,10 @@ function onSwiperInit(event) {
 
 function handleSlideChange(event) {
   playActiveOnly(event.detail[0]);
+}
+
+const goToVideo = (idx) => {
+  swiperEl.swiper.slideToLoop(idx);
 }
 
 function playActiveOnly(swiperInstance) {

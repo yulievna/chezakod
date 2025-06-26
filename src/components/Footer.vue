@@ -44,10 +44,18 @@
         <!-- Контакты -->
         <div class="footer-contacts">
           <div class="contacts-info">
-            <a href="tel:+79998887766" class="contact-phone">+7 (999) 888-77-66</a>
-            <a href="#" class="social-link">WhatsApp</a>
-            <a href="#" class="social-link">Telegram</a>
-            <a href="#" class="social-link">ВКонтакте</a>
+            <template v-for="(contact, key, index) in contacts" :key="index">
+              <template v-if="!contact.hide">
+                <a :href="`tel:${contact.value}`" v-if="contact.type === 'phone'"
+                   class="contact-phone">{{ contact.text ? contact.text : contact.value }}</a>
+                <a :href="`mailto:${contact.value}`"
+                   v-else-if="contact.type === 'email'"
+                   class="social-link">{{ contact.text ? contact.text : contact.value }}</a>
+                <a :href="contact.value" v-else class="social-link">{{
+                    contact.text ? contact.text : contact.value
+                  }}</a>
+              </template>
+            </template>
           </div>
           <!--          <button class="book-btn" @click="togglePopup">Забронировать</button>-->
         </div>
@@ -55,7 +63,7 @@
 
       <!-- Копирайт -->
       <div class="footer-copyright">
-        <p>&copy; 2025 Чеширский код. Все права защищены.</p>
+        <p>&copy; 2017-{{ new Date().getFullYear() }} Чеширский код. Все права защищены.</p>
       </div>
     </div>
   </footer>
@@ -63,6 +71,7 @@
 
 <script setup>
 import {ref} from "vue";
+import contacts from "@/contacts.js";
 
 const isPopupOpen = ref(false);
 

@@ -15,7 +15,6 @@
               <div class="booking">
                 <button class="to_book" @click.prevent="goToAboutQuest(quest.slug)">Забронировать</button>
                 <div class="contacts">
-                  <div class="contact">{{ quest.contact }}</div>
                   <div class="address">{{ quest.address }}</div>
                 </div>
               </div>
