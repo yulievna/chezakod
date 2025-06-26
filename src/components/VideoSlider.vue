@@ -73,7 +73,7 @@ function playActiveOnly(swiperInstance) {
 
 .video-item {
   width: 90%;
-  max-width: 1500px;
+  max-width: 1200px;
   border-radius: 20px;
   aspect-ratio: 16 / 9;
   transition: transform 0.4s ease, filter 0.4s ease;

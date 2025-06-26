@@ -81,7 +81,6 @@ const togglePopup = () => {
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 .footer-content {
@@ -120,13 +119,14 @@ const togglePopup = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 140px;
 }
 
 .contacts-info {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 150px;
+  text-align: right;
 }
 
 .contact-phone {

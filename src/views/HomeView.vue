@@ -370,14 +370,23 @@ const videos = [
       "quests games karting"
       "karaoke adult kids";
     gap: 15px;
+    width: 90vw;
+    margin: 0 auto;
   }
-
+  .main-slider{
+    width: 90vw;
+    margin: 0 auto;
+  }
   .title {
     font-size: 30px;
   }
+
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
   .servises__list {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -404,7 +413,15 @@ const videos = [
   }
 
   .about-stats {
+    width: 90vw;
+    margin: 0 auto;
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 30px;
+  }
+  .stat-card:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
   }
 
   .title {
@@ -418,15 +435,6 @@ const videos = [
     padding: 0 15px;
   }
 
-  .about-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .stat-card:last-child {
-    grid-column: 1 / -1;
-    justify-self: center;
-  }
 }
 </style>
 

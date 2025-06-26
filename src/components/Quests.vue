@@ -11,7 +11,6 @@
               <div class="quest_chars">
                 <div class="players">{{ quest.players }}</div>
                 <div class="time">{{ quest.time }}</div>
-                <div class="difficulty">{{ quest.difficulty }}</div>
               </div>
               <div class="booking">
                 <button class="to_book" @click.prevent="goToAboutQuest(quest.slug)">Забронировать</button>
@@ -168,6 +167,8 @@ const goToAboutQuest = (slug) => {
 }
 
 .contacts {
+  position: absolute;
+  right: 10px;
   text-align: right;
 }
 
@@ -180,13 +181,20 @@ const goToAboutQuest = (slug) => {
 /* Медиа-запросы для адаптивности */
 @media (max-width: 1200px) {
   .quests__list {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+@media (max-width: 1072px) {
+  .to_book {
+    width: 50%;
+    padding: 8px 14px;
   }
 }
 
+
 @media (max-width: 992px) {
   .quests__list {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 15px;
   }
 
@@ -205,12 +213,13 @@ const goToAboutQuest = (slug) => {
   .to_book {
     padding: 8px 20px;
     font-size: 14px;
+    width: 60%;
   }
 }
 
 @media (max-width: 768px) {
   .quests__list {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 12px;
   }
 
@@ -242,8 +251,10 @@ const goToAboutQuest = (slug) => {
   }
 
   .contacts {
-    text-align: left;
-    width: 100%;
+    right: 10px;
+    bottom: 58px;
+    width: 150px;
+    text-align: right;
   }
 
   .contact, .address {

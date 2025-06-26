@@ -1,7 +1,7 @@
 <template>
   <Header></Header>
   <div class="promotions">
-
+    <div class="promotions__container">
 
     <nav class="promotions__nav">
       <ul class="promotions__nav-list">
@@ -15,7 +15,7 @@
       </ul>
     </nav>
 
-    <div class="promotions__container">
+
       <div class="promotion-card" id="easy-thursday">
         <div class="promotion-card__image">
           <img src="@/assets/images/discount1.jpg" alt="Легкий четверг" class="promotion-card__img">
@@ -303,7 +303,6 @@ import {useRoute} from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import {useHead} from "@unhead/vue";
-
 useHead({
   title: "Акции"
 });
@@ -314,7 +313,10 @@ const scrollToPromotion = (hash) => {
   if (hash) {
     const element = document.getElementById(hash.slice(1));
     if (element) {
-      element.scrollIntoView({behavior: 'smooth'});
+      const headerHeight = 200;
+      const y = element.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }
 };
@@ -322,18 +324,17 @@ const scrollToPromotion = (hash) => {
 onMounted(() => {
   scrollToPromotion(route.hash);
 
-  // Плавная прокрутка при клике на ссылки
   document.querySelectorAll('.promotions__nav-list a').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', function(e) {
       e.preventDefault();
       const targetId = this.getAttribute('href');
       const targetElement = document.querySelector(targetId);
 
       if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        });
+        const headerHeight = 200;
+        const y = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+        window.scrollTo({ top: y, behavior: 'smooth' });
       }
     });
   });
@@ -351,7 +352,7 @@ onMounted(() => {
         });
       }
     });
-  }, {threshold: 0.5});
+  }, { threshold: 0.5 });
 
   document.querySelectorAll('.promotion-card').forEach(card => {
     observer.observe(card);
@@ -365,7 +366,8 @@ watch(() => route.hash, (newHash) => {
 
 <style scoped>
 .promotions__nav {
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
   background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
   position: fixed;
@@ -382,14 +384,14 @@ watch(() => route.hash, (newHash) => {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .promotions__nav-list li a {
   color: #fff;
   font-weight: bold;
   text-decoration: none;
-  padding: 8px 15px;
+  padding: 4px 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   transition: all 0.3s ease;
@@ -702,6 +704,7 @@ watch(() => route.hash, (newHash) => {
 
   .promotions__note {
     padding: 15px;
+    margin: 0 10px;
     font-size: 12px;
     text-align: center;
   }

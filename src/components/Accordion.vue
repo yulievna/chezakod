@@ -124,21 +124,60 @@ p {
   transform: rotate(45deg);
 }
 
-@media (max-width: 450px) {
+@media (max-width: 768px) {
   .accordion-container {
-    flex-direction: column; /* Один столбец на мобильных устройствах */
-    gap: 0px; /* Уменьшаем расстояние между элементами */
+    gap: 15px;
   }
 
   button {
-    height: 50px; /* Уменьшаем высоту кнопки */
-    font-size: 16px; /* Уменьшаем размер шрифта */
-    padding: 10px 15px; /* Уменьшаем отступы */
+    min-height: 50px;
+    font-size: 18px;
+    padding: 12px 20px;
   }
 
   p {
-    font-size: 14px; /* Уменьшаем размер шрифта */
-    padding: 15px; /* Уменьшаем отступы */
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+}
+
+/* Мобильные устройства */
+@media (max-width: 600px) {
+  .accordion-container {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  button {
+    min-height: auto;
+    font-size: 16px;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 14px;
+    padding: 12px 15px;
+    margin: -5px 0 10px 0;
+  }
+
+  .arrow {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 400px) {
+  button {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+
+  p {
+    font-size: 13px;
+    padding: 10px 12px;
   }
 }
 </style>
