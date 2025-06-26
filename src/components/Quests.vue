@@ -11,7 +11,6 @@
               <div class="quest_chars">
                 <div class="players">{{ quest.players }}</div>
                 <div class="time">{{ quest.time }}</div>
-                <div class="difficulty">{{ quest.difficulty }}</div>
               </div>
               <div class="booking">
                 <button class="to_book" @click.prevent="goToAboutQuest(quest.slug)">Забронировать</button>

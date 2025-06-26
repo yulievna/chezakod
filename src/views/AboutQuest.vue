@@ -27,10 +27,6 @@
                 <img :src="time" alt="Time"/>
                 <span>{{ quest.duration }} минут</span>
               </div>
-              <div class="char-item">
-                <img :src="difficulty" alt="Difficulty"/>
-                <span>Средняя сложность</span>
-              </div>
             </div>
           </div>
         </div>

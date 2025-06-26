@@ -185,13 +185,12 @@
             </div>
 
             <div class="card">
-              <h3 class="card__title">ГДЕ ПРОХОДИТ?</h3>
+              <h3 class="card__title">📍 ГДЕ ПРОХОДИТ?</h3>
               <div class="location-info">
-                <p>Шоу может проходить на любых площадках Чеширский код. Мы подбираем подходящее под Ваше мероприятие
-                  помещение на одном из наших филиалов.</p>
-                <p class="highlight">Стоимость аренды в этом случае дополнительно НЕ оплачивается.</p>
-                <p>Так же возможен выезд на вашу площадку.</p>
-                <p class="highlight">Стоимость выезда за пределы Красноярска +3000₽</p>
+                <p>Шоу проводится на любых площадках сети Чеширский КОД. Мы подберём подходящее помещение под ваше
+                  мероприятие — аренда включена в стоимость и не оплачивается отдельно.</p>
+                <p>Также возможен выезд на вашу площадку.</p>
+                <p>Выезд за пределы Красноярска — доплата +3 000 ₽.</p>
               </div>
             </div>
           </div>
@@ -224,7 +223,8 @@
                 <div class="game-card__content">
                   <h3>{{ game.title }}</h3>
                   <p>{{ game.description }}</p>
-                  <router-link :to="game.link" class="btn-more">Подробнее</router-link>
+                  <a :href="game.link" class="btn-more" target="_blank" v-if="game.external">Подробнее</a>
+                  <router-link :to="game.link" class="btn-more" target="_blank" v-else>Подробнее</router-link>
                 </div>
               </div>
             </div>
@@ -242,7 +242,7 @@
                 и кипятком — всё готово для комфортного празднования. Вам остается только принести любимые угощения и
                 напитки. Отличное решение для дней рождения, семейных мероприятий и корпоративов!
               </p>
-              <router-link to="/quests#lounges" class="btn-more">Посмотреть залы</router-link>
+              <router-link to="/quests#lounges" class="btn-more" target="_blank">Посмотреть залы</router-link>
 
             </div>
 
@@ -301,7 +301,8 @@
         <div class="contact-info">
           <h2>Забронировать мероприятие</h2>
           <p class="contact-types">выездной квест | ваш офис | база отдыха</p>
-          <a :href="`tel:${contacts.phone.value}`" class="phone-number">{{ contacts.phone.text ? contacts.phone.text : contacts.phone.value }}</a>
+          <a :href="`tel:${contacts.phone.value}`"
+             class="phone-number">{{ contacts.phone.text ? contacts.phone.text : contacts.phone.value }}</a>
         </div>
       </div>
     </section>
@@ -467,14 +468,16 @@ const games = [
     title: 'Картинг',
     description: 'Захватывающий дух скоростной электро-картинг с игровыми элементами',
     image: showImage,
-    link: 'https://kartingchego.ru'
+    link: 'https://kartingchego.ru',
+    external: true
   },
   {
     id: 5,
     title: 'Лофт-караоке',
     description: 'Уютные залы в уникальном стиле с караоке-системой',
     image: showImage,
-    link: 'https://party-kod.ru'
+    link: 'https://party-kod.ru',
+    external: true
   }
 ]
 
@@ -873,7 +876,15 @@ onServerPrefetch(init);
   line-height: 1.6;
 }
 
-/* Games and services grid */
+.games-grid,
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* Games and services grid
 .games-grid,
 .lounges-grid,
 .services-grid {
@@ -881,10 +892,13 @@ onServerPrefetch(init);
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 15px;
   margin-top: 30px;
-}
+} */
+
 
 .game-card,
 .service-card {
+  width: 32%;
+  min-width: 300px;
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -964,6 +978,16 @@ onServerPrefetch(init);
 .steps-slider__image img {
   border-radius: 10px;
   margin-top: 20px;
+}
+
+.btn-more {
+  width: 100%;
+  text-align: center;
+  margin: 10px;
+  background: var(--primary-color);
+  border-radius: 10px;
+  color: white;
+  padding: 10px;
 }
 
 /* Responsive styles */
@@ -1125,11 +1149,6 @@ onServerPrefetch(init);
   .game-card__content h3,
   .lounge-card__content h3 {
     font-size: 18px;
-  }
-
-  .btn-more {
-    width: 100%;
-    text-align: center;
   }
 }
 </style> 

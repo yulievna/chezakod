@@ -28,7 +28,7 @@
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
               <li>
-                <router-link to="/show-programs">Шоу программы</router-link>
+                <router-link to="/show-programs">Шоу-программы</router-link>
               </li>
             </ul>
           </li>

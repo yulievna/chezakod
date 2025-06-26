@@ -27,10 +27,6 @@
                 <img :src="time" alt="Time"/>
                 <span>{{ game.duration }} мин</span>
               </div>
-              <div class="char-item">
-                <img :src="difficulty" alt="Difficulty"/>
-                <span>Легкий</span>
-              </div>
             </div>
           </div>
         </div>
