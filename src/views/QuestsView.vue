@@ -31,7 +31,6 @@ const loadQuests = async (category) => {
       images: [q.main_image, ...(q.photo || [])],
       players: `${q.players.min}-${q.players.max} игрока`,
       time: `${q.duration} минут`,
-      difficulty: 'Средний',
       // contact: '+7 (391) 269-92-23',
       address: q.location.address,
     }));

@@ -59,9 +59,7 @@ const loadGames = async () => {
         age: `${i.age_min}+`,
         players: `${i.players.min}-${i.players.max}`,
         time: `${i.duration} мин`,
-        difficulty: "Лёгкий", // TODO: решить что делать со сложностью
         address: i.location.address,
-        contact: '+7 (391) 986-85-16',
         images: i.photo
       }));
     } else {

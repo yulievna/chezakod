@@ -22,7 +22,7 @@
             <router-link to="/#">Караоке</router-link>
           </li>
           <li class="footer-item">
-            <router-link to="/#">Шоу программы</router-link>
+            <router-link to="/#">Шоу-программы</router-link>
           </li>
           <li class="footer-item">
             <router-link to="/#">Мероприятия</router-link>
