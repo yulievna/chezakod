@@ -10,6 +10,7 @@
       class="swiper-video"
       @swiperinit="onSwiperInit"
       @swiperslidechange="handleSlideChange"
+      :zoom="true"
   >
     <swiper-slide
         class="video-item"

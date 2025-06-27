@@ -50,6 +50,7 @@
         <swiper-container
             :navigation="true"
             thumbs-swiper=".lounge-thumbs"
+            :zoom="true"
         >
           <swiper-slide
               v-for="(photo, index) in selectedLounge.photo"

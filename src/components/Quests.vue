@@ -275,6 +275,7 @@ const goToAboutQuest = (slug) => {
 
   .quests__el {
     height: 380px;
+    opacity: 1;
   }
 
   .quest_info {

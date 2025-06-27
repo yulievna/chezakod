@@ -11,6 +11,7 @@
         pauseOnMouseEnter: true
       } : false"
       :navigation="props.navigation"
+      :zoom="true"
   >
     <swiper-slide
         v-for="(image, index) in images"

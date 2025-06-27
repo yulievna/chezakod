@@ -7,12 +7,17 @@
 
   <swiper-container
       class="swiper-quest"
-      :allowTouchMove="false"
+      :allowTouchMove="true"
+      :breakpoints="{
+        768: {
+          allowTouchMove: false,
+          speed: 1000
+        }
+      }"
       :pagination="true"
       @mousemove="handleMouseMove"
       @mouseleave="resetImage"
       @swiperinit="swiperInit"
-      speed="1000"
   >
     <swiper-slide
         v-for="(image, index) in images" :key="index" class="quest-item"
