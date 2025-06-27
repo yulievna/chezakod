@@ -6,7 +6,8 @@
     <section class="hero">
       <div class="container">
         <h1 class="hero__title">Шоу-программы</h1>
-        <p class="hero__subtitle">Специальные программы для детей от 5 до 7 лет. Дети становятся героями и активными участниками сказачного приключения, а пройти все испытания им помогают анимированные сказочные персонажи.</p>
+        <p class="hero__subtitle">Специальные программы для детей от 5 до 7 лет. Дети становятся героями и активными
+          участниками сказачного приключения, а пройти все испытания им помогают анимированные сказочные персонажи.</p>
         <p class="hero__duration">Длительность всех шоу-программ - 2 часа 30 минут</p>
       </div>
     </section>
@@ -30,21 +31,23 @@
         <div v-else>
           <div class="shows-grid">
             <div class="shows-grid">
-              <div v-for="show in showPrograms" :key="show.id" class="show-card" @click="openGallery(show)">
-                <div class="show-image">
+              <div v-for="show in showPrograms" :key="show.id" class="show-card">
+                <div class="show-image" @click="openModal(show, 'gallery')">
                   <img :src="show.previewImage" :alt="show.name" loading="lazy">
                 </div>
-                <div class="show-content">
+                <div class="show-content" @click="openModal(show, 'description')">
                   <h3>{{ show.name }}</h3>
-                  <p class="show-description">{{ show.previewText }}</p>
+                  <p class="show-description" v-html="show.previewText"></p>
                   <div class="show-details">
-                    <div class="detail-row">
-                      <span class="detail-label">Длительность: {{ show.duration }}</span>
+                    <!--                    <div class="detail-row">-->
+                    <!--                      <span class="detail-label">Актеры: {{ show.actor }}</span>-->
+                    <!--                    </div>-->
+                    <div class="show-price">От {{ show.price.base }} ₽ / участник <span
+                        class="price-note">Команда до {{ show.price.players }} человек - {{ show.price.all }} ₽</span>
                     </div>
-                    <div class="detail-row">
-                      <span class="detail-label">Актеры: {{ show.actor }}</span>
-                    </div>
-                    <div class="show-price">От {{ show.price.base }} ₽ / участник <span class="price-note">Команда от {{ show.price.players }} человек - {{ show.price.all }} ₽</span>
+                    <div class="show-buttons">
+                      <button>Подробнее</button>
+                      <button class="book" @click="openModal(show, 'book')" @click.stop>Забронировать</button>
                     </div>
                   </div>
                 </div>
@@ -53,27 +56,35 @@
           </div>
 
           <!-- Галерея шоу-программы -->
-          <div v-if="selectedShow" class="gallery-modal" @click="closeGallery">
+          <div v-if="showGallery" class="gallery-modal" @click="closeModal">
             <div class="gallery-modal__content" @click.stop>
-              <button class="gallery-modal__close" @click="closeGallery">&times;</button>
+              <button class="gallery-modal__close" @click="closeModal">&times;</button>
               <swiper-container
                   :navigation="true"
                   thumbs-swiper=".show-thumbs"
                   class="swiper-show"
+                  :zoom="true"
               >
                 <swiper-slide
                     v-for="(photo, index) in selectedShow.gallery"
                     :key="index"
                 >
-                  <img :src="photo" :alt="`Фото ${index + 1}`">
+                  <div class="swiper-zoom-container">
+                    <img :src="photo" :alt="`Фото ${index + 1}`">
+                  </div>
                 </swiper-slide>
               </swiper-container>
               <swiper-container
                   class="show-thumbs"
-                  :slidesPerView="6"
+                  :slidesPerView="3"
                   :free-mode="true"
                   :watchSlidesProgress="true"
                   :spaceBetween="10"
+                  :breakpoints="{
+                    768: {
+                       slidesPerView: 6
+                    }
+                  }"
               >
                 <swiper-slide
                     v-for="(photo, index) in selectedShow.gallery"
@@ -83,40 +94,46 @@
                   <img :src="photo" :alt="`Фото ${index + 1}`">
                 </swiper-slide>
               </swiper-container>
-              <!--              <div class="gallery-modal__main">-->
-              <!--                <button-->
-              <!--                    class="gallery-modal__arrow gallery-modal__arrow&#45;&#45;prev"-->
-              <!--                    @click="prevPhoto"-->
-              <!--                    :disabled="currentPhotoIndex === 0"-->
-              <!--                >-->
-              <!--                  &#10094;-->
-              <!--                </button>-->
-              <!--                <img-->
-              <!--                    :src="currentPhoto"-->
-              <!--                    :alt="selectedShow.name"-->
-              <!--                    class="gallery-modal__image"-->
-              <!--                >-->
-              <!--                <button-->
-              <!--                    class="gallery-modal__arrow gallery-modal__arrow&#45;&#45;next"-->
-              <!--                    @click="nextPhoto"-->
-              <!--                    :disabled="currentPhotoIndex === selectedShow.gallery.length - 1"-->
-              <!--                >-->
-              <!--                  &#10095;-->
-              <!--                </button>-->
-              <!--              </div>-->
-              <!--              <div class="gallery-modal__thumbnails">-->
-              <!--                <img-->
-              <!--                    v-for="(photo, index) in selectedShow.gallery"-->
-              <!--                    :key="index"-->
-              <!--                    :src="photo"-->
-              <!--                    :alt="`Фото ${index + 1}`"-->
-              <!--                    :class="{ 'active': currentPhotoIndex === index }"-->
-              <!--                    @click="currentPhotoIndex = index"-->
-              <!--                >-->
-              <!--              </div>-->
             </div>
           </div>
 
+          <div v-if="showDescription" class="gallery-modal" @click="closeModal">
+            <div class="gallery-modal__content" @click.stop>
+              <button class="gallery-modal__close" @click="closeModal">&times;</button>
+              <div class="description-modal">
+                <h3>{{ selectedShow.name }}</h3>
+                <p class="description" v-html="selectedShow.detailText"></p>
+                <p class="include-title">Что входит:</p>
+                <ul>
+                  <li v-for="element in selectedShow.elements">{{ element }}</li>
+                </ul>
+                <p><span class="bolder">Ведущие: </span>{{ selectedShow.actor }}</p>
+                <p><span class="bolder">Продолжительность: </span>{{ selectedShow.duration }}</p>
+                <p><span class="bolder">Звуоковое сопровождение: </span>{{ selectedShow.music }}</p>
+                <div class="show-price">От {{ selectedShow.price.base }} ₽ / участник
+                  <span class="price-note">Команда до {{
+                      selectedShow.price.players
+                    }} человек - {{ selectedShow.price.all }} ₽</span>
+                </div>
+                <div class="show-buttons">
+                  <button class="book" @click="openModal(selectedShow, 'book')">Забронировать</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="showBook" class="gallery-modal" @click="closeModal">
+            <div class="gallery-modal__content" @click.stop>
+              <button class="gallery-modal__close" @click="closeModal">&times;</button>
+              <div class="booking-modal">
+<!--                TODO: форма бронирования шоу-программы -->
+                <div class="name"></div>
+                <div class="phone"></div>
+                <div class="comment"></div>
+                <div class="date"></div>
+              </div>
+            </div>
+          </div>
 
           <h2 class="section-title">Дополнительные развлечения</h2>
           <p class="section-subtitle">
@@ -152,7 +169,7 @@
 
 
 <script setup>
-import {computed, onMounted, onServerPrefetch, ref} from 'vue'
+import {onMounted, onServerPrefetch, ref} from 'vue'
 import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -167,15 +184,37 @@ const miniShows = ref([]);
 const selectedMiniShow = ref(null);
 const loading = ref(true);
 const error = ref(null);
-const selectedShow = ref(null)
+const selectedShow = ref(null);
+const showGallery = ref(false);
+const showDescription = ref(false);
+const showBook = ref(false);
 
-const openGallery = (show) => {
+const openModal = (show, mode) => {
   selectedShow.value = show;
+  showGallery.value = false;
+  showDescription.value = false;
+  showBook.value = false;
   document.body.style.overflow = 'hidden';
+  switch (mode) {
+    case "gallery":
+      showGallery.value = true;
+      break;
+    case "description":
+      showDescription.value = true;
+      break;
+    case "book":
+      showBook.value = true;
+      break;
+    default:
+      document.body.style.overflow = '';
+  }
 };
 
-const closeGallery = () => {
+const closeModal = () => {
   selectedShow.value = null;
+  showGallery.value = false;
+  showDescription.value = false;
+  showBook.value = false;
   document.body.style.overflow = '';
 };
 
@@ -194,11 +233,16 @@ const loadShows = async () => {
       id: show.id,
       name: show.name,
       previewImage: show.preview_image,
-      previewText: show.preview_text?.replace(/<[^>]*>/g, '') || '',
+      previewText: show.preview_text,
+      detailText: show.detail_text,
+      detailImage: show.detail_image,
       duration: show.duration,
       actor: show.actor,
       price: show.price,
-      gallery: show.photo || [] // Переименовываем photo в gallery
+      gallery: show.photo || [],
+      location: show.location,
+      music: show.music,
+      elements: show.elements
     }));
 
     // Мини-шоу
@@ -227,6 +271,108 @@ onMounted(loadShows);
 </script>
 
 <style scoped>
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.description-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.description-modal h3 {
+  font-size: 24pt;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #CF1034;
+  line-height: 1.3;
+}
+
+.description-modal p {
+  font-size: 12pt;
+  margin-bottom: 10px;
+}
+
+.description-modal .include-title {
+  font-weight: bold;
+  font-size: larger;
+  margin: 0;
+}
+
+.description-modal ul {
+  list-style: none;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.description-modal li {
+  background: url('https://chezakod.ru/local/templates/main/img/show/star.png') no-repeat left center;
+  padding-left: 30px;
+  font-size: 12pt;
+}
+
+.bolder {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.show-buttons {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.show-buttons button {
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  border: none;
+}
+
+.show-buttons button.book {
+  color: #fff;
+  background-color: var(--primary-color);
+}
+
+.show-buttons button:not(.book) {
+  background-color: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.show-buttons button.book::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+  );
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.show-buttons button.book:hover::before {
+  left: 100%;
+}
+
+.swiper-show {
+  margin-bottom: 10px;
+}
 
 swiper-container * {
   border-radius: 20px;
@@ -278,11 +424,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .mini-show-card:hover {
   transform: translateY(-4px);
-}
-
-/* Мини-шоу стили */
-.mini-shows {
-  margin-top: 60px;
 }
 
 .section-title {
@@ -425,7 +566,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   }
 }
 
-/* Шоу-программы стили (улучшения) */
 .show-card {
   background: linear-gradient(to bottom right, #fff, #fdf4f6);
   border-radius: 20px;
@@ -452,7 +592,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   font-size: 1rem;
   color: #555;
   line-height: 1.6;
-  max-height: 90px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -491,10 +630,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 .container {
   width: 1200px;
   margin: 0 auto;
-}
-
-.main-content {
-  /* padding: 60px 0; */
 }
 
 .shows-grid {
@@ -546,25 +681,26 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 .show-content h3 {
+  display: flex;
+  align-items: center;
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 12px;
   color: #CF1034;
   line-height: 1.3;
+  height: 50px;
 }
 
 .show-description {
   font-size: 15px;
   line-height: 1.5;
   color: #000;
-  margin-bottom: 20px;
   flex-grow: 1;
 }
 
 .show-details {
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
 }
 
 .show-details p {
@@ -618,6 +754,10 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   .show-content {
     padding: 18px;
   }
+
+  .description-modal {
+    padding: 15px;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -643,14 +783,14 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
     grid-template-columns: 1fr;
   }
 
+  ::-webkit-scrollbar-track {
+    opacity: 0;
+  }
+
   .gallery-modal__content {
-    background: #fff;
-    padding: 20px;
     border-radius: 16px;
     position: relative;
     width: 90%;
-    height: 50%;
-    overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   }
 }
@@ -713,15 +853,13 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 20px;
 }
 
 .gallery-modal__content {
-  padding: 20px;
   border-radius: 16px;
   position: relative;
   width: 90%;
-  max-width: 1200px;
+  max-width: 800px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -730,8 +868,8 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .gallery-modal__close {
   position: absolute;
-  top: -20px;
-  right: -10px;
+  top: -30px;
+  right: -30px;
   background: none;
   border: none;
   font-size: 48px;
@@ -749,81 +887,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .gallery-modal__close:hover {
   background-color: rgba(255, 255, 255, 0.1);
-}
-
-.gallery-modal__main {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  min-height: 0;
-}
-
-.gallery-modal__image {
-  max-width: 100%;
-  max-height: 70vh;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.gallery-modal__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  z-index: 2;
-}
-
-.gallery-modal__arrow:hover {
-  background: #fff;
-}
-
-.gallery-modal__arrow--prev {
-  left: 20px;
-}
-
-.gallery-modal__arrow--next {
-  right: 20px;
-}
-
-.gallery-modal__arrow[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.gallery-modal__thumbnails {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 10px 0;
-  scrollbar-width: thin;
-  scrollbar-color: #CF1034 #f0f0f0;
-}
-
-.gallery-modal__thumbnails::-webkit-scrollbar {
-  height: 6px;
-}
-
-.gallery-modal__thumbnails::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 3px;
-}
-
-.gallery-modal__thumbnails::-webkit-scrollbar-thumb {
-  background: #CF1034;
-  border-radius: 3px;
 }
 
 .gallery-modal__thumbnails img {
@@ -847,38 +910,12 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 @media (max-width: 768px) {
-  .gallery-modal__content {
-    width: 95%;
-    padding: 15px;
-  }
 
-  .gallery-modal__arrow {
-    width: 35px;
-    height: 35px;
-    font-size: 16px;
-  }
-
-  .gallery-modal__thumbnails img {
-    width: 60px;
-    height: 45px;
-  }
-
-  .gallery-modal__image {
-    max-height: 60vh;
+  .gallery-modal__close {
+    right: -10px;
+    top: -40px;
   }
 }
 
-@media (max-width: 480px) {
-  .gallery-modal__arrow {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-  }
-
-  .gallery-modal__thumbnails img {
-    width: 50px;
-    height: 40px;
-  }
-}
 
 </style>
