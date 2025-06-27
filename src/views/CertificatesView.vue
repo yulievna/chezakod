@@ -181,26 +181,19 @@ const closeForm = () => {
 <style scoped>
 .certificates {
   color: #fff;
-  margin-top: 60px;
+  margin-top: 10px;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
-.title {
+.title, .section-title {
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 2rem;
-  color: #CF1034;
-}
-
-.section-title {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 2rem;
+  font-weight: 500;
   color: #CF1034;
 }
 
@@ -211,7 +204,7 @@ section {
 .certificates-grid {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   margin-bottom: 4rem;
   perspective: 1000px;
   margin-left: auto;
@@ -439,6 +432,7 @@ section {
 @media (max-width: 992px) {
   .certificates-grid {
     gap: 1rem;
+    margin-bottom: 40px;
   }
 
   .certificate-card {
@@ -454,7 +448,6 @@ section {
   }
 
   .certificate-card {
-    width: 100%;
     max-width: 400px;
     opacity: 1;
     transform: scale(1);
@@ -465,9 +458,11 @@ section {
   }
 
   .certificate-card.selected {
-    transform: scale(1.05);
+    transform: scale(1.15);
   }
-
+  .title, .section-title {
+    font-size: 1.8rem;
+  }
   .methods-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -491,10 +486,11 @@ section {
     max-width: 100%;
   }
 
-  .certificate-content {
-    padding: 1rem;
+  .certificate-card {
+    max-width: 250px;
+    opacity: 1;
+    transform: scale(1);
   }
-
   .certificate-content h3 {
     font-size: 18px;
   }
