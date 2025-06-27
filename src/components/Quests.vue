@@ -197,10 +197,6 @@ const goToAboutQuest = (slug) => {
     gap: 15px;
   }
 
-  .quests__el {
-    height: 450px;
-  }
-
   .quest_title {
     font-size: 20px;
   }
@@ -220,10 +216,6 @@ const goToAboutQuest = (slug) => {
   .quests__list {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 12px;
-  }
-
-  .quests__el {
-    height: 400px;
   }
 
   .quest_info {
@@ -274,7 +266,6 @@ const goToAboutQuest = (slug) => {
   }
 
   .quests__el {
-    height: 380px;
     opacity: 1;
   }
 

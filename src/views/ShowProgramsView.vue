@@ -159,7 +159,7 @@
             Вы можете добавить к любой шоу-программе небольшие увлекательные развлечения
           </p>
           <div class="mini-shows-grid">
-            <div v-for="mini in miniShows" :key="mini.id" class="mini-show-card" @click="selectedMiniShow = mini">
+            <div v-for="mini in miniShows" :key="mini.id" class="mini-show-card" @click="openMiniModal(mini)">
               <img :src="mini.image" :alt="mini.name" loading="lazy">
               <h4>{{ mini.name }}</h4>
               <p class="mini-price">{{ mini.price }} ₽</p>
@@ -167,17 +167,15 @@
           </div>
 
           <!-- Modal -->
-          <div v-if="selectedMiniShow" class="modal-backdrop" @click.self="selectedMiniShow = null">
+          <div v-if="selectedMiniShow" class="modal-backdrop" @click.self="closeMiniModal">
             <div class="modal-content">
-              <button class="modal-close" @click="selectedMiniShow = null">×</button>
+              <button class="modal-close" @click="closeMiniModal">×</button>
               <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name"/>
               <h3>{{ selectedMiniShow.name }}</h3>
               <p>{{ selectedMiniShow.description }}</p>
               <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
             </div>
           </div>
-
-
         </div>
       </div>
     </section>
@@ -228,6 +226,16 @@ const openModal = (show, mode) => {
       document.body.style.overflow = '';
   }
 };
+
+const openMiniModal = (mini) => {
+  selectedMiniShow.value = mini;
+  document.body.style.overflow = "hidden";
+}
+
+const closeMiniModal = () => {
+  selectedMiniShow.value = null;
+  document.body.style.overflow = "";
+}
 
 const closeModal = () => {
   selectedShow.value = null;
@@ -290,10 +298,6 @@ onMounted(loadShows);
 </script>
 
 <style scoped>
-
-::-webkit-scrollbar {
-  display: none;
-}
 
 .map-links {
   display: inline-flex;
@@ -380,6 +384,12 @@ onMounted(loadShows);
   overflow: hidden;
   position: relative;
   border: none;
+}
+
+@media(max-width: 405px) {
+  .show-buttons button {
+    padding: 10px;
+  }
 }
 
 .show-buttons button.book {
@@ -565,9 +575,12 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   padding: 30px;
   border-radius: 12px;
   max-width: 500px;
+  max-height: 95%;
   width: 90%;
   position: relative;
   animation: fadeIn 0.3s ease;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .modal-content img {
@@ -892,6 +905,11 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 .gallery-modal {
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
   position: fixed;
   top: 0;
   left: 0;
