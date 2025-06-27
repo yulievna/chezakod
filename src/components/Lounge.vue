@@ -11,20 +11,20 @@
           <div class="lounge__overlay">
             <div class="lounge__info">
               <div class="lounge__address">
-                {{ lounge.location?.address || lounge.address }}
+                {{ (lounge.location || location).address }}
               </div>
               <div class="lounge__links">
                 <a
-                    v-if="lounge.location?.links?.ymaps"
-                    :href="lounge.location.links.ymaps"
+                    v-if="(lounge.location || location).links?.ymaps"
+                    :href="(lounge.location || location).links.ymaps"
                     target="_blank"
                     class="lounge__map-link"
                 >
                   Яндекс Карты
                 </a>
                 <a
-                    v-if="lounge.location?.links?.['2gis']"
-                    :href="lounge.location.links['2gis']"
+                    v-if="(lounge.location || location).links?.['2gis']"
+                    :href="(lounge.location || location).links['2gis']"
                     target="_blank"
                     class="lounge__map-link"
                 >
@@ -56,15 +56,22 @@
               v-for="(photo, index) in selectedLounge.photo"
               :key="index"
           >
-            <img :src="photo" :alt="`Фото ${index + 1}`">
+            <div class="swiper-zoom-container">
+              <img :src="photo" :alt="`Фото ${index + 1}`">
+            </div>
           </swiper-slide>
         </swiper-container>
         <swiper-container
             class="lounge-thumbs"
-            :slidesPerView="6"
+            :slidesPerView="3"
             :free-mode="true"
             :watchSlidesProgress="true"
             :spaceBetween="10"
+            :breakpoints="{
+              768: {
+                slidesPerView: 6
+              }
+            }"
         >
           <swiper-slide
               v-for="(photo, index) in selectedLounge.photo"
@@ -121,6 +128,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  location: {
+    type: Array,
+    required: false
+  }
 });
 
 const selectedLounge = ref(null);
@@ -139,6 +150,10 @@ const closeGallery = () => {
 </script>
 
 <style scoped>
+
+.lounge-thumbs {
+  margin-top: 10px;
+}
 
 swiper-container * {
   border-radius: 20px;
@@ -299,7 +314,90 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   }
 }
 
+.gallery-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gallery-modal__content {
+  border-radius: 16px;
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gallery-modal__close {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  background: none;
+  border: none;
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.gallery-modal__close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.gallery-modal__thumbnails img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.gallery-modal__thumbnails img:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.gallery-modal__thumbnails img.active {
+  opacity: 1;
+  border: 2px solid #CF1034;
+}
+
 @media (max-width: 768px) {
+
+  .gallery-modal__close {
+    right: -10px;
+    top: -40px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .gallery-modal__content {
+    border-radius: 16px;
+    position: relative;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+
   .lounge__list {
     grid-template-columns: 1fr;
     gap: 15px;
@@ -351,39 +449,4 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   }
 }
 
-/* Стили для модального окна галереи */
-.gallery-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-.gallery-modal__content {
-  position: relative;
-  width: 90%;
-  max-width: 1200px;
-  background: #1a1a1a;
-  border-radius: 20px;
-  padding: 20px;
-}
-
-.gallery-modal__close {
-  position: absolute;
-  top: -60px;
-  right: -20px;
-  background: none;
-  border: none;
-  font-size: 30px;
-  color: #fff;
-  cursor: pointer;
-  z-index: 2;
-}
 </style>

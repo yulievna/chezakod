@@ -46,20 +46,21 @@
 
         <div class="quest-more">
           <div v-if="quest.vips && quest.vips.length" class="vip-lounges">
-            <h3>Доступные лаундж-зоны на этом квесте</h3>
-            <div class="lounges-grid">
-              <div
-                  v-for="lounge in quest.vips"
-                  :key="lounge.id"
-                  class="lounge-card"
-                  :style="lounge.photo && lounge.photo[0] ? { backgroundImage: `url(${lounge.photo[0]})` } : {}"
-                  @click="openGallery(lounge)"
-              >
-                <div class="lounge-overlay">
-                  <button class="view-btn">Посмотреть</button>
-                </div>
-              </div>
-            </div>
+            <h3 style="margin-bottom: 30px;">Доступные лаундж-зоны на этом квесте</h3>
+            <Lounge :lounges="quest.vips" :location="quest.location"></Lounge>
+<!--            <div class="lounges-grid">-->
+<!--              <div-->
+<!--                  v-for="lounge in quest.vips"-->
+<!--                  :key="lounge.id"-->
+<!--                  class="lounge-card"-->
+<!--                  :style="lounge.photo && lounge.photo[0] ? { backgroundImage: `url(${lounge.photo[0]})` } : {}"-->
+<!--                  @click="openGallery(lounge)"-->
+<!--              >-->
+<!--                <div class="lounge-overlay">-->
+<!--                  <button class="view-btn">Посмотреть</button>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
 
           <div class="quest-addition">
@@ -172,6 +173,7 @@ import time from '@/assets/images/time.png';
 import difficulty from '@/assets/images/difficulty.png';
 import ImgSlider from '@/components/ImgSlider.vue';
 import {useHead} from "@unhead/vue";
+import Lounge from "@/components/Lounge.vue";
 
 const props = defineProps({
   id: {

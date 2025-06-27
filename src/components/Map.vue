@@ -268,7 +268,7 @@ export default {
               const marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
-                icon: "src/assets/images/pointer-min.png",
+                icon: "/pointer-min.png",
                 info: contentInfo,
                 id: i,
                 animation: google.maps.Animation.DROP,
