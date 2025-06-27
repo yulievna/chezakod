@@ -197,7 +197,7 @@ const togglePopup = () => {
     justify-content: center;
   }
 
-  .footer-contacts {
+  .contacts-info {
     align-items: center;
   }
 }

@@ -99,7 +99,6 @@ const scrollToPromotion = (hash) => {
     if (element) {
       const headerHeight = 200;
       const y = element.getBoundingClientRect().top + window.scrollY - headerHeight;
-
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }

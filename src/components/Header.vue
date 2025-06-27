@@ -10,9 +10,9 @@
 
         <!-- Бургер-меню -->
         <div class="burger" @click="toggleMenu">
-          <span></span>
-          <span></span>
-          <span></span>
+          <span class="burger-line top"></span>
+          <span class="burger-line middle"></span>
+          <span class="burger-line bottom"></span>
         </div>
 
         <!-- Основное меню (десктоп) -->
@@ -53,7 +53,7 @@
     </div>
 
     <!-- Мобильное меню -->
-    <transition name="fade">
+    <transition name="mobile-menu">
       <div class="mobile-menu" v-if="isMenuOpen">
         <ul class="mobile-menu-list">
           <li class="navigation-item mobile-only">
@@ -68,7 +68,7 @@
               <li><router-link to="/action-games">Экшн игры</router-link></li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
-              <li><router-link to="/show-programs">Шоу программы</router-link></li>
+              <li><router-link to="/show-programs">Шоу-программы</router-link></li>
             </ul>
           </li>
           <li class="mobile-menu-item"><router-link to="/events">Мероприятия</router-link></li>
@@ -111,6 +111,10 @@ const togglePopup = () => {
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
+  const burger = document.querySelector('.burger')
+      if (burger) burger.classList.toggle('active');
+      if (isMenuOpen.value) document.body.classList.add('menu-open');
+      else document.body.classList.remove('menu-open');
 };
 </script>
 
@@ -246,8 +250,8 @@ const toggleMenu = () => {
 /* Мобильное */
 .mobile-btn {
   display: block;
-  margin: 20px auto;
-  width: 250px;
+  margin: 0 auto 20px;
+  width: 90%;
   font-size: 16px;
   padding: 10px 20px;
   background-color: #000;
@@ -263,26 +267,47 @@ const toggleMenu = () => {
 
 .burger {
   display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.burger span {
   width: 24px;
+  height: 24px;
+  position: relative;
+  cursor: pointer;
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+.burger-line {
+  display: block;
+  width: 100%;
   height: 3px;
   background: #000;
+  position: relative;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.burger.active .top {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.burger.active .bottom {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.burger.active .middle {
+  opacity: 0;
+  transform: scale(0) translateY(-50%);
 }
 
 .mobile-menu {
   position: fixed;
   top: 80px;
   left: 0;
+  height: calc(100vh - 80px);
   width: 100%;
   background: #fff;
   z-index: 99;
-  padding: 20px;
+  padding: 0 20px;
   box-shadow: 0 8px 10px rgba(0,0,0,0.1);
+  overflow-y: auto;
 }
 
 .mobile-menu-list {
@@ -291,8 +316,27 @@ const toggleMenu = () => {
   margin: 0;
 }
 
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+  transform: translateX(500px);
+  opacity: 1;
+}
+
 .mobile-menu-item {
-  margin-bottom: 15px;
+  opacity: 1;
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-enter-active .mobile-menu-item,
+.mobile-menu-leave-active .mobile-menu-item {
+  opacity: 0;
+  transform: translateX(100px);
 }
 
 .mobile-menu-item a {
@@ -310,7 +354,7 @@ const toggleMenu = () => {
   font-size: 13px;
   font-weight: bold;
   color: #999;
-  margin-bottom: 10px;
+  margin: 10px 0;
   text-transform: uppercase;
 }
 
@@ -349,6 +393,9 @@ const toggleMenu = () => {
 
   .burger {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
   }
 
   .logo-wrapper .logo {
