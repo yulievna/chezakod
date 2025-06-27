@@ -129,7 +129,7 @@
           <h2>Универсальный подарок для всех поводов!</h2>
           <p>Подарок кому угодно! — сертификаты универсальны для любого возраста и для любой профессии!</p>
           <p class="age-info">В квесты можно играть, начиная с 5 лет и верхняя планка не ограничена!</p>
-          <button class="btn btn-secondary" @click="openOrderPopup">Заказать сертификат</button>
+          <button class="btn btn-secondary" @click="openForm">Заказать сертификат</button>
         </div>
       </div>
     </section>

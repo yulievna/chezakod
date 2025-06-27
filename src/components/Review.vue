@@ -21,6 +21,20 @@
         :centeredSlides="true"
         class="swiper-reviews"
         :spaceBetween="30"
+        :breakpoints="{
+        320: {
+            slidesPerView: 1,
+            spaceBetween: 10
+        },
+        768: {
+            slidesPerView: 2,
+            spaceBetween: 20
+        },
+        1024: {
+            slidesPerView: 3,
+            spaceBetween: 30
+        }
+    }"
     >
       <swiper-slide
           class="review-card"
@@ -222,7 +236,11 @@ swiper-slide.swiper-slide-active {
 .review-link {
   color: #869791;
 }
-
+@media (max-width: 768px) {
+  .reviews-title{
+    flex-direction: column;
+  }
+}
 /*
 
 

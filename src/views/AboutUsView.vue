@@ -409,7 +409,7 @@ h2 {
     text-align: center;
   }
 
-  .about-text h1 {
+  .about-text h1, h2 {
     font-size: 36px;
   }
 
@@ -430,7 +430,8 @@ h2 {
   }
 
   .org-card {
-    height: 35vh;
+    height: fit-content;
+    min-height: 35vh;
   }
 
   .contact-link:hover {

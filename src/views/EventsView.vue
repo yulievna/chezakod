@@ -1008,9 +1008,9 @@ onServerPrefetch(init);
   }
 
   .slider-section {
-    grid-column: 1;
-    width: 400px;
-    height: 300px;
+    width: 90vw;
+    height: 40vh;
+    padding: 0px;
   }
 
   .hero__title {
@@ -1034,7 +1034,6 @@ onServerPrefetch(init);
   .hero__subtitle {
     font-size: 16px;
   }
-
   .toggle-buttons {
     flex-direction: column;
     align-items: center;
@@ -1056,11 +1055,6 @@ onServerPrefetch(init);
   .show-card__icon {
     width: 40px;
     height: 40px;
-  }
-
-  .process-steps {
-    flex-direction: column;
-    gap: 15px;
   }
 
   .duration-options {
@@ -1093,15 +1087,12 @@ onServerPrefetch(init);
 }
 
 @media (max-width: 480px) {
+  .content-grid{
+    gap: 0px;
+  }
   .hero {
     padding: 40px 0;
   }
-
-  .slider-section {
-    max-width: 400px;
-    overflow: hidden;
-  }
-
   .hero__title {
     font-size: 24px;
   }
@@ -1110,8 +1101,9 @@ onServerPrefetch(init);
     font-size: 14px;
   }
 
-  .card {
-    padding: 20px;
+  .slider-section {
+    width: 90vw;
+    padding: 0px;
   }
 
   .card__title {

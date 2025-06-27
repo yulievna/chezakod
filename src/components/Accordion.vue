@@ -76,11 +76,11 @@ function handleAccordion(selectedIndex) {
 .accordion-container {
   margin-top: 30px;
   display: flex;
-  gap: 20px; /* Расстояние между колонками */
+  gap: 20px;
 }
 
 .accordion-column {
-  flex: 1; /* Равномерное распределение пространства */
+  flex: 1;
 }
 
 button {
@@ -130,9 +130,9 @@ p {
   }
 
   button {
-    min-height: 50px;
-    font-size: 18px;
-    padding: 12px 20px;
+    font-size: 16px;
+    padding: 10px 18px;
+    line-height: 16px;
   }
 
   p {
@@ -145,7 +145,7 @@ p {
 @media (max-width: 600px) {
   .accordion-container {
     flex-direction: column;
-    gap: 8px;
+    gap: 0px;
     margin-top: 20px;
   }
 
@@ -171,13 +171,8 @@ p {
 /* Очень маленькие экраны */
 @media (max-width: 400px) {
   button {
-    font-size: 15px;
-    padding: 10px 12px;
-  }
-
-  p {
     font-size: 13px;
-    padding: 10px 12px;
+    padding: 5px 12px;
   }
 }
 </style>

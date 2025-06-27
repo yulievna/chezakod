@@ -51,7 +51,7 @@
               <button
                   v-for="nominal in availableNominals"
                   :key="nominal"
-                  @click="selectNominal(nominal)"
+                  @click="formData.nominal = nominal"
                   :class="{
                   'selected': formData.nominal === nominal,
                   'error': errors.nominal
@@ -367,6 +367,7 @@ const submitForm = async () => {
 
 .nominal-options {
   display: flex;
+  justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
 }
