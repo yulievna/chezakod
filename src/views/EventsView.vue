@@ -981,9 +981,11 @@ onServerPrefetch(init);
 }
 
 .btn-more {
+  display: block;
   width: 100%;
+  max-width: 200px;
   text-align: center;
-  margin: 10px;
+  margin: 10px auto;
   background: var(--primary-color);
   border-radius: 10px;
   color: white;

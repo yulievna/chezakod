@@ -9,11 +9,25 @@ import Quests from '@/components/Quests.vue';
 import Lounge from '@/components/Lounge.vue';
 import TimetableEmbed from '@/components/TimetableEmbed.vue';
 import {useHead} from "@unhead/vue";
+import {useRoute} from "vue-router";
 
 const quests = ref([]);
 const lounges = ref([]);
 const activeCategory = ref('regular');
 const timetableQuestIds = ref([]);
+const route = useRoute();
+
+const scrollToElem = (hash) => {
+  if (hash) {
+    const element = document.getElementById(hash.slice(1));
+    if (element) {
+      const headerHeight = 200;
+      const y = element.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }
+};
 
 const loadQuests = async (category) => {
   try {
@@ -84,6 +98,8 @@ onMounted(async () => {
   script.src = import.meta.env.VITE_HOST + '/f/build/embed.js';
   script.async = true;
   document.body.appendChild(script);
+
+  setTimeout(() => { scrollToElem(route.hash) }, 800);
 });
 </script>
 <template>
