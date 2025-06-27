@@ -6,7 +6,8 @@
     <section class="hero">
       <div class="container">
         <h1 class="hero__title">Шоу-программы</h1>
-        <p class="hero__subtitle">Незабываемые развлечения для вашего праздника</p>
+        <p class="hero__subtitle">Специальные программы для детей от 5 до 7 лет. Дети становятся героями и активными участниками сказачного приключения, а пройти все испытания им помогают анимированные сказочные персонажи.</p>
+        <p class="hero__duration">Длительность всех шоу-программ - 2 часа 30 минут</p>
       </div>
     </section>
 
@@ -43,7 +44,7 @@
                     <div class="detail-row">
                       <span class="detail-label">Актеры: {{ show.actor }}</span>
                     </div>
-                    <div class="show-price">{{ show.price }} ₽ <span class="price-note">на команду 10 человек</span>
+                    <div class="show-price">От {{ show.price.base }} ₽ / участник <span class="price-note">Команда от {{ show.price.players }} человек - {{ show.price.all }} ₽</span>
                     </div>
                   </div>
                 </div>
@@ -117,7 +118,10 @@
           </div>
 
 
-          <h2 class="section-title">Мини шоу-программы</h2>
+          <h2 class="section-title">Дополнительные развлечения</h2>
+          <p class="section-subtitle">
+            Вы можете добавить к любой шоу-программе небольшие увлекательные развлечения
+          </p>
           <div class="mini-shows-grid">
             <div v-for="mini in miniShows" :key="mini.id" class="mini-show-card" @click="selectedMiniShow = mini">
               <img :src="mini.image" :alt="mini.name" loading="lazy">
@@ -244,8 +248,11 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   opacity: 1;
 }
 
-.mini-shows {
-  margin-top: 60px;
+.hero__duration {
+  margin-top: 20px;
+  font-size: 18pt;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 .mini-shows-grid {
@@ -253,6 +260,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .mini-show-card {
@@ -278,11 +286,17 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 .section-title {
-  font-size: 32px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
-  color: #CF1034;
+  font-size: 2rem;
+  margin-top: 60px;
+  color: #000;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 14pt;
 }
 
 .mini-shows-grid {
@@ -290,6 +304,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .mini-show-card {
@@ -307,56 +322,12 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   transform: translateY(-5px);
 }
 
-.mini-show-image {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.mini-show-info {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mini-show-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.mini-show-description {
-  font-size: 0.95rem;
-  color: #555;
-  height: 60px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
-.mini-show-price {
-  font-size: 1.1rem;
-  color: #CF1034;
-  font-weight: 600;
-  margin-top: auto;
-}
-
-.section-title {
-  font-size: 28px;
-  margin: 40px 0 20px;
-  text-align: center;
-  color: #333;
-}
-
 .mini-shows-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .mini-show-card {
@@ -502,7 +473,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   background-size: cover;
   background-position: center;
   color: #000;
-  padding: 40px 0;
+  padding: 40px 0 0 0;
   text-align: center;
 }
 
@@ -649,14 +620,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   }
 }
 
-
-.section-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-top: 60px;
-  color: #000;
-}
-
 @media (max-width: 1200px) {
   .container {
     width: 100%;
@@ -670,6 +633,10 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
   .hero__subtitle {
     font-size: 20px;
+  }
+
+  .hero__duration {
+    font-size: 14pt;
   }
 
   .shows-grid {
