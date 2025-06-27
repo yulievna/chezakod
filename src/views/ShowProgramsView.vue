@@ -39,9 +39,9 @@
                   <h3>{{ show.name }}</h3>
                   <p class="show-description" v-html="show.previewText"></p>
                   <div class="show-details">
-                    <!--                    <div class="detail-row">-->
-                    <!--                      <span class="detail-label">Актеры: {{ show.actor }}</span>-->
-                    <!--                    </div>-->
+                    <div class="detail-row">
+                      <span class="detail-label">Адрес: {{ show.location.address }}</span>
+                    </div>
                     <div class="show-price">От {{ show.price.base }} ₽ / участник <span
                         class="price-note">Команда до {{ show.price.players }} человек - {{ show.price.all }} ₽</span>
                     </div>
@@ -110,6 +110,25 @@
                 <p><span class="bolder">Ведущие: </span>{{ selectedShow.actor }}</p>
                 <p><span class="bolder">Продолжительность: </span>{{ selectedShow.duration }}</p>
                 <p><span class="bolder">Звуоковое сопровождение: </span>{{ selectedShow.music }}</p>
+                <p><span class="bolder">Адрес: </span>{{ selectedShow.location.address }}</p>
+                <div class="map-links">
+                  <a
+                      v-if="selectedShow.location.links && selectedShow.location.links.ymaps"
+                      :href="selectedShow.location.links.ymaps"
+                      target="_blank"
+                      class="map-link"
+                  >
+                    Яндекс.Карты
+                  </a>
+                  <a
+                      v-if="selectedShow.location.links && selectedShow.location.links['2gis']"
+                      :href="selectedShow.location.links['2gis']"
+                      target="_blank"
+                      class="map-link"
+                  >
+                    2GIS
+                  </a>
+                </div>
                 <div class="show-price">От {{ selectedShow.price.base }} ₽ / участник
                   <span class="price-note">Команда до {{
                       selectedShow.price.players
@@ -126,7 +145,7 @@
             <div class="gallery-modal__content" @click.stop>
               <button class="gallery-modal__close" @click="closeModal">&times;</button>
               <div class="booking-modal">
-<!--                TODO: форма бронирования шоу-программы -->
+                <!--                TODO: форма бронирования шоу-программы -->
                 <div class="name"></div>
                 <div class="phone"></div>
                 <div class="comment"></div>
@@ -274,6 +293,30 @@ onMounted(loadShows);
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.map-links {
+  display: inline-flex;
+  gap: 10px;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: 3px solid #cf1034;
+}
+
+.map-link:hover {
+  background: var(--primary-color);
+  color: #fff;
 }
 
 .description-modal {
@@ -699,8 +742,9 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 .show-details {
-  margin-top: auto;
+  margin-top: 16px;
   padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
 }
 
 .show-details p {
@@ -757,6 +801,11 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
   .description-modal {
     padding: 15px;
+  }
+
+  .map-link {
+    width: 100%;
+    padding: 12px;
   }
 }
 
