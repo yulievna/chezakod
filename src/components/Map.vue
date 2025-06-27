@@ -305,6 +305,7 @@ export default {
 <style>
 #map {
   color: #000;
+  min-height: 400px;
 }
 
 .address-item {
