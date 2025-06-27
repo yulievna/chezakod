@@ -68,7 +68,7 @@
               <li><router-link to="/action-games">Экшн игры</router-link></li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
-              <li><router-link to="/show-programs">Шоу программы</router-link></li>
+              <li><router-link to="/show-programs">Шоу-программы</router-link></li>
             </ul>
           </li>
           <li class="mobile-menu-item"><router-link to="/events">Мероприятия</router-link></li>
