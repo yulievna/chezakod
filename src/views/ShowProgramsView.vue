@@ -272,10 +272,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   transform: translateY(-4px);
 }
 
-/* Мини-шоу стили */
-.mini-shows {
-  margin-top: 60px;
-}
 
 .section-title {
   font-size: 32px;
