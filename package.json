@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev-test": "vite --mode testing",
     "build": "vite-ssg build --mode testing",
     "prod": "vite-ssg build",
     "preview": "vite preview",

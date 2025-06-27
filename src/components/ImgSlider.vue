@@ -4,6 +4,7 @@
         clickable: props.paginationClickable
       } : false"
       class="swiper-slider"
+      :zoom="true"
       :loop="props.loop"
       :autoplay="props.autoplay ? {
         delay: props.autoplayDelay,
@@ -11,19 +12,20 @@
         pauseOnMouseEnter: true
       } : false"
       :navigation="props.navigation"
-      :zoom="true"
   >
     <swiper-slide
         v-for="(image, index) in images"
         :key="index"
         class="item"
     >
-      <img
-          :src="isPromoSlider ? image.src : image"
-          :alt="isPromoSlider ? image.alt : 'Image' + (index + 1)"
-          style="cursor: pointer"
-          class="swiper-image"
-      >
+      <div class="swiper-zoom-container">
+        <img
+            :src="isPromoSlider ? image.src : image"
+            :alt="isPromoSlider ? image.alt : 'Image' + (index + 1)"
+            style="cursor: pointer"
+            class="swiper-image"
+        >
+      </div>
     </swiper-slide>
   </swiper-container>
 </template>
