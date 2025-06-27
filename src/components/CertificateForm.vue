@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-import {computed, nextTick, ref, watch} from 'vue'
+import {computed, ref, watch} from 'vue'
 
 const props = defineProps({
   isOpen: {
@@ -94,8 +94,7 @@ const props = defineProps({
     required: true
   },
   selectedCertificate: {
-    type: Number,
-    default: 3000
+    type: Number
   }
 })
 
@@ -126,26 +125,34 @@ const isFormValid = computed(() => {
       formData.value.nominal
 })
 
-watch(() => props.isOpen, (newVal) => {
-  if (newVal) {
-    nextTick(() => {
-      phoneInput.value?.focus()
-    })
-  }
-})
-
 const handlePhoneInput = () => {
-  let cleaned = formData.value.phone.replace(/\D/g, '')
+  let digits = formData.value.phone.replace(/\D/g, '');
 
-  if (cleaned.startsWith('8') && cleaned.length === 11) {
-    cleaned = '7' + cleaned.slice(1)
+  if (digits.startsWith('8') && digits.length > 0) {
+    digits = '7' + digits.slice(1);
+  }
+  else if (!digits.startsWith('7') && digits.length > 0) {
+    digits = '7' + digits;
   }
 
-  if (cleaned.length >= 1) {
-    formData.value.phone = `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`
+  digits = digits.slice(0, 11);
+
+  let formatted = '+7';
+  if (digits.length > 1) {
+    formatted += ` (${digits.slice(1, 4)}`;
+  }
+  if (digits.length > 4) {
+    formatted += `) ${digits.slice(4, 7)}`;
+  }
+  if (digits.length > 7) {
+    formatted += `-${digits.slice(7, 9)}`;
+  }
+  if (digits.length > 9) {
+    formatted += `-${digits.slice(9, 11)}`;
   }
 
-  validateField('phone')
+  formData.value.phone = formatted;
+  validateField('phone');
 }
 const isValidPhone = (phone) => {
   const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
@@ -177,10 +184,9 @@ const validateField = (field) => {
     }
   }
 }
-const selectNominal = (nominal) => {
-  formData.value.nominal = nominal
-  validateField('nominal')
-}
+watch(() => props.selectedCertificate, (newValue) => {
+  formData.value.nominal = newValue
+})
 
 const closeForm = () => {
   emit('close')
@@ -495,4 +501,4 @@ input.error {
     font-size: 14px;
   }
 }
-</style> 
+</style>

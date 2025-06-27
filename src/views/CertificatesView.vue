@@ -9,8 +9,6 @@
               class="certificate-card"
               :class="{ 'selected': selectedCertificate === 2500 }"
               @click="selectCertificate(2500)"
-              @mouseover="hoverCertificate(3)"
-              @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert3.jpg" alt="Сертификат на 6 человек" class="certificate-image">
           </div>
@@ -18,8 +16,6 @@
               class="certificate-card"
               :class="{ 'selected': selectedCertificate === 3000 }"
               @click="selectCertificate(3000)"
-              @mouseover="hoverCertificate(1)"
-              @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert1.jpg" alt="Сертификат на 2 человека" class="certificate-image">
           </div>
@@ -27,8 +23,6 @@
               class="certificate-card"
               :class="{ 'selected': selectedCertificate === 3500 }"
               @click="selectCertificate(3500)"
-              @mouseover="hoverCertificate(2)"
-              @mouseleave="resetHover"
           >
             <img src="@/assets/images/sert2.jpg" alt="Сертификат на 4 человека" class="certificate-image">
           </div>
@@ -146,7 +140,6 @@
       :is-open="isFormOpen"
       :selected-certificate="selectedCertificate"
       @close="closeForm"
-      @submit="handleSubmit"
   />
 </template>
 
@@ -177,10 +170,6 @@ const openOrderPopup = () => {
 }
 
 const openForm = () => {
-  if (!selectedCertificate.value) {
-    alert('Пожалуйста, выберите сертификат')
-    return
-  }
   isFormOpen.value = true
 }
 
@@ -219,7 +208,6 @@ section {
   margin-bottom: 60px;
 }
 
-/* Certificates Grid */
 .certificates-grid {
   display: flex;
   align-items: center;
@@ -524,4 +512,4 @@ section {
     font-size: 14px;
   }
 }
-</style> 
+</style>
