@@ -363,6 +363,7 @@ const toggleMenu = () => {
   position: fixed;
   top: 0;
   left: 0;
+  backdrop-filter: blur(4px);
   background: rgba(0,0,0,0.5);
   width: 100%;
   height: 100%;

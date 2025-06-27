@@ -143,13 +143,102 @@
 
           <div v-if="showBook" class="gallery-modal" @click="closeModal">
             <div class="gallery-modal__content" @click.stop>
-              <button class="gallery-modal__close" @click="closeModal">&times;</button>
               <div class="booking-modal">
-                <!--                TODO: форма бронирования шоу-программы -->
-                <div class="name"></div>
-                <div class="phone"></div>
-                <div class="comment"></div>
-                <div class="date"></div>
+                <button class="gallery-modal__close" @click="closeModal">&times;</button>
+                <h2 class="booking-modal__title">Бронирование шоу-программы</h2>
+
+                <div v-if="!isSubmitted" class="booking-modal__form">
+                  <div class="selected-show">
+                    <strong>Выбранная программа:</strong> {{ selectedShow.name }}
+                  </div>
+
+                  <div class="form-group">
+                    <label for="booking-name">Ваше имя</label>
+                    <div class="input-wrapper">
+                      <input
+                          type="text"
+                          id="booking-name"
+                          v-model="bookingData.name"
+                          required
+                          placeholder="Введите ваше имя"
+                          @input="validateField('name')"
+                          @blur="validateField('name')"
+                          :class="{ 'error': errors.name }"
+                      >
+                      <div class="input-focus-effect"></div>
+                    </div>
+                    <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="booking-phone">Телефон</label>
+                    <div class="input-wrapper">
+                      <input
+                          type="tel"
+                          id="booking-phone"
+                          v-model="bookingData.phone"
+                          v-mask="'+7 (###) ###-##-##'"
+                          required
+                          placeholder="+7 (___) ___-__-__"
+                          @input="handlePhoneInput"
+                          @blur="validateField('phone')"
+                          @keyup.enter="submitBooking"
+                          :class="{ 'error': errors.phone }"
+                          ref="phoneInput"
+                      >
+                      <div class="input-focus-effect"></div>
+                    </div>
+                    <span v-if="errors.phone" class="error-message">{{ errors.phone }}</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="booking-date">Дата мероприятия</label>
+                    <div class="input-wrapper">
+                      <input
+                          type="date"
+                          id="booking-date"
+                          v-model="bookingData.date"
+                          required
+                          @input="validateField('date')"
+                          @blur="validateField('date')"
+                          :class="{ 'error': errors.date }"
+                          :min="minDate"
+                      >
+                      <div class="input-focus-effect"></div>
+                    </div>
+                    <span v-if="errors.date" class="error-message">{{ errors.date }}</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="booking-comment">Пожелания и комментарии</label>
+                    <div class="input-wrapper">
+                      <textarea
+                          id="booking-comment"
+                          v-model="bookingData.comment"
+                          placeholder="Ваши пожелания, особенности мероприятия и т.д."
+                          rows="3"
+                      ></textarea>
+                      <div class="input-focus-effect"></div>
+                    </div>
+                  </div>
+
+                  <button
+                      type="submit"
+                      class="booking-modal__submit"
+                      @click="submitBooking"
+                      :disabled="isSubmitting || !isFormValid"
+                  >
+                    {{ isSubmitting ? 'Отправка...' : 'Забронировать' }}
+                  </button>
+                </div>
+
+                <div v-else class="success-message">
+                  <div class="success-icon">✓</div>
+                  <h3>Заявка отправлена!</h3>
+                  <p>Мы свяжемся с вами для подтверждения бронирования.</p>
+                  <button class="close-btn" @click="closeModal">Закрыть</button>
+                </div>
+                <span v-if="errors.submit" class="error-message">{{ errors.submit }}</span>
               </div>
             </div>
           </div>
@@ -188,7 +277,7 @@
 
 
 <script setup>
-import {onMounted, onServerPrefetch, ref} from 'vue'
+import {onMounted, onServerPrefetch, ref, computed} from 'vue'
 import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -207,6 +296,36 @@ const selectedShow = ref(null);
 const showGallery = ref(false);
 const showDescription = ref(false);
 const showBook = ref(false);
+
+const bookingData = ref({
+  name: '',
+  phone: '',
+  date: '',
+  comment: '',
+  showTitle: ''
+});
+
+const errors = ref({
+  name: '',
+  phone: '',
+  date: '',
+  submit: ''
+});
+
+const isSubmitting = ref(false);
+const isSubmitted = ref(false);
+const phoneInput = ref(null);
+
+const minDate = computed(() => {
+  return new Date().toISOString().split('T')[0];
+});
+
+const isFormValid = computed(() => {
+  return bookingData.value.name.trim() &&
+      isValidPhone(bookingData.value.phone) &&
+      bookingData.value.date
+});
+
 
 const openModal = (show, mode) => {
   selectedShow.value = show;
@@ -235,6 +354,127 @@ const closeModal = () => {
   showDescription.value = false;
   showBook.value = false;
   document.body.style.overflow = '';
+
+  bookingData.value = {
+    name: '',
+    phone: '',
+    date: '',
+    comment: '',
+    showTitle: ''
+  };
+  errors.value = {
+    name: '',
+    phone: '',
+    date: '',
+    submit: ''
+  };
+  isSubmitted.value = false;
+};
+
+const handlePhoneInput = () => {
+  let digits = bookingData.value.phone.replace(/\D/g, '');
+  if (digits.startsWith('8') && digits.length > 0) {
+    digits = '7' + digits.slice(1);
+  }
+  else if (!digits.startsWith('7') && digits.length > 0) {
+    digits = '7' + digits;
+  }
+
+  digits = digits.slice(0, 11);
+
+  let formatted = '+7';
+  if (digits.length > 1) {
+    formatted += ` (${digits.slice(1, 4)}`;
+  }
+  if (digits.length > 4) {
+    formatted += `) ${digits.slice(4, 7)}`;
+  }
+  if (digits.length > 7) {
+    formatted += `-${digits.slice(7, 9)}`;
+  }
+  if (digits.length > 9) {
+    formatted += `-${digits.slice(9, 11)}`;
+  }
+
+  bookingData.value.phone = formatted;
+  validateField('phone');
+};
+
+const isValidPhone = (phone) => {
+  const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+  return phoneRegex.test(phone);
+};
+
+const validateField = (field) => {
+  errors.value[field] = '';
+
+  if (field === 'name') {
+    if (!bookingData.value.name.trim()) {
+      errors.value.name = 'Введите ваше имя';
+    } else if (bookingData.value.name.trim().length < 2) {
+      errors.value.name = 'Имя слишком короткое';
+    }
+  }
+
+  if (field === 'phone') {
+    if (!bookingData.value.phone) {
+      errors.value.phone = 'Введите номер телефона';
+    } else if (!isValidPhone(bookingData.value.phone)) {
+      errors.value.phone = 'Введите корректный номер';
+    }
+  }
+
+  if (field === 'date') {
+    if (!bookingData.value.date) {
+      errors.value.date = 'Укажите дату мероприятия';
+    }
+  }
+};
+
+const submitBooking = async () => {
+  validateField('name');
+  validateField('phone');
+  validateField('date');
+
+  if (Object.values(errors.value).some(error => error)) return;
+
+  isSubmitting.value = true;
+
+  try {
+    const submitData = {
+      ...bookingData.value,
+      phone: bookingData.value.phone.replace(/\D/g, ''),
+      showId: selectedShow.value?.id
+    };
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', submitData.name);
+    formDataToSend.append('phone', submitData.phone);
+    formDataToSend.append('date', submitData.date);
+    formDataToSend.append('comment', submitData.comment);
+    formDataToSend.append('showTitle', submitData.showTitle);
+    if (submitData.showId) {
+      formDataToSend.append('showId', submitData.showId);
+    }
+
+    // const response = await fetch(import.meta.env.VITE_API_URL + '/booking', {
+    //   method: 'POST',
+    //   body: formDataToSend
+    // });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Ошибка при отправке формы');
+    }
+
+    const result = await response.json();
+    isSubmitted.value = true;
+  } catch (error) {
+    console.error('Ошибка при отправке:', error);
+    errors.value.submit = error.message || 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.';
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 const loadShows = async () => {
@@ -897,7 +1137,8 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -917,21 +1158,16 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .gallery-modal__close {
   position: absolute;
-  top: -30px;
-  right: -30px;
+  top: 20px;
+  right: 20px;
   background: none;
   border: none;
-  font-size: 48px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 24px;
+  color: #666;
   cursor: pointer;
-  z-index: 2;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
+  padding: 5px;
+  line-height: 1;
+  transition: color 0.3s ease;
 }
 
 .gallery-modal__close:hover {
@@ -965,6 +1201,206 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
     top: -40px;
   }
 }
+/* Cтили для формы бронирования */
+.booking-modal {
+ position: relative;
+ background: white;
+ padding: 30px;
+ border-radius: 12px;
+ max-width: 500px;
+ margin: 0 auto;
+}
+
+.booking-modal__title {
+  font-size: 24px;
+  color: #CF1034;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.selected-show {
+  background: #f8f8f8;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.booking-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Rubik', sans-serif;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #CF1034;
+  outline: none;
+}
+
+.input-focus-effect {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #CF1034;
+  transition: width 0.3s ease;
+}
 
 
+.booking-modal__submit {
+  background: #CF1034;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.booking-modal__submit:hover {
+  background: #a00d29;
+}
+
+.booking-modal__submit:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+input.error,
+textarea.error {
+  border-color: #ff4444;
+}
+
+.success-message {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #CF1034;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 auto 20px;
+}
+
+.success-message h3 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.success-message p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: #CF1034;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .booking-modal {
+    padding: 20px;
+  }
+
+  .booking-modal__title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .booking-modal__submit {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-modal {
+    padding: 15px;
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .booking-modal__title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .selected-show {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+}
 </style>
