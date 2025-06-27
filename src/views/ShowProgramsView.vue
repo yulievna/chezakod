@@ -723,7 +723,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-top: 60px;
   color: #000;
 }

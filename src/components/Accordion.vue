@@ -98,6 +98,7 @@ button {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  line-height: 25px;
 }
 
 p {

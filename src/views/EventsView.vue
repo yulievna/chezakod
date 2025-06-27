@@ -388,7 +388,7 @@ const shows = [
     icon: brain
   },
   {
-    name: 'Где логика',
+    name: 'Где логика?',
     description: 'Найдите связь между предметами',
     icon: logic
   },
@@ -548,9 +548,6 @@ useHead({
 onMounted(init);
 onServerPrefetch(init);
 
-// onBeforeUnmount(() => {
-//   stopAutoSlide()
-// })
 </script>
 <style scoped>
 /* Base styles */
@@ -562,7 +559,6 @@ onServerPrefetch(init);
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 /* Hero section */
@@ -646,7 +642,9 @@ onServerPrefetch(init);
   gap: 30px;
   margin: 60px 0;
 }
-
+.slider-section{
+  max-height: 515px;
+}
 /* Cards */
 .card {
   background: white;
@@ -667,6 +665,7 @@ onServerPrefetch(init);
 .shows-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 20px;
   margin-top: 30px;
 }
@@ -677,10 +676,12 @@ onServerPrefetch(init);
   padding: 20px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 220px;
+  height: 160px;
 }
 
 .show-card:hover,
@@ -708,11 +709,18 @@ onServerPrefetch(init);
   height: 100%;
   object-fit: contain;
 }
-
+.show-card__content{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .show-card__content h4 {
-  font-size: 18px;
-  margin: 0 0 8px;
+  font-size: 16px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  line-height: 20px;
 }
 
 .show-card__content p {
@@ -794,7 +802,10 @@ onServerPrefetch(init);
   color: white;
   border-color: #CF1034;
 }
-
+.highlight-text{
+  margin-top: 20px;
+  font-size: 17px;
+}
 /* Pricing tabs */
 .pricing-tabs {
   margin-top: 20px;
