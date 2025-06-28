@@ -301,8 +301,7 @@ const bookingData = ref({
   name: '',
   phone: '',
   date: '',
-  comment: '',
-  showTitle: ''
+  comment: ''
 });
 
 const errors = ref({
@@ -369,8 +368,7 @@ const closeModal = () => {
     name: '',
     phone: '',
     date: '',
-    comment: '',
-    showTitle: ''
+    comment: ''
   };
   errors.value = {
     name: '',
@@ -453,23 +451,20 @@ const submitBooking = async () => {
     const submitData = {
       ...bookingData.value,
       phone: bookingData.value.phone.replace(/\D/g, ''),
-      showId: selectedShow.value?.id
+      show: selectedShow.value?.name
     };
 
     const formDataToSend = new FormData();
     formDataToSend.append('name', submitData.name);
     formDataToSend.append('phone', submitData.phone);
     formDataToSend.append('date', submitData.date);
-    formDataToSend.append('comment', submitData.comment);
-    formDataToSend.append('showTitle', submitData.showTitle);
-    if (submitData.showId) {
-      formDataToSend.append('showId', submitData.showId);
-    }
+    formDataToSend.append('textarea', submitData.comment);
+    formDataToSend.append('show', submitData.show);
 
-    // const response = await fetch(import.meta.env.VITE_API_URL + '/booking', {
-    //   method: 'POST',
-    //   body: formDataToSend
-    // });
+    const response = await fetch(import.meta.env.VITE_HOST + '/api/v1/feedback/', {
+      method: 'POST',
+      body: formDataToSend
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -477,6 +472,9 @@ const submitBooking = async () => {
     }
 
     const result = await response.json();
+    if (result.status === "error") {
+      throw new Error(result.msg);
+    }
     isSubmitted.value = true;
   } catch (error) {
     console.error('Ошибка при отправке:', error);
@@ -1110,7 +1108,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
     border-radius: 16px;
     position: relative;
     width: 90%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   }
 }
 
