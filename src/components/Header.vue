@@ -5,7 +5,7 @@
 
         <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
-          <img class="logo" src="@/assets/images/logo.svg" alt="Logo" />
+          <img class="logo" src="@/assets/images/logo.svg" alt="Logo"/>
         </router-link>
 
         <!-- Бургер-меню -->
@@ -20,8 +20,12 @@
           <li class="navigation-item dropdown">
             <router-link to="#">Развлечения</router-link>
             <ul class="dropdown-menu">
-              <li><router-link to="/quests">Квесты</router-link></li>
-              <li><router-link to="/action-games">Экшн игры</router-link></li>
+              <li>
+                <router-link to="/quests">Квесты</router-link>
+              </li>
+              <li>
+                <router-link to="/action-games">Экшн игры</router-link>
+              </li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
               <li>
@@ -29,11 +33,21 @@
               </li>
             </ul>
           </li>
-          <li class="navigation-item"><router-link to="/events">Мероприятия</router-link></li>
-          <li class="navigation-item"><router-link to="/timetable">Расписание</router-link></li>
-          <li class="navigation-item"><router-link to="/sert">Сертификаты</router-link></li>
-          <li class="navigation-item"><router-link to="/action">Акции</router-link></li>
-          <li class="navigation-item"><router-link to="/about">О нас</router-link></li>
+          <li class="navigation-item">
+            <router-link to="/events">Мероприятия</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/timetable">Расписание</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/sert">Сертификаты</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/action">Акции</router-link>
+          </li>
+          <li class="navigation-item">
+            <router-link to="/about">О нас</router-link>
+          </li>
         </ul>
 
         <!-- Кнопки десктоп -->
@@ -42,10 +56,17 @@
           <div class="navigation-item dropdown">
             <button class="contacts-btn">Контакты</button>
             <ul class="dropdown-menu">
-              <li><a href="tel:+79998887766">+7 (999) 888-77-66</a></li>
-              <li><a href="#">WhatsApp</a></li>
-              <li><a href="#">Telegram</a></li>
-              <li><a href="https://vk.com/chezakod">ВКонтакте</a></li>
+              <template v-for="(contact, key, index) in contacts" :key="index">
+                <template v-if="!contact.hide">
+                  <li v-if="contact.type === 'phone'"><a
+                      :href="`tel:${contact.value}`">{{ contact.text ? contact.text : contact.value }}</a></li>
+                  <li v-else-if="contact.type === 'email'"><a
+                      :href="`mailto:${contact.value}`">{{ contact.text ? contact.text : contact.value }}</a></li>
+                  <li v-else><a :href="contact.value">{{
+                      contact.text ? contact.text : contact.value
+                    }}</a></li>
+                </template>
+              </template>
             </ul>
           </div>
         </div>
@@ -64,26 +85,49 @@
           <li class="mobile-menu-item sub-nav">
             <div class="nav-section-title">Развлечения</div>
             <ul>
-              <li><router-link to="/quests">Квесты</router-link></li>
-              <li><router-link to="/action-games">Экшн игры</router-link></li>
+              <li>
+                <router-link to="/quests">Квесты</router-link>
+              </li>
+              <li>
+                <router-link to="/action-games">Экшн игры</router-link>
+              </li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
-              <li><router-link to="/show-programs">Шоу-программы</router-link></li>
+              <li>
+                <router-link to="/show-programs">Шоу-программы</router-link>
+              </li>
             </ul>
           </li>
-          <li class="mobile-menu-item"><router-link to="/events">Мероприятия</router-link></li>
-          <li class="mobile-menu-item"><router-link to="/timetable">Расписание</router-link></li>
-          <li class="mobile-menu-item"><router-link to="/sert">Сертификаты</router-link></li>
-          <li class="mobile-menu-item"><router-link to="/action">Акции</router-link></li>
-          <li class="mobile-menu-item"><router-link to="/about">О нас</router-link></li>
+          <li class="mobile-menu-item">
+            <router-link to="/events">Мероприятия</router-link>
+          </li>
+          <li class="mobile-menu-item">
+            <router-link to="/timetable">Расписание</router-link>
+          </li>
+          <li class="mobile-menu-item">
+            <router-link to="/sert">Сертификаты</router-link>
+          </li>
+          <li class="mobile-menu-item">
+            <router-link to="/action">Акции</router-link>
+          </li>
+          <li class="mobile-menu-item">
+            <router-link to="/about">О нас</router-link>
+          </li>
 
           <li class="mobile-menu-item sub-nav">
             <div class="nav-section-title">Контакты</div>
             <ul>
-              <li><a href="tel:+79998887766">+7 (999) 888-77-66</a></li>
-              <li><a href="#">WhatsApp</a></li>
-              <li><a href="#">Telegram</a></li>
-              <li><a href="https://vk.com/chezakod">ВКонтакте</a></li>
+              <template v-for="(contact, key, index) in contacts" :key="index">
+                <template v-if="!contact.hide">
+                  <li v-if="contact.type === 'phone'"><a
+                      :href="`tel:${contact.value}`">{{ contact.text ? contact.text : contact.value }}</a></li>
+                  <li v-else-if="contact.type === 'email'"><a
+                      :href="`mailto:${contact.value}`">{{ contact.text ? contact.text : contact.value }}</a></li>
+                  <li v-else><a :href="contact.value">{{
+                      contact.text ? contact.text : contact.value
+                    }}</a></li>
+                </template>
+              </template>
             </ul>
           </li>
         </ul>
@@ -92,7 +136,7 @@
 
     <!-- Попап -->
     <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
-      <Form />
+      <Form/>
     </div>
   </header>
 </template>
@@ -112,9 +156,9 @@ const togglePopup = () => {
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
   const burger = document.querySelector('.burger')
-      if (burger) burger.classList.toggle('active');
-      if (isMenuOpen.value) document.body.classList.add('menu-open');
-      else document.body.classList.remove('menu-open');
+  if (burger) burger.classList.toggle('active');
+  if (isMenuOpen.value) document.body.classList.add('menu-open');
+  else document.body.classList.remove('menu-open');
 };
 </script>
 
@@ -203,6 +247,7 @@ const toggleMenu = () => {
   visibility: visible;
   transform: translateY(0);
 }
+
 .navigation-item.dropdown:hover .dropdown-menu {
   display: block;
 }
@@ -274,6 +319,7 @@ const toggleMenu = () => {
   z-index: 1001;
   transition: all 0.3s ease;
 }
+
 .burger-line {
   display: block;
   width: 100%;
@@ -306,7 +352,7 @@ const toggleMenu = () => {
   background: #fff;
   z-index: 99;
   padding: 0 20px;
-  box-shadow: 0 8px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
 
@@ -346,7 +392,8 @@ const toggleMenu = () => {
   display: block;
   padding: 8px 0;
 }
-.sub-nav ul{
+
+.sub-nav ul {
   margin: 0 30px;
 }
 
@@ -364,7 +411,7 @@ const toggleMenu = () => {
   top: 0;
   left: 0;
   backdrop-filter: blur(4px);
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   width: 100%;
   height: 100%;
   z-index: 200;
@@ -372,22 +419,27 @@ const toggleMenu = () => {
   align-items: center;
   justify-content: center;
 }
+
 @media (max-width: 1072px) {
-  .header-buttons{
+  .header-buttons {
     flex-direction: column;
     align-items: center;
   }
-  .navigation-item a{
+
+  .navigation-item a {
     font-size: 13px;
   }
-  .logo-wrapper{
+
+  .logo-wrapper {
     width: 150px;
   }
 }
+
 @media (max-width: 768px) {
-  .header-container{
+  .header-container {
     padding: 0 15px;
   }
+
   .desktop-only {
     display: none;
   }
@@ -403,8 +455,9 @@ const toggleMenu = () => {
     width: 200px;
   }
 }
+
 @media (min-width: 768px) {
-  .mobile-menu{
+  .mobile-menu {
     display: none;
   }
 }
