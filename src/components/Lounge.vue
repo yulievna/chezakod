@@ -46,7 +46,7 @@
     <!-- Photo Gallery Modal -->
     <div v-if="selectedLounge" class="gallery-modal" @click="closeGallery">
       <div class="gallery-modal__content" @click.stop>
-        <button class="gallery-modal__close" @click="closeGallery" style="font-size: 48pt">&times;</button>
+        <button class="gallery-modal__close" @click="closeGallery">&times;</button>
         <swiper-container
             :navigation="true"
             thumbs-swiper=".lounge-thumbs"
@@ -344,7 +344,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   right: -40px;
   background: none;
   border: none;
-  font-size: 48px;
+  font-size: 48pt;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   z-index: 2;
@@ -397,6 +397,10 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
     position: relative;
     width: 90%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-modal__close {
+    font-size: 36pt;
   }
 
   .lounge__list {

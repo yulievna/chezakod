@@ -228,7 +228,7 @@ const submitForm = async () => {
     formDataToSend.append('phone', submitData.phone)
     formDataToSend.append('nominal', submitData.nominal)
 
-    const response = await fetch(import.meta.env.VITE_HOST + '/api/v1/sert', {
+    const response = await fetch(import.meta.env.VITE_HOST + '/api/v1/sert/', {
       method: 'POST',
       body: formDataToSend
     })
