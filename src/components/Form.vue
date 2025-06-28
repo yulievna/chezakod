@@ -41,7 +41,6 @@
               :key="index"
               :class="{
                 'selected': selectedAnswers[currentQuestion].includes(answer),
-                'error': errors[currentQuestion] && (!selectedAnswers[currentQuestion] || selectedAnswers[currentQuestion].length === 0)
               }"
               @click="toggleCheckboxAnswer(answer)">
             <label class="custom-checkbox">
@@ -359,7 +358,7 @@ const submitForm = async () => {
 
     Object.entries(selectedAnswers.value).forEach(([index, value]) => {
       const question = questions[index]
-      if (question.fmd == "txt") {
+      if (question.fmd === "txt") {
         txt += `${question.txt}: ${Array.isArray(value) ? value.join(', ') : value}\n`
       } else {
         formData.append(question.fmd, value)
