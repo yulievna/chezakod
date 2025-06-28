@@ -53,7 +53,7 @@
             <p>Современный крытый электрокартинг для всей семьи. Удобное расположение, свежий воздух, безопасность и
               драйв!</p>
           </div>
-          <a href="https://chego.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
+          <a href="https://kartingchego.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
         </div>
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="500">
@@ -73,7 +73,7 @@
             <p>Новинка 2025 года! Интерактивный сенсорный пол, где можно бегать, прыгать, играть с друзьями или всей
               семьёй. Формат ярких мини-игр, от которых не оторваться.</p>
           </div>
-          <a href="https://playkod.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
+          <a href="https://actionkod.ru/playkod" class="btn-primary" target="_blank">Перейти на сайт</a>
         </div>
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="700">
@@ -82,7 +82,7 @@
             <!-- <h3>Party Kod</h3> -->
             <p>Уютные лофт-караоке комнаты с атмосферой праздника и качественным звуком.</p>
           </div>
-          <a href="https://partykod.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
+          <a href="https://party-kod.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
         </div>
       </div>
     </div>
