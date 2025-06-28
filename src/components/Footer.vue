@@ -13,32 +13,28 @@
             <router-link to="/quests">Квесты</router-link>
           </li>
           <li class="footer-item">
-            <router-link to="/#">Экшн игры</router-link>
+            <router-link to="/action-games">Экшн игры</router-link>
           </li>
+          <li><a href="https://kartingchego.ru/">Картинг</a></li>
+          <li><a href="https://party-kod.ru/">Караоке</a></li>
           <li class="footer-item">
-            <router-link to="/#">Картинг</router-link>
+            <router-link to="/show-programs">Шоу-программы</router-link>
           </li>
-          <li class="footer-item">
-            <router-link to="/#">Караоке</router-link>
-          </li>
-          <li class="footer-item">
-            <router-link to="/#">Шоу-программы</router-link>
-          </li>
-          <li class="footer-item">
-            <router-link to="/#">Мероприятия</router-link>
-          </li>
-          <li class="footer-item">
-            <router-link to="/#">Расписание</router-link>
-          </li>
-          <li class="footer-item">
-            <router-link to="/#">Сертификаты</router-link>
-          </li>
-          <li class="footer-item">
-            <router-link to="/#">Акции</router-link>
-          </li>
-          <li class="footer-item">
-            <router-link to="/#">О нас</router-link>
-          </li>
+        <li class="footer-item">
+          <router-link to="/events">Мероприятия</router-link>
+        </li>
+        <li class="footer-item">
+          <router-link to="/timetable">Расписание</router-link>
+        </li>
+        <li class="footer-item">
+          <router-link to="/sert">Сертификаты</router-link>
+        </li>
+        <li class="footer-item">
+          <router-link to="/action">Акции</router-link>
+        </li>
+        <li class="footer-item">
+          <router-link to="/about">О нас</router-link>
+        </li>
         </ul>
 
         <!-- Контакты -->

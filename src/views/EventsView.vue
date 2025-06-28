@@ -1008,19 +1008,30 @@ onServerPrefetch(init);
   .container {
     padding: 0 20px;
   }
-
+  .card{
+    width: 95%;
+    margin: 0 auto 20px;
+  }
   .content-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
   .shows-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, 1fr);
+  }
+  .show-card {
+    width: 100%;
+  }
+  .show-card__content h4 {
+    font-size: 1.2rem;
   }
 
+  .show-card__content p {
+    font-size: 1rem;
+  }
   .slider-section {
     width: 90vw;
-    height: 40vh;
     padding: 0px;
   }
 
@@ -1032,8 +1043,18 @@ onServerPrefetch(init);
     font-size: 20px;
   }
 }
-
+@media (max-width: 920px) {
+  .card {
+    margin: 0 auto 20px;
+    width: 100%;
+    padding: 10px;
+  }
+}
 @media (max-width: 768px) {
+  .container {
+    padding: 0;
+    margin: 0 auto;
+  }
   .hero {
     padding: 60px 0;
   }
@@ -1056,11 +1077,20 @@ onServerPrefetch(init);
   }
 
   .shows-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
+  .show-card:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 50%;
+  }
+  .card{
+    margin: 0px auto 20px;
+    width: 95%;
 
+  }
   .show-card {
-    padding: 15px;
+    padding: 10px;
   }
 
   .show-card__icon {
@@ -1116,17 +1146,35 @@ onServerPrefetch(init);
     width: 90vw;
     padding: 0px;
   }
+  .shows-grid {
+    grid-template-columns: 1fr;
 
+  }
+  .show-card:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+  }
   .card__title {
     font-size: 20px;
   }
-
+  .show-card{
+    gap: 20px;
+    padding: 20px;
+  }
+  .show-card__icon{
+    width: 60px;
+    height: 60px;
+  }
+  .show-card__content {
+    gap: 10px;
+  }
   .show-card__content h4 {
-    font-size: 16px;
+    font-size: 1.3rem;
   }
 
   .show-card__content p {
-    font-size: 12px;
+    font-size: 1rem;
   }
 
   .step__number {
@@ -1150,7 +1198,12 @@ onServerPrefetch(init);
   .step-header h2 {
     font-size: 20px;
   }
-
+  .contact-info{
+    padding: 0 20px;
+  }
+  .phone-number{
+    font-size: 20px;
+  }
   .game-card__content h3,
   .lounge-card__content h3 {
     font-size: 18px;

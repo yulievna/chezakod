@@ -12,11 +12,7 @@
           clickable: true
         }"
         :navigation="true"
-        :autoplay="{
-          delay: 3000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true
-        }"
+
         :slidesPerView="3"
         :centeredSlides="true"
         class="swiper-reviews"
@@ -52,16 +48,17 @@
               <span class="review-name">{{ review.user }}</span>
               <span class="review-date">{{ review.date }}</span>
             </div>
+            <span class="review-rating">
+              <span
+                  v-for="star in 5"
+                  :key="star"
+                  class="star"
+                  :class="{ filled: star <= review.rating }"
+              >★</span
+              >
+            </span>
           </div>
-          <span class="review-rating">
-                      <span
-                          v-for="star in 5"
-                          :key="star"
-                          class="star"
-                          :class="{ filled: star <= review.rating }"
-                      >★</span
-                      >
-                    </span>
+
         </div>
         <p class="review-text">{{ review.text }}</p>
         <a class="review-link" :href="review.link" target="_blank">
@@ -240,11 +237,32 @@ swiper-slide.swiper-slide-active {
   .reviews-title{
     flex-direction: column;
   }
+
+
+}
+@media (max-width: 480px) {
+  .review-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: 5px;
+  }
+
+  .review-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .review-name {
+    color: white;
+    font-size: 12px;
+  }
+
+
 }
 /*
-
-
-
 
 .reviews-container {
   text-align: center;
