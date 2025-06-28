@@ -120,10 +120,10 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch} from 'vue'
-import { mask } from 'vue-the-mask'
+import pkg from 'vue-the-mask';
 import axios from 'axios'
 
-// Директивы
+const {mask} = pkg;
 const vMask = mask
 
 // Данные формы
