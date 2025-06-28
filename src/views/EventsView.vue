@@ -223,8 +223,8 @@
                 <div class="game-card__content">
                   <h3>{{ game.title }}</h3>
                   <p>{{ game.description }}</p>
-                  <a :href="game.link" class="btn-more" target="_blank" v-if="game.external">Подробнее</a>
-                  <router-link :to="game.link" class="btn-more" target="_blank" v-else>Подробнее</router-link>
+                  <a :href="game.link" class="btn-more" v-if="game.external">Подробнее</a>
+                  <router-link :to="game.link" class="btn-more" v-else>Подробнее</router-link>
                 </div>
               </div>
             </div>
@@ -242,7 +242,7 @@
                 и кипятком — всё готово для комфортного празднования. Вам остается только принести любимые угощения и
                 напитки. Отличное решение для дней рождения, семейных мероприятий и корпоративов!
               </p>
-              <router-link to="/quests#lounges" class="btn-more" target="_blank">Посмотреть залы</router-link>
+              <router-link to="/quests#lounges" class="btn-more">Посмотреть залы</router-link>
 
             </div>
 
