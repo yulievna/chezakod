@@ -146,6 +146,7 @@ import {ref} from "vue";
 import Form from "@/components/Form.vue";
 import contacts from "@/contacts.js";
 
+const scrollPosition = ref(0);
 const isPopupOpen = ref(false);
 const isMenuOpen = ref(false);
 
@@ -157,14 +158,29 @@ const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
   const burger = document.querySelector('.burger')
   if (burger) burger.classList.toggle('active');
-  if (isMenuOpen.value) document.body.classList.add('menu-open');
-  else document.body.classList.remove('menu-open');
+  if (isMenuOpen.value) {
+    scrollPosition.value = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition.value}px`;
+    document.body.style.width = '100%';
+  } else {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollPosition.value);
+  }
 };
 </script>
 
 
 <style scoped>
-/* Общие стили */
+body.menu-open {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
 .header {
   background-color: #fff;
   padding: 26px 0;
@@ -347,7 +363,7 @@ const toggleMenu = () => {
   position: fixed;
   top: 90px;
   left: 0;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 80px);
   width: 100%;
   background: #fff;
   z-index: 99;
