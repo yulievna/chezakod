@@ -5,6 +5,7 @@
 <script>
 import {onMounted} from "vue";
 import axios, {HttpStatusCode} from "axios";
+import pointer from "@/assets/images/pointer-min.png";
 
 export default {
   setup() {
@@ -268,7 +269,7 @@ export default {
               const marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
-                icon: "/pointer-min.png",
+                icon: pointer,
                 info: contentInfo,
                 id: i,
                 animation: google.maps.Animation.DROP,

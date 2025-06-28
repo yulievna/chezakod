@@ -340,8 +340,8 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .gallery-modal__close {
   position: absolute;
-  top: -30px;
-  right: -30px;
+  top: -40px;
+  right: -40px;
   background: none;
   border: none;
   font-size: 48px;
@@ -355,6 +355,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.3s ease;
+  padding: 25px;
 }
 
 .gallery-modal__close:hover {

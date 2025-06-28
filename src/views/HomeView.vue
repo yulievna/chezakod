@@ -18,6 +18,7 @@ import discount7 from '@/assets/images/discount7.jpg';
 import sl2 from '@/assets/images/sl2.jpg';
 import korporativ from '@/assets/images/korporativ.jpg';
 import sl3 from '@/assets/images/sl3.jpg';
+import pointer from "@/assets/images/pointer-min.png";
 
 import quests from '@/assets/images/quest__2.jpg';
 import action from '@/assets/images/action.jpg';
@@ -130,7 +131,7 @@ onServerPrefetch(async () => {
 
 <template>
   <Header></Header>
-
+  <img :src="pointer" style="display: none">
   <section class="main">
     <div class="container">
       <ul class="servises__list">

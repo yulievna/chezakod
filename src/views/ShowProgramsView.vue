@@ -22,13 +22,15 @@
         </div>
 
         <!-- Error State -->
-        <div v-else-if="error" class="error-state">
-          <p>{{ error }}</p>
-          <button @click="loadShows" class="retry-button">Повторить</button>
-        </div>
+        <template v-else-if="error">
+          <div class="error-state">
+            <p>{{ error }}</p>
+            <button @click="loadShows" class="retry-button">Повторить</button>
+          </div>
+        </template>
 
         <!-- Основные шоу-программы -->
-        <div v-else>
+        <template v-else>
           <div class="shows-grid">
             <div class="shows-grid">
               <div v-for="show in showPrograms" :key="show.id" class="show-card">
@@ -265,7 +267,7 @@
               <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </section>
 
@@ -275,7 +277,7 @@
 
 
 <script setup>
-import {onMounted, onServerPrefetch, ref, computed} from 'vue'
+import {computed, onMounted, onServerPrefetch, ref} from 'vue'
 import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -383,8 +385,7 @@ const handlePhoneInput = () => {
   let digits = bookingData.value.phone.replace(/\D/g, '');
   if (digits.startsWith('8') && digits.length > 0) {
     digits = '7' + digits.slice(1);
-  }
-  else if (!digits.startsWith('7') && digits.length > 0) {
+  } else if (!digits.startsWith('7') && digits.length > 0) {
     digits = '7' + digits;
   }
 
@@ -626,7 +627,7 @@ onMounted(loadShows);
   border: none;
 }
 
-@media(max-width: 405px) {
+@media (max-width: 405px) {
   .show-buttons button {
     padding: 10px;
   }
@@ -678,6 +679,16 @@ swiper-slide.thumbs-slide img {
   transition: all 0.3s ease;
 }
 
+@media(max-height: 790px) {
+  swiper-slide.thumbs-slide img {
+    max-height: 20vh;
+  }
+
+  .swiper-show img {
+    max-height: 70vh;
+  }
+}
+
 swiper-slide.thumbs-slide img:hover {
   opacity: 0.8;
 }
@@ -726,6 +737,12 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   font-size: 2.5rem;
   margin-top: 60px;
   color: #000;
+}
+
+@media(max-width: 400px) {
+  .section-title {
+    font-size: 2rem;
+  }
 }
 
 .section-subtitle {
@@ -1153,14 +1170,15 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   backdrop-filter: blur(4px);
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow: hidden;
 }
 
 .gallery-modal__content {
@@ -1176,16 +1194,18 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .gallery-modal__close {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: -50px;
+  right: -30px;
   background: none;
   border: none;
-  font-size: 24px;
-  color: #666;
+  font-size: 48px;
+  color: white;
   cursor: pointer;
-  padding: 5px;
   line-height: 1;
   transition: color 0.3s ease;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
 }
 
 .gallery-modal__close:hover {
@@ -1213,20 +1233,20 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 @media (max-width: 768px) {
-
   .gallery-modal__close {
     right: -10px;
-    top: -40px;
+    top: -50px;
   }
 }
+
 /* Cтили для формы бронирования */
 .booking-modal {
- position: relative;
- background: white;
- padding: 30px;
- border-radius: 12px;
- max-width: 500px;
- margin: 0 auto;
+  position: relative;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .booking-modal__title {
