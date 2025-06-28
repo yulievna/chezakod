@@ -1,4 +1,4 @@
-<template> <!-- TODO: пофиксить форму -->
+<template>
   <div class="quiz-container">
     <transition name="fade" mode="out-in">
       <!-- Блок с вопросами -->
@@ -10,12 +10,12 @@
             <div class="question-counter">{{ currentQuestion + 1 }} / {{ questions.length }}</div>
           </div>
           <div class="progress-bar">
-            <div class="progress" :style="{ width: ((currentQuestion + 1) / questions.length) * 100 + '%' }"></div>
+            <div class="progress" :style="{ width: progressWidth }"></div>
           </div>
         </div>
 
         <!-- Вопрос -->
-        <h2>{{ questions[currentQuestion].question }}</h2>
+        <h2>{{ currentQuestionData.question }}</h2>
 
         <!-- Сообщение об ошибке -->
         <div v-if="errors[currentQuestion]" class="error-message">
@@ -23,48 +23,38 @@
         </div>
 
         <!-- Варианты ответа (radio) -->
-        <ul v-if="questions[currentQuestion].type === 'radio'" class="answer-list">
-          <li v-for="(answer, index) in questions[currentQuestion].answers"
+        <ul v-if="currentQuestionData.type === 'radio'" class="answer-list">
+          <li v-for="(answer, index) in currentQuestionData.answers"
               :key="index"
-              :class="{ 
+              :class="{
                 'selected': selectedAnswers[currentQuestion] === answer,
                 'error': errors[currentQuestion] && !selectedAnswers[currentQuestion]
-              }">
-            <!--            <input type="radio" -->
-            <!--                   :value="answer" -->
-            <!--                   v-model="selectedAnswers[currentQuestion]" -->
-            <!--                   @change="validateAndNext"-->
-            <!--                   :id="'radio-' + index" />-->
+              }"
+              @click="selectRadioAnswer(answer)">
             <label>{{ answer }}</label>
           </li>
         </ul>
 
         <!-- Варианты ответа (checkbox) -->
-        <ul v-if="questions[currentQuestion].type === 'checkbox'" class="answer-list">
-          <li v-for="(answer, index) in questions[currentQuestion].answers"
+        <ul v-if="currentQuestionData.type === 'checkbox'" class="answer-list">
+          <li v-for="(answer, index) in currentQuestionData.answers"
               :key="index"
-              :class="{ 
-                'selected': selectedAnswers[currentQuestion].includes(answer)
-                // 'error': errors[currentQuestion] && (!selectedAnswers[currentQuestion] || selectedAnswers[currentQuestion].length === 0)
+              :class="{
+                'selected': selectedAnswers[currentQuestion].includes(answer),
+                'error': errors[currentQuestion] && (!selectedAnswers[currentQuestion] || selectedAnswers[currentQuestion].length === 0)
               }"
               @click="toggleCheckboxAnswer(answer)">
             <label class="custom-checkbox">
-              <!--              <input type="checkbox" -->
-              <!--                     :value="answer" -->
-              <!--                     v-model="selectedAnswers[currentQuestion]"-->
-              <!--                     @change="validateField"-->
-              <!--                     :id="'checkbox-' + index" />-->
-              <!--              <span class="checkmark"></span>-->
               {{ answer }}
             </label>
           </li>
         </ul>
 
         <!-- Ввод текста -->
-        <div v-else-if="questions[currentQuestion].type === 'text'" class="text-input-wrapper">
+        <div v-else-if="currentQuestionData.type === 'text'" class="text-input-wrapper">
           <input type="text"
                  v-model="selectedAnswers[currentQuestion]"
-                 :placeholder="questions[currentQuestion].placeholder || 'Введите ваш ответ'"
+                 :placeholder="currentQuestionData.placeholder || 'Введите ваш ответ'"
                  @input="validateField"
                  @keyup.enter="validateAndNext"
                  :class="{ 'error': errors[currentQuestion] }"
@@ -73,7 +63,7 @@
         </div>
 
         <!-- Ввод телефона с маской -->
-        <div v-else-if="questions[currentQuestion].type === 'phone'" class="phone-input-wrapper">
+        <div v-else-if="currentQuestionData.type === 'phone'" class="phone-input-wrapper">
           <input type="text"
                  v-model="selectedAnswers[currentQuestion]"
                  v-mask="'+7 (###) ###-##-##'"
@@ -86,7 +76,7 @@
         </div>
 
         <!-- Ввод даты -->
-        <div v-else-if="questions[currentQuestion].type === 'date'" class="date-input-wrapper">
+        <div v-else-if="currentQuestionData.type === 'date'" class="date-input-wrapper" @click="openDatePicker">
           <input type="date"
                  v-model="selectedAnswers[currentQuestion]"
                  :min="minDate"
@@ -120,281 +110,296 @@
         </div>
       </div>
 
-      <!-- Блок с благодарностью -->
       <div v-else class="thank-you-card">
         <div class="thank-you-icon">✓</div>
         <h1>Спасибо за вашу заявку!</h1>
         <p>Мы свяжемся с вами в ближайшее время.</p>
-        <!--        <button class="close-btn" @click="$emit('close')">Закрыть</button>-->
       </div>
     </transition>
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import pkg from 'vue-the-mask';
+<script setup>
+import { ref, computed, onMounted, nextTick, watch} from 'vue'
+import { mask } from 'vue-the-mask'
+import axios from 'axios'
 
-const {mask} = pkg;
+// Директивы
+const vMask = mask
 
-export default {
-  directives: {mask},
-  data() {
-    return {
-      currentQuestion: 0,
-      selectedAnswers: {},
-      errors: {},
-      isSubmitting: false,
-      minDate: new Date().toISOString().split('T')[0], // Сегодняшняя дата
-      questions: [
-        {
-          question: "Укажите количество играющих гостей",
-          type: "radio",
-          answers: ["1-6 человек", "6-15 человек", "16 и более человек", "Не знаю"],
-          required: true,
-          fmd: "txt",
-          txt: "Количество игроков"
-        },
-        {
-          question: "Укажите возраст игроков",
-          type: "radio",
-          answers: ["3-6 лет", "6-10 лет", "10-14 лет", "от 15 либо взрослые", "Сильный разброс"],
-          required: true,
-          fmd: "txt",
-          txt: "Возраст"
-        },
-        {
-          question: "Какие активности вас интересуют?",
-          type: "checkbox",
-          answers: ["Картинг", "Экшн игры", "Квесты", "Детские квесты", "Лаундж зона", "День рождения", "Корпоратив", "Караоке", "Шоу-программы"],
-          required: true,
-          minSelections: 1,
-          fmd: "txt",
-          txt: "Категория"
-        },
-        {
-          question: "Желаемая длительность мероприятия",
-          type: "radio",
-          answers: ["1-2,5 часа", "2,5-3,5 часа", "4-6 часов"],
-          required: true,
-          fmd: "txt",
-          txt: "Длительность"
-        },
-        {
-          question: "Желаемая дата мероприятия",
-          type: "date",
-          required: true,
-          fmd: "txt",
-          txt: "Дата"
-        },
-        {
-          question: "Введите ваше имя",
-          type: "text",
-          required: true,
-          placeholder: "Введите ваше имя",
-          minLength: 2,
-          fmd: "name"
-        },
-        {
-          question: "Введите ваш контактный номер",
-          type: "phone",
-          required: true,
-          fmd: "phone"
-        },
-        {
-          question: "Как с вами связаться?",
-          type: "radio",
-          answers: ["Звонок", "WhatsApp", "Telegram"],
-          required: true,
-          fmd: "txt",
-          txt: "Способ связи"
-        }
-      ]
-    };
+// Данные формы
+const currentQuestion = ref(0)
+const selectedAnswers = ref({})
+const errors = ref({})
+const isSubmitting = ref(false)
+const minDate = new Date().toISOString().split('T')[0]
+
+// Refs для инпутов
+const textInput = ref(null)
+const phoneInput = ref(null)
+const dateInput = ref(null)
+
+// Вопросы
+const questions = [
+  {
+    question: "Укажите количество играющих гостей",
+    type: "radio",
+    answers: ["1-6 человек", "6-15 человек", "16 и более человек", "Не знаю"],
+    required: true,
+    fmd: "txt",
+    txt: "Количество игроков"
   },
-  computed: {
-    isLastQuestion() {
-      return this.currentQuestion === this.questions.length - 1;
-    },
-    canProceed() {
-      const currentAnswer = this.selectedAnswers[this.currentQuestion];
-      if (!currentAnswer) return false;
-
-      if (Array.isArray(currentAnswer)) {
-        return currentAnswer.length > 0;
-      }
-
-      return true;
-    }
+  {
+    question: "Укажите возраст игроков",
+    type: "radio",
+    answers: ["3-6 лет", "6-10 лет", "10-14 лет", "от 15 либо взрослые", "Сильный разброс"],
+    required: true,
+    fmd: "txt",
+    txt: "Возраст"
   },
-  methods: {
-    validateField() {
-      const question = this.questions[this.currentQuestion];
-      const answer = this.selectedAnswers[this.currentQuestion];
-      this.errors[this.currentQuestion] = '';
-
-      console.log('Validating field:', {
-        questionIndex: this.currentQuestion,
-        questionType: question.type,
-        answer: answer
-      });
-
-      if (question.required && !answer) {
-        this.errors[this.currentQuestion] = 'Это поле обязательно для заполнения';
-        return false;
-      }
-
-      if (question.type === 'text' && question.minLength && answer.length < question.minLength) {
-        this.errors[this.currentQuestion] = `Минимальная длина ${question.minLength} символа`;
-        return false;
-      }
-
-      if (question.type === 'checkbox' && question.minSelections) {
-        if (!Array.isArray(answer)) {
-          console.error('Checkbox answer is not an array:', answer);
-          this.selectedAnswers[this.currentQuestion] = [];
-          return false;
-        }
-        if (answer.length < question.minSelections) {
-          this.errors[this.currentQuestion] = `Выберите минимум ${question.minSelections} вариант`;
-          return false;
-        }
-      }
-
-      if (question.type === 'phone' && answer) {
-        const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
-        if (!phoneRegex.test(answer)) {
-          this.errors[this.currentQuestion] = 'Введите корректный номер телефона';
-          return false;
-        }
-      }
-
-      if (question.type === 'date' && answer) {
-        const selectedDate = new Date(answer);
-        const today = new Date();
-        if (selectedDate < today) {
-          this.errors[this.currentQuestion] = 'Дата не может быть в прошлом';
-          return false;
-        }
-      }
-
-      return true;
-    },
-    scrollToCenter() {
-      const element = document.querySelector('.question-card');
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }
-    },
-    validateAndNext() {
-      if (this.validateField()) {
-        this.nextQuestion();
-      }
-    },
-    nextQuestion() {
-      console.log('Moving to next question:', {
-        current: this.currentQuestion,
-        next: this.currentQuestion + 1,
-        total: this.questions.length
-      });
-
-      if (this.currentQuestion < this.questions.length - 1) {
-        this.currentQuestion++;
-        this.$nextTick(() => {
-          this.focusInput();
-          this.scrollToCenter();
-        });
-      }
-
-    },
-    previousQuestion() {
-      if (this.currentQuestion > 0) {
-        this.currentQuestion--;
-        this.$nextTick(() => {
-          this.focusInput();
-          this.scrollToCenter();
-        });
-      }
-    },
-    selectRadioAnswer(answer) {
-      this.selectedAnswers[this.currentQuestion] = answer;
-    },
-    toggleCheckboxAnswer(answer) {
-      console.log('Toggling checkbox:', {
-        answer,
-        currentAnswers: this.selectedAnswers[this.currentQuestion]
-      });
-
-      if (!Array.isArray(this.selectedAnswers[this.currentQuestion])) {
-        this.selectedAnswers[this.currentQuestion] = [];
-      }
-
-      const answers = this.selectedAnswers[this.currentQuestion];
-      const index = answers.indexOf(answer);
-
-      if (index === -1) {
-        answers.push(answer);
-      } else {
-        answers.splice(index, 1);
-      }
-
-      console.log('Updated answers:', this.selectedAnswers[this.currentQuestion]);
-      this.validateField();
-    },
-    focusInput() {
-      const currentInput = this.$refs[`${this.questions[this.currentQuestion].type}Input`];
-      if (currentInput) {
-        currentInput.focus();
-      }
-    },
-    async submitForm() {
-      if (!this.validateField()) return;
-
-      this.isSubmitting = true;
-      try {
-        const formData = new FormData();
-        let txt = "";
-        Object.entries(this.selectedAnswers).forEach(([index, value]) => {
-          const question = this.questions[index];
-          if (question.fmd == "txt") {
-            txt += `${question.txt}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
-          } else {
-            formData.append(question.fmd, value);
-          }
-        });
-        formData.append("textarea", txt);
-
-        const response = await axios.post(import.meta.env.VITE_HOST + '/api/v1/feedback/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-
-        if (response.data.status === "ok") {
-          this.currentQuestion++;
-        } else {
-          throw new Error(response.data.message || 'Ошибка при отправке формы');
-        }
-      } catch (error) {
-        console.error('Ошибка при отправке данных:', error);
-        alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.');
-      } finally {
-        this.isSubmitting = false;
-      }
-    }
+  {
+    question: "Какие активности вас интересуют?",
+    type: "checkbox",
+    answers: ["Картинг", "Экшн игры", "Квесты", "Детские квесты", "Лаундж зона", "День рождения", "Корпоратив", "Караоке", "Шоу-программы"],
+    required: true,
+    minSelections: 1,
+    fmd: "txt",
+    txt: "Категория"
   },
-  created() {
-    this.questions.forEach((q, index) => {
-      if (q.type === 'checkbox') {
-        this.selectedAnswers[index] = [];
-      }
-      this.errors[index] = '';
-    });
+  {
+    question: "Желаемая длительность мероприятия",
+    type: "radio",
+    answers: ["1-2,5 часа", "2,5-3,5 часа", "4-6 часов"],
+    required: true,
+    fmd: "txt",
+    txt: "Длительность"
+  },
+  {
+    question: "Желаемая дата мероприятия",
+    type: "date",
+    required: true,
+    fmd: "txt",
+    txt: "Дата"
+  },
+  {
+    question: "Введите ваше имя",
+    type: "text",
+    required: true,
+    placeholder: "Введите ваше имя",
+    minLength: 2,
+    fmd: "name"
+  },
+  {
+    question: "Введите ваш контактный номер",
+    type: "phone",
+    required: true,
+    fmd: "phone"
+  },
+  {
+    question: "Как с вами связаться?",
+    type: "radio",
+    answers: ["Звонок", "WhatsApp", "Telegram"],
+    required: true,
+    fmd: "txt",
+    txt: "Способ связи"
   }
-};
+]
+
+const currentQuestionData = computed(() => questions[currentQuestion.value])
+const isLastQuestion = computed(() => currentQuestion.value === questions.length - 1)
+const progressWidth = computed(() => `${((currentQuestion.value + 1) / questions.length) * 100}%`)
+
+const canProceed = computed(() => {
+  const currentAnswer = selectedAnswers.value[currentQuestion.value]
+  if (!currentAnswer) return false
+
+  if (Array.isArray(currentAnswer)) {
+    return currentAnswer.length > 0
+  }
+
+  return true
+})
+
+// Методы
+const validateField = () => {
+  const question = currentQuestionData.value
+  const answer = selectedAnswers.value[currentQuestion.value]
+  errors.value[currentQuestion.value] = ''
+
+  if (question.required && !answer) {
+    errors.value[currentQuestion.value] = 'Это поле обязательно для заполнения'
+    return false
+  }
+
+  if (question.type === 'text' && question.minLength && answer?.length < question.minLength) {
+    errors.value[currentQuestion.value] = `Минимальная длина ${question.minLength} символа`
+    return false
+  }
+
+  if (question.type === 'checkbox' && question.minSelections) {
+    if (!Array.isArray(answer)) {
+      console.error('Checkbox answer is not an array:', answer)
+      selectedAnswers.value[currentQuestion.value] = []
+      return false
+    }
+    if (answer.length < question.minSelections) {
+      errors.value[currentQuestion.value] = `Выберите минимум ${question.minSelections} вариант`
+      return false
+    }
+  }
+
+  if (question.type === 'phone' && answer) {
+    const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
+    if (!phoneRegex.test(answer)) {
+      errors.value[currentQuestion.value] = 'Введите корректный номер телефона'
+      return false
+    }
+  }
+
+  if (question.type === 'date' && answer) {
+    const selectedDate = new Date(answer)
+    const today = new Date()
+    if (selectedDate < today) {
+      errors.value[currentQuestion.value] = 'Дата не может быть в прошлом'
+      return false
+    }
+  }
+  return true
+}
+
+const scrollToCenter = () => {
+  const element = document.querySelector('.question-card')
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    })
+  }
+}
+
+const validateAndNext = () => {
+  const isValid = validateField()
+  console.log(`Step ${currentQuestion.value}: isValid=${isValid}`)
+  if (isValid) {
+    nextQuestion()
+  }
+}
+
+const nextQuestion = () => {
+  console.log('Moving from', currentQuestion.value, 'to', currentQuestion.value + 1)
+  if (currentQuestion.value < questions.length - 1) {
+    currentQuestion.value++
+    nextTick(() => {
+      focusInput()
+      scrollToCenter()
+    })
+  }
+}
+
+const previousQuestion = () => {
+  if (currentQuestion.value > 0) {
+    currentQuestion.value--
+    nextTick(() => {
+      focusInput()
+      scrollToCenter()
+    })
+  }
+}
+
+const selectRadioAnswer = (answer) => {
+  selectedAnswers.value[currentQuestion.value] = answer
+  validateField()
+}
+
+const toggleCheckboxAnswer = (answer) => {
+  if (!Array.isArray(selectedAnswers.value[currentQuestion.value])) {
+    selectedAnswers.value[currentQuestion.value] = []
+  }
+
+  const answers = selectedAnswers.value[currentQuestion.value]
+  const index = answers.indexOf(answer)
+
+  if (index === -1) {
+    answers.push(answer)
+  } else {
+    answers.splice(index, 1)
+  }
+
+  validateField()
+}
+
+const focusInput = () => {
+  let currentInput = null
+  switch (currentQuestionData.value.type) {
+    case 'text':
+      currentInput = textInput.value
+      break
+    case 'phone':
+      currentInput = phoneInput.value
+      break
+    case 'date':
+      currentInput = dateInput.value
+      break
+  }
+
+  if (currentInput) {
+    currentInput.focus()
+  }
+}
+const openDatePicker = () => {
+  dateInput.value.showPicker()
+}
+const submitForm = async () => {
+  if (!validateField()) return
+
+  isSubmitting.value = true
+  try {
+    const formData = new FormData()
+    let txt = ""
+
+    Object.entries(selectedAnswers.value).forEach(([index, value]) => {
+      const question = questions[index]
+      if (question.fmd == "txt") {
+        txt += `${question.txt}: ${Array.isArray(value) ? value.join(', ') : value}\n`
+      } else {
+        formData.append(question.fmd, value)
+      }
+    })
+
+    formData.append("textarea", txt)
+
+    const response = await axios.post(import.meta.env.VITE_HOST + '/api/v1/feedback/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    if (response.data.status === "ok") {
+      currentQuestion.value++
+    } else {
+      throw new Error(response.data.message || 'Ошибка при отправке формы')
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке данных:', error)
+    alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.')
+  } finally {
+    isSubmitting.value = false
+  }
+}
+watch(selectedAnswers, (newVal) => {
+  console.log('Selected answers updated:', JSON.parse(JSON.stringify(newVal)))
+}, { deep: true })
+// Инициализация
+onMounted(() => {
+  questions.forEach((q, index) => {
+    if (q.type === 'checkbox') {
+      selectedAnswers.value[index] = []
+    } else {
+      selectedAnswers.value[index] = null
+    }
+    errors.value[index] = ''
+  })
+})
 </script>
 
 <style scoped>
@@ -548,6 +553,7 @@ input[type="date"] {
   border-radius: 8px;
   font-size: 16px;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 input[type="text"]:focus,
@@ -556,7 +562,6 @@ input[type="date"]:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(207, 16, 52, 0.1);
 }
-
 input.error {
   border-color: #ff4444;
 }
@@ -676,4 +681,5 @@ input.error {
     font-size: 14px;
   }
 }
+
 </style>
