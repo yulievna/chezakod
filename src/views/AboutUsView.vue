@@ -316,7 +316,7 @@ h2 {
 }
 
 .mission-text {
-  color: #000;
+  color: white;
 }
 
 .mission h2 {

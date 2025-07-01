@@ -13,10 +13,10 @@
             <router-link to="/quests">Квесты</router-link>
           </li>
           <li class="footer-item">
-            <router-link to="/action-games">Экшн игры</router-link>
+            <router-link to="/action-games">Экшн-игры</router-link>
           </li>
-          <li><a href="https://kartingchego.ru/">Картинг</a></li>
-          <li><a href="https://party-kod.ru/">Караоке</a></li>
+          <li><a class="footer-item" href="https://kartingchego.ru/">Картинг</a></li>
+          <li><a class="footer-item" href="https://party-kod.ru/">Караоке</a></li>
           <li class="footer-item">
             <router-link to="/show-programs">Шоу-программы</router-link>
           </li>
@@ -53,7 +53,6 @@
               </template>
             </template>
           </div>
-          <!--          <button class="book-btn" @click="togglePopup">Забронировать</button>-->
         </div>
       </div>
 
@@ -84,7 +83,7 @@ const togglePopup = () => {
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: fit-content;
   margin: 0 auto;
 }
 
@@ -110,10 +109,10 @@ const togglePopup = () => {
   padding: 0;
 }
 
-.footer-item a {
+.footer-item{
   text-decoration: none;
   color: #fff;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .footer-item a:hover {

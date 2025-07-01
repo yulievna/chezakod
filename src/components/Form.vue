@@ -120,10 +120,9 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch} from 'vue'
-import pkg from 'vue-the-mask';
+import { mask } from 'vue-the-mask';
 import axios from 'axios'
 
-const {mask} = pkg;
 const vMask = mask
 
 // Данные формы
@@ -427,7 +426,7 @@ onMounted(() => {
 }
 
 .question-title h1 {
-  font-size: 24px;
+  font-size: 20px;
   color: #333;
   margin: 0;
 }
@@ -451,7 +450,7 @@ onMounted(() => {
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
   margin-bottom: 20px;
 }
@@ -463,8 +462,8 @@ h2 {
 }
 
 .answer-list li {
-  margin-bottom: 12px;
-  padding: 15px;
+  margin-bottom: 10px;
+  padding: 10px;
   border: 2px solid #eee;
   border-radius: 8px;
   cursor: pointer;
@@ -497,7 +496,7 @@ h2 {
 .answer-list label {
   display: block;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;
   color: #333;
 }
 
@@ -582,7 +581,7 @@ input.error {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;

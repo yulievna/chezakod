@@ -1,7 +1,6 @@
 <template>
   <Header/>
   <div class="timetable-page">
-    <div class="container">
       <h1 class="page-title">Расписание</h1>
       <section class="service-category-toggler">
         <div class="container">
@@ -17,7 +16,6 @@
       </section>
       <TimetableEmbed :questIds="questIds"/>
     </div>
-  </div>
   <Footer/>
 </template>
 

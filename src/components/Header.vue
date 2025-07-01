@@ -24,7 +24,7 @@
                 <router-link to="/quests">Квесты</router-link>
               </li>
               <li>
-                <router-link to="/action-games">Экшн игры</router-link>
+                <router-link to="/action-games">Экшн-игры</router-link>
               </li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
@@ -176,11 +176,7 @@ const toggleMenu = () => {
 
 
 <style scoped>
-body.menu-open {
-  position: relative;
-  height: 100%;
-  overflow: hidden;
-}
+
 .header {
   background-color: #fff;
   padding: 26px 0;
@@ -468,7 +464,7 @@ body.menu-open {
   }
 
   .logo-wrapper .logo {
-    width: 200px;
+    width: 400px;
   }
 }
 

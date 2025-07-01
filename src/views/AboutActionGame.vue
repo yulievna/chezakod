@@ -21,7 +21,7 @@
             <div class="game-chars">
               <div class="char-item">
                 <img :src="players" alt="Players"/>
-                <span>{{ game.players.min }}-{{ game.players.max }}</span>
+                <span>{{ game.players.min }}-{{ game.players.max }} игроков</span>
               </div>
               <div class="char-item">
                 <img :src="time" alt="Time"/>
@@ -345,7 +345,6 @@ onServerPrefetch(init);
 .schedule {
   background: #1a1a1a;
   padding: 40px 0;
-  margin-bottom: 40px;
 }
 
 .schedule .title {
