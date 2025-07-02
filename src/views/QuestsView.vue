@@ -127,10 +127,8 @@ onMounted(async () => {
     </div>
   </div>
   <section class="schedule">
-    <div class="container">
       <h1 class="title">Расписание</h1>
       <TimetableEmbed :questIds="timetableQuestIds"/>
-    </div>
   </section>
   <section class="lounges" id="lounges">
     <div class="container">

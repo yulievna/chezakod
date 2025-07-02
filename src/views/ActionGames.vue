@@ -7,10 +7,8 @@
     </div>
   </section>
   <section class="schedule">
-    <div class="container">
       <h2 class="page-title">Расписание</h2>
       <TimetableEmbed :questIds="timetableQuestIds"/>
-    </div>
   </section>
   <section class="lounges">
     <div class="container">

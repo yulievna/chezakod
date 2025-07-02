@@ -2,7 +2,7 @@
   <Header></Header>
   <div class="about-action-game">
     <div v-if="loading" class="loading">
-      Загрузка...
+      <Loading/>
     </div>
     <div v-else-if="error" class="error">
       {{ error }}
@@ -116,6 +116,7 @@ import players from '@/assets/images/players.png';
 import time from '@/assets/images/time.png';
 import difficulty from '@/assets/images/difficulty.png';
 import {useHead} from "@unhead/vue";
+import Loading from "@/components/Loading.vue";
 
 const route = useRoute();
 const game = ref(null);

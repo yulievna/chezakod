@@ -17,8 +17,7 @@
       <div class="container">
         <!-- Loading State -->
         <div v-if="loading" class="loading-state">
-          <div class="spinner"></div>
-          <p>Загрузка шоу-программ...</p>
+          <Loading/>
         </div>
 
         <!-- Error State -->
@@ -283,6 +282,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import {useHead} from "@unhead/vue";
 import {register} from "swiper/element/bundle";
+import Loading from "@/components/Loading.vue";
 
 register();
 

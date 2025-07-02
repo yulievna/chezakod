@@ -2,7 +2,7 @@
   <Header></Header>
   <div class="about-quest">
     <div v-if="loading" class="loading">
-      Загрузка...
+      <Loading/>
     </div>
     <div v-else-if="error" class="error">
       {{ error }}
@@ -164,6 +164,7 @@ import {useRoute} from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import TimetableEmbed from '@/components/TimetableEmbed.vue';
+import Loading from "@/components/Loading.vue";
 
 import axios from 'axios';
 import players from '@/assets/images/players.png';
@@ -786,5 +787,10 @@ const prevPhoto = () => {
   .quest-title-wrapper {
     order: 2;
   }
+}
+.loading{
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 </style>
