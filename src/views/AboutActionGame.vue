@@ -68,12 +68,26 @@
             </div>
           </div>
 
-          <div class="location-info">
+          <div v-if="game.location" class="location-info">
             <h3>Локация</h3>
-            <p>{{ game.location.address }}</p>
-            <div class="contact-info">
-              <a :href="game.location.links['2gis']" target="_blank" class="location-link">2GIS</a>
-              <a :href="game.location.links.ymaps" target="_blank" class="location-link">Яндекс Карты</a>
+            <p>{{ game.location.address.replace(/&quot;/g, '"') }}</p>
+            <div class="map-links">
+              <a
+                  v-if="game.location.links && game.location.links.ymaps"
+                  :href="game.location.links.ymaps"
+                  target="_blank"
+                  class="map-link"
+              >
+                Яндекс Карты
+              </a>
+              <a
+                  v-if="game.location.links && game.location.links['2gis']"
+                  :href="game.location.links['2gis']"
+                  target="_blank"
+                  class="map-link"
+              >
+                2GIS
+              </a>
             </div>
           </div>
         </div>
@@ -81,10 +95,8 @@
 
       <!-- Add timetable section -->
       <section class="schedule">
-        <div class="container">
           <h2 class="title">Расписание</h2>
           <TimetableEmbed :questIds="[game.id]"/>
-        </div>
       </section>
     </div>
   </div>
@@ -352,8 +364,73 @@ onServerPrefetch(init);
   text-align: center;
   margin-bottom: 30px;
 }
+.location-info {
+  border-color: rgba(207, 16, 52, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
 
+
+.location-info h3 {
+  font-size: 32px;
+  color: #CF1034;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.location-info h3::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23CF1034"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>') no-repeat center;
+}
+
+.location-info p {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #000000;
+  margin-bottom: 20px;
+  padding-left: 34px;
+  position: relative;
+}
+
+
+.map-links {
+  display: flex;
+  gap: 12px;
+  padding-left: 34px;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #000000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  border: 3px solid #cf1034;
+}
+
+.map-link:active {
+  transform: translateY(0);
+}
 /* Адаптация для мобильных */
+@media (max-width: 1200px) {
+  .container{
+    padding: 0 20px;
+  }
+}
+
 @media (max-width: 992px) {
   .game-content {
     grid-template-columns: 1fr;

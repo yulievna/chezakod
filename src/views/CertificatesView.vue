@@ -416,6 +416,9 @@ section {
 
 /* Responsive Styles */
 @media (max-width: 1200px) {
+  .container{
+    padding: 0 1rem;
+  }
   .certificates-grid {
     gap: 1.5rem;
   }

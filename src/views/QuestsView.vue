@@ -237,7 +237,11 @@ onMounted(async () => {
   color: #fff;
   box-shadow: 0 4px 8px rgba(207, 16, 52, 0.2);
 }
-
+@media (max-width: 1200px) {
+  .container{
+    padding: 0 1rem;
+  }
+}
 @media (max-width: 768px) {
   .category-switcher {
     gap: 0.75rem;

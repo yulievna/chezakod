@@ -2,12 +2,31 @@
   <header class="header">
     <div class="container header-container">
       <nav class="navigation">
-
-        <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
           <img class="logo" src="@/assets/images/logo.svg" alt="Logo"/>
         </router-link>
-
+        <!-- Логотип -->
+        <div class="header-main__mobile">
+          <router-link to="/" class="logo-wrapper-mobile">
+            <img class="logo" src="@/assets/images/logo.svg" alt="Logo"/>
+          </router-link>
+          <div class="navigation-item dropdown dropdown-mobile">
+            <button class="contacts-btn">Контакты</button>
+            <ul class="dropdown-menu">
+              <template v-for="(contact, key, index) in contacts" :key="index">
+                <template v-if="!contact.hide">
+                  <li v-if="contact.type === 'phone'"><a
+                      :href="`tel:${contact.value}`">{{ contact.text ? contact.text : contact.value }}</a></li>
+                  <li v-else-if="contact.type === 'email'"><a
+                      :href="`mailto:${contact.value}`">{{ contact.text ? contact.text : contact.value }}</a></li>
+                  <li v-else><a :href="contact.value">{{
+                      contact.text ? contact.text : contact.value
+                    }}</a></li>
+                </template>
+              </template>
+            </ul>
+          </div>
+        </div>
         <!-- Бургер-меню -->
         <div class="burger" @click="toggleMenu">
           <span class="burger-line top"></span>
@@ -26,8 +45,8 @@
               <li>
                 <router-link to="/action-games">Экшн-игры</router-link>
               </li>
-              <li><a href="https://kartingchego.ru/">Картинг</a></li>
-              <li><a href="https://party-kod.ru/">Караоке</a></li>
+              <li><a href="https://kartingchego.ru/" target="_blank">Картинг</a></li>
+              <li><a href="https://party-kod.ru/" target="_blank">Караоке</a></li>
               <li>
                 <router-link to="/show-programs">Шоу-программы</router-link>
               </li>
@@ -89,7 +108,7 @@
                 <router-link to="/quests">Квесты</router-link>
               </li>
               <li>
-                <router-link to="/action-games">Экшн игры</router-link>
+                <router-link to="/action-games">Экшн-игры</router-link>
               </li>
               <li><a href="https://kartingchego.ru/">Картинг</a></li>
               <li><a href="https://party-kod.ru/">Караоке</a></li>
@@ -136,7 +155,7 @@
 
     <!-- Попап -->
     <div v-if="isPopupOpen" class="popup-overlay" @click.self="togglePopup">
-      <Form/>
+      <Form @close="togglePopup" :isPopup="true"/>
     </div>
   </header>
 </template>
@@ -159,24 +178,18 @@ const toggleMenu = () => {
   const burger = document.querySelector('.burger')
   if (burger) burger.classList.toggle('active');
   if (isMenuOpen.value) {
-    scrollPosition.value = window.pageYOffset || document.documentElement.scrollTop;
     document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollPosition.value}px`;
-    document.body.style.width = '100%';
+    console.log(isMenuOpen.value);
   } else {
     document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    window.scrollTo(0, scrollPosition.value);
+    console.log(isMenuOpen.value);
+
   }
 };
 </script>
 
 
 <style scoped>
-
 .header {
   background-color: #fff;
   padding: 26px 0;
@@ -195,11 +208,30 @@ const toggleMenu = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
+.header-main__mobile {
+  display: none;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.logo-wrapper {
+  display: block;
+}
 .logo-wrapper .logo {
   width: 240px;
   height: auto;
+}
+
+.logo-wrapper-mobile {
+  display: none;
+  width: 150px;
+}
+.logo-wrapper-mobile .logo {
+  width: 100%;
 }
 
 .navigation-list {
@@ -217,12 +249,12 @@ const toggleMenu = () => {
 .navigation-item a {
   text-decoration: none;
   color: #000;
-  font-size: 16px;
+  font-size: 18px;
 }
-
 
 .navigation-item .dropdown-menu li {
   padding: 6px 20px;
+
 }
 
 .navigation-item .dropdown-menu li a {
@@ -233,6 +265,7 @@ const toggleMenu = () => {
   text-decoration: none;
   transition: background 0.2s;
   border-radius: 8px;
+  padding: 5px 10px;
 }
 
 .dropdown-menu {
@@ -246,35 +279,41 @@ const toggleMenu = () => {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   min-width: 200px;
   z-index: 10;
-  opacity: 1;
+  opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
   transition: all 0.3s ease;
-  display: none;
   padding: 12px 0;
+  display: block;
+  pointer-events: none;
 }
 
 .dropdown:hover .dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-}
-
-.navigation-item.dropdown:hover .dropdown-menu {
-  display: block;
-}
-
-
-.dropdown-menu li a {
-  padding: 5px 10px;
-  display: block;
-  color: #000;
+  pointer-events: auto;
 }
 
 .dropdown-menu li a:hover {
   background-color: #cf1034;
   color: #fff;
-  border-radius: 8px;
+}
+
+.dropdown-mobile {
+  display: none;
+}
+.dropdown-mobile button {
+  color: white;
+  background: black;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.dropdown-mobile .dropdown-menu {
+  left: -100px;
 }
 
 .header-buttons {
@@ -290,18 +329,18 @@ const toggleMenu = () => {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
 }
 
+.book-btn:hover {
+  background: #333;
+}
 .contacts-btn {
   background: #cf1034;
 }
-
-.contacts-btn-wrapper {
-  position: relative;
-}
-
-.contacts-btn-wrapper:hover .contacts-dropdown {
-  display: block;
+.contacts-btn:hover {
+  background: #a80e2b;
 }
 
 /* Мобильное */
@@ -316,6 +355,7 @@ const toggleMenu = () => {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: box-shadow 0.3s ease;
 }
 
 .mobile-btn:hover {
@@ -328,7 +368,10 @@ const toggleMenu = () => {
   height: 24px;
   position: relative;
   cursor: pointer;
-  z-index: 1001;
+  z-index: 100;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
   transition: all 0.3s ease;
 }
 
@@ -337,7 +380,7 @@ const toggleMenu = () => {
   width: 100%;
   height: 3px;
   background: #000;
-  position: relative;
+  border-radius: 2px;
   transition: all 0.3s ease;
   transform-origin: center;
 }
@@ -345,11 +388,9 @@ const toggleMenu = () => {
 .burger.active .top {
   transform: translateY(8px) rotate(45deg);
 }
-
 .burger.active .bottom {
   transform: translateY(-8px) rotate(-45deg);
 }
-
 .burger.active .middle {
   opacity: 0;
   transform: scale(0) translateY(-50%);
@@ -381,7 +422,7 @@ const toggleMenu = () => {
 
 .mobile-menu-enter-from,
 .mobile-menu-leave-to {
-  transform: translateX(500px);
+  transform: translateX(800px);
   opacity: 1;
 }
 
@@ -417,7 +458,6 @@ const toggleMenu = () => {
   text-transform: uppercase;
 }
 
-/* Попап */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -431,46 +471,64 @@ const toggleMenu = () => {
   align-items: center;
   justify-content: center;
 }
+@media (max-width: 1240px) {
+  .container {
+    padding: 0 30px;
+  }
+  .navigation-item a {
+    font-size: 1.1rem;
+  }
+  .header-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+  }
 
-@media (max-width: 1072px) {
+}
+
+@media (max-width: 1084px) {
+  .header-container {
+    padding: 0 15px;
+  }
   .header-buttons {
     flex-direction: column;
     align-items: center;
   }
 
-  .navigation-item a {
-    font-size: 13px;
-  }
-
   .logo-wrapper {
-    width: 150px;
+    display: none;
   }
-}
 
-@media (max-width: 768px) {
-  .header-container {
-    padding: 0 15px;
+  .logo-wrapper-mobile {
+    display: block;
+  }
+
+  .dropdown-mobile {
+    display: block;
   }
 
   .desktop-only {
     display: none;
   }
 
-  .burger {
+  .header-main__mobile {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
+    justify-content: space-between;
   }
 
-  .logo-wrapper .logo {
-    width: 400px;
+  .burger {
+    display: flex;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1084px) {
   .mobile-menu {
     display: none;
   }
+  .contacts-btn, .book-btn {
+    width: 130px;
+    text-align: center;
+  }
+
 }
 </style>

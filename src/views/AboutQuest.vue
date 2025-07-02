@@ -112,10 +112,8 @@
       </div>
 
       <section v-if="quest.id" class="schedule">
-        <div class="container">
           <h2 class="title">Расписание</h2>
           <TimetableEmbed :questIds="[quest.id]"/>
-        </div>
       </section>
     </div>
 
@@ -286,7 +284,7 @@ const prevPhoto = () => {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
+  position: relative;
   box-sizing: border-box;
 }
 
@@ -312,8 +310,8 @@ const prevPhoto = () => {
 
 .age {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  bottom: 340px;
+  right: 0px;
   padding: 8px 16px;
   border-radius: 8px;
   background-color: #CF1034;
@@ -599,6 +597,12 @@ const prevPhoto = () => {
 
 
 /* Адаптация для мобильных */
+@media (max-width: 1200px) {
+  .container{
+    padding: 0 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .location-info {
     padding: 18px;
@@ -640,13 +644,13 @@ const prevPhoto = () => {
 
 .gallery-modal__close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: -5px;
+  right: 5px;
   background: none;
   border: none;
-  font-size: 30px;
-  color: #fff;
+  font-size: 28px;
   cursor: pointer;
+  color: #666;
 }
 
 .gallery-modal__image {
@@ -734,13 +738,16 @@ const prevPhoto = () => {
   }
 
   .schedule .title {
-    font-size: 28px;
+    font-size: 36px;
   }
 }
 
 @media (max-width: 576px) {
   .container {
     padding: 0 20px;
+  }
+  .age {
+    bottom: 540px;
   }
 
   .quest-header {
@@ -755,7 +762,9 @@ const prevPhoto = () => {
   .name-quest {
     font-size: 24px;
   }
-
+  .quest-title-wrapper{
+    width: 100%;
+  }
   .to-book {
     width: 100%;
     padding: 10px;
@@ -764,7 +773,6 @@ const prevPhoto = () => {
   .lounges-grid {
     grid-template-columns: 1fr;
   }
-
   .gallery-modal__content {
     width: 95%;
     padding: 10px;

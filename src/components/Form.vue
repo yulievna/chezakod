@@ -7,7 +7,8 @@
         <div class="question-header">
           <div class="question-title">
             <h1>Создайте свой праздник</h1>
-            <div class="question-counter">{{ currentQuestion + 1 }} / {{ questions.length }}</div>
+            <button v-if="isPopup" class="popup-close-btn" @click="$emit('close')">×</button>
+            <div v-else class="question-counter">{{ currentQuestion + 1 }} / {{ questions.length }}</div>
           </div>
           <div class="progress-bar">
             <div class="progress" :style="{ width: progressWidth }"></div>
@@ -36,7 +37,7 @@
         </ul>
 
         <!-- Варианты ответа (checkbox) -->
-        <ul v-if="currentQuestionData.type === 'checkbox'" class="answer-list">
+        <ul v-if="currentQuestionData.type === 'checkbox'" class="answer-list answer-list__checkbox">
           <li v-for="(answer, index) in currentQuestionData.answers"
               :key="index"
               :class="{
@@ -125,6 +126,11 @@ import axios from 'axios'
 
 const vMask = mask
 
+defineProps({
+  isPopup: Boolean,
+})
+
+const emit = defineEmits(['close'])
 // Данные формы
 const currentQuestion = ref(0)
 const selectedAnswers = ref({})
@@ -158,7 +164,7 @@ const questions = [
   {
     question: "Какие активности вас интересуют?",
     type: "checkbox",
-    answers: ["Картинг", "Экшн игры", "Квесты", "Детские квесты", "Лаундж зона", "День рождения", "Корпоратив", "Караоке", "Шоу-программы"],
+    answers: ["Картинг", "Экшн-игры", "Квесты", "Детские квесты", "Лаундж зона", "День рождения", "Корпоратив", "Караоке", "Шоу-программы"],
     required: true,
     minSelections: 1,
     fmd: "txt",
@@ -402,9 +408,10 @@ onMounted(() => {
 
 <style scoped>
 .quiz-container {
-  max-width: 600px;
+  width: 40vw;
   margin: 0 auto;
   padding: 20px;
+  z-index: 100;
 }
 
 .question-card {
@@ -420,6 +427,7 @@ onMounted(() => {
 
 .question-title {
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
@@ -460,6 +468,11 @@ h2 {
   padding: 0;
   margin: 0;
 }
+.answer-list__checkbox{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
 
 .answer-list li {
   margin-bottom: 10px;
@@ -470,7 +483,9 @@ h2 {
   transition: all 0.3s ease;
   background: #fff;
 }
-
+.answer-list__checkbox li{
+  margin: 0;
+}
 .answer-list li:hover {
   border-color: #CF1034;
   background: #fff5f6;
@@ -630,21 +645,26 @@ input.error {
   margin: 0 auto 20px;
 }
 
-.close-btn {
-  margin-top: 20px;
-  padding: 12px 30px;
-  background: #CF1034;
-  color: white;
+.popup-close-btn {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: none;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  font-size: 28px;
   cursor: pointer;
+  color: #666;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
 }
 
-.close-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.popup-close-btn:hover {
+  color: #CF1034;
+  transform: scale(1.1);
 }
 
 .fade-enter-active,
@@ -656,27 +676,53 @@ input.error {
 .fade-leave-to {
   opacity: 0;
 }
-
-@media (max-width: 480px) {
-  .quiz-container {
-    padding: 15px;
-  }
-
-  .question-card {
-    padding: 20px;
+@media (max-width: 992px) {
+  .quiz-container{
+    width: 70vw;
   }
 
   .question-title h1 {
-    font-size: 20px;
+    font-size: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .quiz-container {
+    padding: 10px;
+    width: 95vw;
+
   }
 
   .answer-list li {
-    padding: 10px;
+    margin-bottom: 8px;
+    padding: 8px;
+  }
+  .answer-list__checkbox{
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .answer-list__checkbox li{
+    margin: 0;
+    padding: 4px;
+  }
+  .question-card {
+    padding: 20px;
+  }
+  .question-header{
+    margin-bottom: 10px ;
+  }
+  .question-card h2{
+    margin: 10px 0;
+  }
+  .question-title h1 {
+    font-size: 16px;
   }
 
   .nav-btn {
-    padding: 10px 20px;
+    padding: 8px 16px;
     font-size: 14px;
+  }
+  .navigation-buttons{
+    margin-top: 10px;
   }
 }
 

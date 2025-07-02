@@ -2,7 +2,7 @@
   <Header/>
   <section class="action-games">
     <div class="container">
-      <h1 class="page-title">Экшн Игры</h1>
+      <h1 class="page-title">Экшн-Игры</h1>
       <Quests :quests="actionGames" basePath="/action-games"/>
     </div>
   </section>
@@ -131,6 +131,11 @@ onMounted(async () => {
   font-weight: 600;
   line-height: 1.3;
   margin: 3rem auto 2rem;
+}
+@media (max-width: 1200px) {
+  .container{
+    padding: 0 20px;
+  }
 }
 
 @media (max-width: 768px) {

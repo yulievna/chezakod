@@ -7,7 +7,7 @@
       <div class="container">
         <h1 class="hero__title">Шоу-программы</h1>
         <p class="hero__subtitle">Специальные программы для детей от 5 до 7 лет. Дети становятся героями и активными
-          участниками сказачного приключения, а пройти все испытания им помогают анимированные сказочные персонажи.</p>
+          участниками сказочного приключения, а пройти все испытания им помогают анимированные сказочные персонажи.</p>
         <p class="hero__duration">Длительность всех шоу-программ - 2 часа 30 минут</p>
       </div>
     </section>
@@ -1052,7 +1052,11 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   display: block;
   margin-top: 4px;
 }
-
+@media (max-width: 1200px) {
+  .container{
+    padding: 0 1rem;
+  }
+}
 @media (max-width: 768px) {
   .shows-grid {
     grid-template-columns: 1fr;

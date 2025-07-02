@@ -1,6 +1,7 @@
 <template>
   <Header></Header>
   <div class="promotions">
+    <div class="container">
     <div class="promotions__container">
 
     <nav class="promotions__nav">
@@ -61,6 +62,8 @@
         только при бронировании на официальном сайте chezakod.ru или по телефону +7 (391) 269-92-23</p>
     </div>
   </div>
+
+    </div>
   </div>
   <Footer></Footer>
 </template>
@@ -152,7 +155,7 @@ watch(() => route.hash, (newHash) => {
 
 <style scoped>
 .promotions__nav {
-  width: 100%;
+  width: 95vw;
   max-width: 1200px;
   background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
@@ -414,7 +417,11 @@ watch(() => route.hash, (newHash) => {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
+@media (max-width: 1200px) {
+  .container{
+    padding: 0 1rem;
+  }
+}
 @media (max-width: 768px) {
   .promotions {
     padding: 0;

@@ -171,10 +171,10 @@ onServerPrefetch(async () => {
           <ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider>
         </li>
         <li class="serviсes__el kids-party" :style="{ backgroundImage: `url(${children})` }">
-          <router-link class="overlay" to="/">Детские праздники</router-link>
+          <router-link class="overlay" to="/events">Детские праздники</router-link>
         </li>
         <li class="serviсes__el adult-party" :style="{ backgroundImage: `url(${korporativ})` }">
-          <router-link class="overlay" to="/">Корпоративы</router-link>
+          <router-link class="overlay" to="/events">Корпоративы</router-link>
         </li>
       </ul>
     </div>
@@ -253,7 +253,7 @@ onServerPrefetch(async () => {
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(3, 176px);
   gap: 20px;
-  margin: 60px auto;
+  margin: 40px auto;
   grid-template-areas:
     "slider slider slider quests games"
     "slider slider slider karting karaoke"
@@ -413,8 +413,10 @@ onServerPrefetch(async () => {
       "karaoke adult kids";
     gap: 15px;
     width: 90vw;
-    margin: 0 auto;
   }
+    .container{
+      padding: 0 1rem;
+    }
   .main-slider{
     width: 90vw;
     margin: 0 auto;

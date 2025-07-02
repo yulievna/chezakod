@@ -6,6 +6,7 @@
             v-for="lounge in lounges"
             :key="lounge.id"
             class="lounge__el"
+            @click="openGallery(lounge)"
             :style="{ backgroundImage: `url(${lounge.photo[0] || lounge.image})` }"
         >
           <div class="lounge__overlay">
@@ -31,12 +32,11 @@
                   2GIS
                 </a>
               </div>
-              <button
-                  class="lounge__book-btn"
-                  @click="openGallery(lounge)"
-              >
-                Посмотреть
-              </button>
+<!--              <button-->
+<!--                  class="lounge__book-btn"-->
+<!--              >-->
+<!--                Посмотреть-->
+<!--              </button>-->
             </div>
           </div>
         </div>
@@ -47,7 +47,7 @@
     <div v-if="selectedLounge" class="gallery-modal" @click="closeGallery">
       <div class="gallery-modal__content" @click.stop>
         <button class="gallery-modal__close" @click="closeGallery">&times;</button>
-        <swiper-container
+        <swiper-container class="x"
             :navigation="true"
             thumbs-swiper=".lounge-thumbs"
             :zoom="true"
@@ -158,7 +158,12 @@ const closeGallery = () => {
 swiper-container * {
   border-radius: 20px;
 }
-
+swiper-container.x {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
 swiper-slide.thumbs-slide img {
   object-fit: cover;
   cursor: pointer;
@@ -177,8 +182,9 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .lounge__list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 30px;
+  justify-content: center;
 }
 
 .lounge__el {
@@ -252,7 +258,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   opacity: 1;
   text-decoration: underline;
 }
-
 .lounge__book-btn {
   background-color: #cf1034;
   color: #fff;
@@ -262,7 +267,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 75%;
+  width: 400px;
   margin-top: 15px;
   position: relative;
   overflow: hidden;
@@ -340,26 +345,17 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .gallery-modal__close {
   position: absolute;
-  top: -40px;
-  right: -40px;
+  top: -35px;
+  right: -35px;
   background: none;
   border: none;
-  font-size: 48pt;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 36px;
   cursor: pointer;
-  z-index: 2;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-  padding: 25px;
+  color: white;
+  z-index: 100;
 }
 
 .gallery-modal__close:hover {
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .gallery-modal__thumbnails img {
@@ -400,7 +396,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   }
 
   .gallery-modal__close {
-    font-size: 36pt;
+    font-size: 32px;
   }
 
   .lounge__list {
