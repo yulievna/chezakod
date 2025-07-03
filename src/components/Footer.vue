@@ -4,7 +4,7 @@
       <div class="footer-content">
         <!-- Логотип -->
         <router-link to="/" class="logo-wrapper">
-          <img class="logo" src="../assets/images/logo-white.svg" alt="Logo"/>
+          <img class="logo" src="../assets/images/logo-white.svg" alt="Logo" loading="lazy"/>
         </router-link>
 
         <!-- Меню -->

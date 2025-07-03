@@ -57,7 +57,7 @@
               :key="index"
           >
             <div class="swiper-zoom-container">
-              <img :src="photo" :alt="`Фото ${index + 1}`">
+              <img :src="photo" :alt="`Фото ${index + 1}`" loading="lazy">
             </div>
           </swiper-slide>
         </swiper-container>
@@ -78,7 +78,7 @@
               :key="index"
               class="thumbs-slide"
           >
-            <img :src="photo" :alt="`Фото ${index + 1}`">
+            <img :src="photo" :alt="`Фото ${index + 1}`" loading="lazy">
           </swiper-slide>
         </swiper-container>
         <!--        <div class="gallery-modal__main">-->

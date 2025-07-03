@@ -161,13 +161,14 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-import Form from "@/components/Form.vue";
+import {defineAsyncComponent, ref} from "vue";
 import contacts from "@/contacts.js";
 
 const scrollPosition = ref(0);
 const isPopupOpen = ref(false);
 const isMenuOpen = ref(false);
+
+const Form = defineAsyncComponent(() => import("@/components/Form.vue"));
 
 const togglePopup = () => {
   isPopupOpen.value = !isPopupOpen.value;

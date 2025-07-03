@@ -15,7 +15,7 @@
             также современные игровые механики с дополненной реальностью и необычными сюжетами.</p>
         </div>
         <div class="about-image" data-aos="fade-left">
-          <img src="@/assets/images/logo.svg" alt="Чеширский код"/>
+          <img src="@/assets/images/logo.svg" alt="Чеширский код" loading="lazy"/>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
       <div class="org-grid">
         <div class="org-card" data-aos="fade-up" data-aos-delay="200">
           <div class="card-content">
-            <img src="@/assets/images/logo-white.svg" alt="Чеширский KOD"/>
+            <img src="@/assets/images/logo-white.svg" alt="Чеширский KOD" loading="lazy"/>
             <!-- <h3>Чеширский KOD</h3> -->
             <p>Атмосферные квесты, организация и проведение праздников в Красноярске.</p>
           </div>
@@ -39,7 +39,7 @@
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="300">
           <div class="card-content">
-            <img src="@/assets/images/zhmurki-logo.svg" alt="Жмурки"/>
+            <img src="@/assets/images/zhmurki-logo.svg" alt="Жмурки" loading="lazy"/>
             <!-- <h3>Жмурки</h3> -->
             <p>Первая экшн-игра в полной темноте, которая влюбила в себя тысячи игроков.</p>
           </div>
@@ -48,7 +48,7 @@
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="400">
           <div class="card-content">
-            <img src="@/assets/images/chego-logo.svg" alt="Че!Go"/>
+            <img src="@/assets/images/chego-logo.svg" alt="Че!Go" loading="lazy"/>
             <!-- <h3>Че!Go</h3> -->
             <p>Современный крытый электрокартинг для всей семьи. Удобное расположение, свежий воздух, безопасность и
               драйв!</p>
@@ -58,7 +58,7 @@
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="500">
           <div class="card-content">
-            <img src="@/assets/images/actionkod-logo.svg" alt="Action Kod"/>
+            <img src="@/assets/images/actionkod-logo.svg" alt="Action Kod" loading="lazy"/>
             <!-- <h3>Action Kod</h3> -->
             <p>Технологичный соревновательный формат, в котором команды решают задания, проходят испытания и соревнуются
               за баллы. Эту игру мы разрабатывали с 2018 года и вложили в неё весь наш опыт.</p>
@@ -78,7 +78,7 @@
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="700">
           <div class="card-content">
-            <img src="@/assets/images/partykod-logo.svg" alt="Party Kod"/>
+            <img src="@/assets/images/partykod-logo.svg" alt="Party Kod" loading="lazy"/>
             <!-- <h3>Party Kod</h3> -->
             <p>Уютные лофт-караоке комнаты с атмосферой праздника и качественным звуком.</p>
           </div>
@@ -107,14 +107,16 @@
 </template>
 
 <script setup>
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import Map from '@/components/Map.vue';
 import {useHead} from "@unhead/vue";
+import {defineAsyncComponent} from "vue";
 
 useHead({
   title: "О нас"
 });
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const Map = defineAsyncComponent(() => import('@/components/Map.vue'));
 
 </script>
 

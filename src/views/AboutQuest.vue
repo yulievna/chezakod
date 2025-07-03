@@ -20,11 +20,11 @@
             </div>
             <div class="quest-chars">
               <div v-if="quest.players" class="char-item">
-                <img :src="players" alt="Players"/>
+                <img :src="players" alt="Players" loading="lazy"/>
                 <span>{{ quest.players.min }}-{{ quest.players.max }} игроков</span>
               </div>
               <div v-if="quest.duration" class="char-item">
-                <img :src="time" alt="Time"/>
+                <img :src="time" alt="Time" loading="lazy"/>
                 <span>{{ quest.duration }} минут</span>
               </div>
             </div>
@@ -129,7 +129,7 @@
           >
             &#10094;
           </button>
-          <img
+          <img loading="lazy"
               :src="currentPhoto"
               :alt="'Лаундж зона'"
               class="gallery-modal__image"
@@ -143,7 +143,7 @@
           </button>
         </div>
         <div class="gallery-modal__thumbnails">
-          <img
+          <img loading="lazy"
               v-for="(photo, index) in selectedLounge.photo"
               :key="index"
               :src="photo"
@@ -159,20 +159,19 @@
 </template>
 
 <script setup>
-import {computed, onMounted, onServerPrefetch, ref} from 'vue';
-import {useRoute} from 'vue-router';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import TimetableEmbed from '@/components/TimetableEmbed.vue';
+import {computed, defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue';
 import Loading from "@/components/Loading.vue";
 
 import axios from 'axios';
 import players from '@/assets/images/players.png';
 import time from '@/assets/images/time.png';
-import difficulty from '@/assets/images/difficulty.png';
 import ImgSlider from '@/components/ImgSlider.vue';
 import {useHead} from "@unhead/vue";
 import Lounge from "@/components/Lounge.vue";
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const TimetableEmbed = defineAsyncComponent(() => import('@/components/TimetableEmbed.vue'));
 
 const props = defineProps({
   id: {
@@ -181,14 +180,12 @@ const props = defineProps({
   }
 });
 
-const route = useRoute();
 const quest = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const currentImage = ref('');
 const selectedLounge = ref(null);
 const currentPhotoIndex = ref(0);
-const isChildQuest = ref(false);
 const head = ref({
   title: "Загрузка...",
   description: "",

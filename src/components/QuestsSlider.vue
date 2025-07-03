@@ -22,7 +22,7 @@
     <swiper-slide
         v-for="(image, index) in images" :key="index" class="quest-item"
     >
-      <img :src="image" :alt="'Image ' + (index + 1)">
+      <img :src="image" :alt="'Image ' + (index + 1)" loading="lazy">
     </swiper-slide>
   </swiper-container>
 
@@ -30,7 +30,7 @@
 
 <script setup>
 import {register} from "swiper/element/bundle";
-import {onMounted, ref} from "vue";
+import { ref} from "vue";
 
 register();
 

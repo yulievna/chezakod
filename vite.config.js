@@ -4,6 +4,7 @@ import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import {VitePWA} from 'vite-plugin-pwa'
+import {imagetools} from "vite-imagetools";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -12,6 +13,7 @@ export default defineConfig(({ mode }) => {
         plugins: [
             vue(),
             vueDevTools(),
+            imagetools(),
             VitePWA({
                 registerType: 'autoUpdate',
                 includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],

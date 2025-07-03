@@ -1,15 +1,16 @@
 <script setup>
-import {onMounted, onServerPrefetch, ref} from 'vue';
+import {defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue';
 import axios from 'axios';
 
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import Map from '@/components/Map.vue';
-import Quests from '@/components/Quests.vue';
-import Lounge from '@/components/Lounge.vue';
-import TimetableEmbed from '@/components/TimetableEmbed.vue';
 import {useHead} from "@unhead/vue";
 import {useRoute} from "vue-router";
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const Map = defineAsyncComponent(() => import('@/components/Map.vue'));
+const Quests = defineAsyncComponent(() => import('@/components/Quests.vue'));
+const Lounge = defineAsyncComponent(() => import('@/components/Lounge.vue'));
+const TimetableEmbed = defineAsyncComponent(() => import('@/components/TimetableEmbed.vue'));
 
 const quests = ref([]);
 const lounges = ref([]);

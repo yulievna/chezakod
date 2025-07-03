@@ -312,12 +312,8 @@
 </template>
 
 <script setup>
-import {onMounted, onServerPrefetch, ref} from 'vue'
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-import ImgSlider from '@/components/ImgSlider.vue'
-import Form from '@/components/Form.vue'
-import axios from 'axios'
+import {defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue';
+import axios from 'axios';
 import {useHead} from "@unhead/vue";
 
 // Import images
@@ -358,7 +354,11 @@ const activeShow = ref(0)
 const lounges = ref([])
 let slideTimer = null
 
-// Data
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const ImgSlider = defineAsyncComponent(() => import('@/components/ImgSlider.vue'));
+const Form = defineAsyncComponent(() => import('@/components/Form.vue'));
+
 const eventImages = [korporativ, korporativ2, korporativ3, korporativ4, korporativ5, korporativ6, korporativ7]
 
 const steps = [

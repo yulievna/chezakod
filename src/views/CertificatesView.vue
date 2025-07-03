@@ -10,21 +10,21 @@
               :class="{ 'selected': selectedCertificate === 2500 }"
               @click="selectCertificate(2500)"
           >
-            <img src="@/assets/images/sert3.jpg" alt="Сертификат на 6 человек" class="certificate-image">
+            <img loading="lazy" src="@/assets/images/sert3.jpg" alt="Сертификат на 6 человек" class="certificate-image">
           </div>
           <div
               class="certificate-card"
               :class="{ 'selected': selectedCertificate === 3000 }"
               @click="selectCertificate(3000)"
           >
-            <img src="@/assets/images/sert1.jpg" alt="Сертификат на 2 человека" class="certificate-image">
+            <img loading="lazy" src="@/assets/images/sert1.jpg" alt="Сертификат на 2 человека" class="certificate-image">
           </div>
           <div
               class="certificate-card"
               :class="{ 'selected': selectedCertificate === 3500 }"
               @click="selectCertificate(3500)"
           >
-            <img src="@/assets/images/sert2.jpg" alt="Сертификат на 4 человека" class="certificate-image">
+            <img loading="lazy" src="@/assets/images/sert2.jpg" alt="Сертификат на 4 человека" class="certificate-image">
           </div>
 
         </div>
@@ -85,37 +85,37 @@
         <h2 class="section-title">Кому можно подарить?</h2>
         <div class="gift-grid">
           <div class="gift-card">
-            <img src="@/assets/images/child.png" alt="Детям" class="gift-icon">
+            <img loading="lazy" src="@/assets/images/child.png" alt="Детям" class="gift-icon">
             <h3>Сыну или дочке!</h3>
             <p>Подарите настоящее приключение своему ребенку и его друзьям! Наши квесты подходят для детей благодаря
               присутствию аниматора, который помогает юным игрокам справиться с поставленными задачами!</p>
           </div>
           <div class="gift-card">
-            <img src="@/assets/images/friends.png" alt="Друзьям" class="gift-icon">
+            <img loading="lazy" src="@/assets/images/friends.png" alt="Друзьям" class="gift-icon">
             <h3>Компании друзей!</h3>
             <p>У вас большая компания? Подарите сертификат в квест всей команде и отправляйтесь все вместе в
               приключение, которое вы никогда не забудете!</p>
           </div>
           <div class="gift-card">
-            <img src="@/assets/images/family.png" alt="Родителям" class="gift-icon">
+            <img loading="lazy" src="@/assets/images/family.png" alt="Родителям" class="gift-icon">
             <h3>Папе с мамой!</h3>
             <p>Оригинальный подарок для всей семьи! Подарите родным отличный досуг в квестах в реальности!</p>
           </div>
           <div class="gift-card">
-            <img src="@/assets/images/boss.png" alt="Руководителю" class="gift-icon">
+            <img loading="lazy" src="@/assets/images/boss.png" alt="Руководителю" class="gift-icon">
             <h3>Руководителю!</h3>
             <p>Что подарить начальнику на день рождения или его профессиональный праздник? Подарите любое из 10
               уникальных приключений, в которые он сможет отправиться со своими близкими и отдохнуть от рабочей
               рутины!</p>
           </div>
           <div class="gift-card">
-            <img src="@/assets/images/couple.png" alt="Любимому" class="gift-icon">
+            <img loading="lazy" src="@/assets/images/couple.png" alt="Любимому" class="gift-icon">
             <h3>Любимому человеку!</h3>
             <p>Сертификат в квест — подарок для вас двоих, приключение, в котором он покажет себя героем, она ощутит
               себя нужной, а вместе вы будете крепкой командой!</p>
           </div>
           <div class="gift-card">
-            <img src="@/assets/images/best-friend.png" alt="Лучшему другу" class="gift-icon">
+            <img loading="lazy" src="@/assets/images/best-friend.png" alt="Лучшему другу" class="gift-icon">
             <h3>Лучшему другу!</h3>
             <p>Интересный подарок лучшему другу или подруге — чтобы потом вместе сыграть в квест!</p>
           </div>
@@ -144,29 +144,22 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-import CertificateForm from '@/components/CertificateForm.vue'
+import {defineAsyncComponent, ref} from 'vue';
 import {useHead} from "@unhead/vue";
 
 useHead({
   title: "Сертификаты"
-})
+});
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const CertificateForm = defineAsyncComponent(() => import('@/components/CertificateForm.vue'));
 
 const isFormOpen = ref(false)
 const selectedCertificate = ref(null)
 
 const selectCertificate = (price) => {
   selectedCertificate.value = price
-}
-
-const openOrderPopup = () => {
-  if (!selectedCertificate.value) {
-    alert('Пожалуйста, выберите сертификат')
-    return
-  }
-  console.log('Open order popup for certificate:', selectedCertificate.value)
 }
 
 const openForm = () => {

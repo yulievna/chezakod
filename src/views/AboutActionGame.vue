@@ -20,11 +20,11 @@
             </div>
             <div class="game-chars">
               <div class="char-item">
-                <img :src="players" alt="Players"/>
+                <img :src="players" alt="Players" loading="lazy"/>
                 <span>{{ game.players.min }}-{{ game.players.max }} игроков</span>
               </div>
               <div class="char-item">
-                <img :src="time" alt="Time"/>
+                <img :src="time" alt="Time" loading="lazy"/>
                 <span>{{ game.duration }} мин</span>
               </div>
             </div>
@@ -104,19 +104,19 @@
 </template>
 
 <script setup>
-import {computed, onMounted, onServerPrefetch, ref} from 'vue';
+import {computed, defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import TimetableEmbed from '@/components/TimetableEmbed.vue';
-import ImgSlider from '@/components/ImgSlider.vue';
 
 // Импортируем изображения
 import players from '@/assets/images/players.png';
 import time from '@/assets/images/time.png';
-import difficulty from '@/assets/images/difficulty.png';
 import {useHead} from "@unhead/vue";
 import Loading from "@/components/Loading.vue";
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const TimetableEmbed = defineAsyncComponent(() => import('@/components/TimetableEmbed.vue'));
+const ImgSlider = defineAsyncComponent(() => import('@/components/ImgSlider.vue'));
 
 const route = useRoute();
 const game = ref(null);

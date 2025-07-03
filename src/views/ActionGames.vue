@@ -21,28 +21,21 @@
 </template>
 
 <script setup>
-import {onMounted, onServerPrefetch, ref} from 'vue';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import Quests from '@/components/Quests.vue';
-import Map from "@/components/Map.vue";
-import TimetableEmbed from "@/components/TimetableEmbed.vue";
-import Lounge from "@/components/Lounge.vue";
+import {defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue';
 import axios, {HttpStatusCode} from "axios";
 
-import img1 from '@/assets/images/sl1.jpg';
-import img2 from '@/assets/images/sl2.jpg';
-import img3 from '@/assets/images/sl3.jpg';
-import img4 from '@/assets/images/jmurki.jpg';
-import img5 from '@/assets/images/jmurki2.jpg';
-import img6 from '@/assets/images/jmurki3.jpg';
-import img7 from '@/assets/images/playkod1.jpeg';
-import img8 from '@/assets/images/playkod2.jpeg';
 import {useHead} from "@unhead/vue";
 
 useHead({
   title: "Экшн-игры"
-})
+});
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const Quests = defineAsyncComponent(() => import('@/components/Quests.vue'));
+const Map = defineAsyncComponent(() => import("@/components/Map.vue"));
+const TimetableEmbed = defineAsyncComponent(() => import("@/components/TimetableEmbed.vue"));
+const Lounge = defineAsyncComponent(() => import("@/components/Lounge.vue"));
 
 const actionGames = ref([]);
 

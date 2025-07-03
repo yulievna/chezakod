@@ -18,7 +18,7 @@
            :key="action.id"
       >
         <div class="promotion-card__image">
-          <img :src="action.image" :alt="action.name" class="promotion-card__img">
+          <img :src="action.image" :alt="action.name" class="promotion-card__img" loading="lazy">
         </div>
         <div class="promotion-card__content">
           <div class="promotion-card__header">
@@ -69,16 +69,17 @@
 </template>
 
 <script setup>
-import {onMounted, watch, onServerPrefetch, ref} from 'vue';
+import {onMounted, watch, onServerPrefetch, ref, defineAsyncComponent} from 'vue';
 import {useRoute} from 'vue-router';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
 import {useHead} from "@unhead/vue";
 import axios, {HttpStatusCode} from "axios";
 
 useHead({
   title: "Акции"
 });
+
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
 
 const route = useRoute();
 let actions = ref([]);

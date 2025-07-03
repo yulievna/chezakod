@@ -24,6 +24,7 @@
             :alt="isPromoSlider ? image.alt : 'Image' + (index + 1)"
             style="cursor: pointer"
             class="swiper-image"
+            loading="lazy"
         >
       </div>
     </swiper-slide>
@@ -31,12 +32,9 @@
 </template>
 
 <script setup>
-import {useRouter} from '@/composables/useRouter.js';
 import {register} from "swiper/element/bundle";
 
 register();
-
-const router = useRouter();
 
 const props = defineProps({
   images: {

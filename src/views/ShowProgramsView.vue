@@ -71,7 +71,7 @@
                     :key="index"
                 >
                   <div class="swiper-zoom-container">
-                    <img :src="photo" :alt="`Фото ${index + 1}`">
+                    <img :src="photo" :alt="`Фото ${index + 1}`" loading="lazy">
                   </div>
                 </swiper-slide>
               </swiper-container>
@@ -92,7 +92,7 @@
                     :key="index"
                     class="thumbs-slide"
                 >
-                  <img :src="photo" :alt="`Фото ${index + 1}`">
+                  <img :src="photo" :alt="`Фото ${index + 1}`" loading="lazy">
                 </swiper-slide>
               </swiper-container>
             </div>
@@ -260,7 +260,7 @@
           <div v-if="selectedMiniShow" class="modal-backdrop" @click.self="closeMiniModal">
             <div class="modal-content">
               <button class="modal-close" @click="closeMiniModal">×</button>
-              <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name"/>
+              <img :src="selectedMiniShow.image" :alt="selectedMiniShow.name" loading="lazy"/>
               <h3>{{ selectedMiniShow.name }}</h3>
               <p>{{ selectedMiniShow.description }}</p>
               <p class="mini-price">{{ selectedMiniShow.price }} ₽</p>
@@ -276,16 +276,16 @@
 
 
 <script setup>
-import {computed, onMounted, onServerPrefetch, ref} from 'vue'
+import {computed, defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue'
 import axios from 'axios'
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
 import {useHead} from "@unhead/vue";
 import {register} from "swiper/element/bundle";
 import Loading from "@/components/Loading.vue";
 
 register();
 
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
 
 const showPrograms = ref([]);
 const miniShows = ref([]);

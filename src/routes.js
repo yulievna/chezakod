@@ -1,32 +1,18 @@
-import HomeView from "@/views/HomeView.vue";
-import AboutUsView from "@/views/AboutUsView.vue";
-import QuestsView from "@/views/QuestsView.vue";
-import CertificatesView from "@/views/CertificatesView.vue";
-import PromotionsView from "@/views/PromotionsView.vue";
-import ActionGames from "@/views/ActionGames.vue";
-import EventsView from "@/views/EventsView.vue";
-import ShowProgramsView from "@/views/ShowProgramsView.vue";
-import TimetableView from "@/views/TimetableView.vue";
-
 export const routes = [
-    {
-        path: '/yulya',
-        component: HomeView,
-    },
     {
         path: '/',
         name: 'home',
-        component: HomeView,
+        component: () => import('@/views/HomeView.vue')
     },
     {
         path: '/about',
         name: 'about',
-        component: AboutUsView
+        component: () => import("@/views/AboutUsView.vue")
     },
     {
         path: '/quests',
         name: 'quests',
-        component: QuestsView,
+        component: () => import("@/views/QuestsView.vue"),
     },
     {
         path: '/quests/:id',
@@ -43,17 +29,17 @@ export const routes = [
     {
         path: '/sert',
         name: 'certificates',
-        component: CertificatesView
+        component: () => import("@/views/CertificatesView.vue"),
     },
     {
         path: '/action',
         name: 'promotions',
-        component: PromotionsView
+        component: () => import("@/views/PromotionsView.vue")
     },
     {
         path: '/action-games',
         name: 'action-games',
-        component: ActionGames,
+        component: () => import("@/views/ActionGames.vue"),
     },
     {
         path: '/action-games/:id',
@@ -64,16 +50,16 @@ export const routes = [
     {
         path: '/events',
         name: 'events',
-        component: EventsView
+        component: () => import("@/views/EventsView.vue"),
     },
     {
         path: '/show-programs',
         name: 'show-programs',
-        component: ShowProgramsView
+        component: () => import("@/views/ShowProgramsView.vue"),
     },
     {
         path: '/timetable',
         name: 'timetable',
-        component: TimetableView
+        component: () => import("@/views/TimetableView.vue"),
     }
 ];

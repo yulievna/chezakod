@@ -1,38 +1,40 @@
 <script setup>
-import Accordion from '../components/Accordion.vue';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import Map from '@/components/Map.vue';
-import ImgSlider from '@/components/ImgSlider.vue';
-import Review from '@/components/Review.vue';
-import VideoSlider from "@/components/VideoSlider.vue";
-import Form from "@/components/Form.vue";
 
-import discount1 from '@/assets/images/discount1.jpg';
-import discount2 from '@/assets/images/discount2.jpg';
-import discount3 from '@/assets/images/discount3.jpg';
-import discount4 from '@/assets/images/discount4.jpg';
-import discount5 from '@/assets/images/discount5.jpg';
-import discount6 from '@/assets/images/discount6.jpg';
-import discount7 from '@/assets/images/discount7.jpg';
-import sl2 from '@/assets/images/sl2.jpg';
-import korporativ from '@/assets/images/korporativ.jpg';
-import sl3 from '@/assets/images/sl3.jpg';
+import discount1 from '@/assets/images/discount1.jpg?w=1000&format=webp';
+import discount2 from '@/assets/images/discount2.jpg?w=1000&format=webp';
+import discount3 from '@/assets/images/discount3.jpg?w=1000&format=webp';
+import discount4 from '@/assets/images/discount4.jpg?w=1000&format=webp';
+import discount5 from '@/assets/images/discount5.jpg?w=1000&format=webp';
+import discount6 from '@/assets/images/discount6.jpg?w=1000&format=webp';
+import discount7 from '@/assets/images/discount7.jpg?w=1000&format=webp';
+import sl2 from '@/assets/images/sl2.jpg?w=800&format=webp';
+import korporativ from '@/assets/images/korporativ.jpg?w=800&format=webp';
+import sl3 from '@/assets/images/sl3.jpg?w=800&format=webp';
 import pointer from "@/assets/images/pointer-min.png";
 
-import quests from '@/assets/images/quest__2.jpg';
-import action from '@/assets/images/action.jpg';
-import karting from '@/assets/images/chego.jpg';
-import karaoke from '@/assets/images/party.jpg';
-import children from '@/assets/images/children.jpg';
+import quests from '@/assets/images/quest__2.jpg?w=300&format=webp';
+import action from '@/assets/images/action.jpg?w=300&format=webp';
+import karting from '@/assets/images/chego.jpg?w=300&format=webp';
+import karaoke from '@/assets/images/party.jpg?w=300&format=webp';
+import korporativ_card from '@/assets/images/korporativ.jpg?w=300&format=webp';
+import children from '@/assets/images/children.jpg?w=300&format=webp';
 import {useHead} from "@unhead/vue";
-import {onMounted, onServerPrefetch, ref} from "vue";
+import {defineAsyncComponent, onMounted, onServerPrefetch, ref} from "vue";
 import axios, {HttpStatusCode} from "axios";
 
 useHead({
   title: "Чеширский КОД · корпорация развлечений",
   titleTemplate: null
 })
+
+const Accordion = defineAsyncComponent(() => import('../components/Accordion.vue'));
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const Map = defineAsyncComponent(() => import('@/components/Map.vue'));
+const ImgSlider = defineAsyncComponent(() => import('@/components/ImgSlider.vue'));
+const Review = defineAsyncComponent(() => import('@/components/Review.vue'));
+const VideoSlider = defineAsyncComponent(() => import("@/components/VideoSlider.vue"));
+const Form = defineAsyncComponent(() => import("@/components/Form.vue"));
 
 const imageUrls = [
   sl2,
@@ -120,6 +122,10 @@ const loadVkSub = async () => {
 onMounted(async () => {
   await loadStat();
   await loadVkSub();
+  ((r, u) => {
+      const l = document.getElementById(r);
+      l.contentWindow.document.open(), l.contentWindow.document.write(decodeURIComponent(escape(atob(u)))), l.contentWindow.document.close()
+    })("big_light_70000001079958008", "PGhlYWQ+PHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgogICAgd2luZG93Ll9fc2l6ZV9fPSdiaWcnOwogICAgd2luZG93Ll9fdGhlbWVfXz0nbGlnaHQnOwogICAgd2luZG93Ll9fYnJhbmNoSWRfXz0nNzAwMDAwMDEwNzk5NTgwMDgnCiAgICB3aW5kb3cuX19vcmdJZF9fPSc3MDAwMDAwMTA3OTk1ODAwNycKICAgPC9zY3JpcHQ+PHNjcmlwdCBjcm9zc29yaWdpbj0iYW5vbnltb3VzIiB0eXBlPSJtb2R1bGUiIHNyYz0iaHR0cHM6Ly9kaXNrLjJnaXMuY29tL3dpZGdldC1jb25zdHJ1Y3Rvci9hc3NldHMvaWZyYW1lLmpzIj48L3NjcmlwdD48bGluayByZWw9Im1vZHVsZXByZWxvYWQiIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiIGhyZWY9Imh0dHBzOi8vZGlzay4yZ2lzLmNvbS93aWRnZXQtY29uc3RydWN0b3IvYXNzZXRzL2RlZmF1bHRzLmpzIj48bGluayByZWw9InN0eWxlc2hlZXQiIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiIGhyZWY9Imh0dHBzOi8vZGlzay4yZ2lzLmNvbS93aWRnZXQtY29uc3RydWN0b3IvYXNzZXRzL2RlZmF1bHRzLmNzcyI+PC9oZWFkPjxib2R5PjxkaXYgaWQ9ImlmcmFtZSI+PC9kaXY+PC9ib2R5Pg==")
 })
 
 onServerPrefetch(async () => {
@@ -131,7 +137,7 @@ onServerPrefetch(async () => {
 
 <template>
   <Header></Header>
-  <img :src="pointer" style="display: none">
+  <img loading="lazy" :src="pointer" style="display: none">
   <section class="main">
     <div class="container">
       <ul class="servises__list">
@@ -171,9 +177,9 @@ onServerPrefetch(async () => {
           <ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider>
         </li>
         <li class="serviсes__el kids-party" :style="{ backgroundImage: `url(${children})` }">
-          <router-link class="overlay" to="/events">Детские праздники</router-link>
+          <router-link class="overlay" to="/show-programs">Детские праздники</router-link>
         </li>
-        <li class="serviсes__el adult-party" :style="{ backgroundImage: `url(${korporativ})` }">
+        <li class="serviсes__el adult-party" :style="{ backgroundImage: `url(${korporativ_card})` }">
           <router-link class="overlay" to="/events">Корпоративы</router-link>
         </li>
       </ul>
@@ -421,6 +427,7 @@ onServerPrefetch(async () => {
     width: 90vw;
     margin: 0 auto;
   }
+
   .title {
     font-size: 30px;
   }
@@ -431,6 +438,7 @@ onServerPrefetch(async () => {
   .container {
     padding: 0 20px;
   }
+
   .servises__list {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -463,6 +471,7 @@ onServerPrefetch(async () => {
     grid-template-columns: repeat(2, 1fr);
     margin-bottom: 30px;
   }
+
   .stat-card:last-child {
     grid-column: 1 / -1;
     justify-self: center;

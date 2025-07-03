@@ -27,10 +27,12 @@
 </template>
 
 <script setup>
-import QuestsSlider from "@/components/QuestsSlider.vue";
 import {useRouter} from '@/composables/useRouter.js';
+import {defineAsyncComponent} from "vue";
 
 const router = useRouter();
+
+const QuestsSlider = defineAsyncComponent(() => import("@/components/QuestsSlider.vue"));
 
 const props = defineProps({
   quests: {
@@ -67,7 +69,6 @@ const goToAboutQuest = (slug) => {
   border-radius: 10px;
   transition: all var(--transition-duration) ease;
   overflow: hidden;
-  opacity: 0.9;
 }
 
 .quests__el:hover {
@@ -119,7 +120,7 @@ const goToAboutQuest = (slug) => {
   flex-wrap: wrap;
 }
 
-.players, .time, .difficulty {
+.players, .time{
   font-size: 14px;
   opacity: 0.9;
 }

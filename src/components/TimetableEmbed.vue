@@ -25,6 +25,7 @@ const loadTimetableScript = () => {
   const script = document.createElement('script');
   script.src = `${import.meta.env.VITE_HOST}/f/build/embed.js`;
   script.async = true;
+  script.defer = true;
   document.body.appendChild(script);
 };
 

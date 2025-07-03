@@ -20,12 +20,13 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import {defineAsyncComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import TimetableEmbed from '@/components/TimetableEmbed.vue';
 import {useHead} from "@unhead/vue";
+
+const Header = defineAsyncComponent(() => import('@/components/Header.vue'));
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'));
+const TimetableEmbed = defineAsyncComponent(() => import('@/components/TimetableEmbed.vue'));
 
 const questIds = ref([]);
 
