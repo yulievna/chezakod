@@ -2,44 +2,45 @@
   <section class="lounge">
     <div class="container">
       <div class="lounge__list">
-        <div
-            v-for="lounge in lounges"
-            :key="lounge.id"
-            class="lounge__el"
-            @click="openGallery(lounge)"
-            :style="{ backgroundImage: `url(${lounge.photo[0] || lounge.image})` }"
-        >
-          <div class="lounge__overlay">
-            <div class="lounge__info">
-              <div class="lounge__address">
-                {{ (lounge.location || location).address }}
+        <template v-for="lounge in lounges" :key="lounge.id">
+          <div
+              class="lounge__el"
+              @click="openGallery(lounge)"
+              :style="{ backgroundImage: `url(${lounge.photo[0] || lounge.image})` }"
+              v-if="lounge.photo.length > 0"
+          >
+            <div class="lounge__overlay">
+              <div class="lounge__info">
+                <div class="lounge__address">
+                  {{ (lounge.location || location).address }}
+                </div>
+                <div class="lounge__links">
+                  <a
+                      v-if="(lounge.location || location).links?.ymaps"
+                      :href="(lounge.location || location).links.ymaps"
+                      target="_blank"
+                      class="lounge__map-link"
+                  >
+                    Яндекс Карты
+                  </a>
+                  <a
+                      v-if="(lounge.location || location).links?.['2gis']"
+                      :href="(lounge.location || location).links['2gis']"
+                      target="_blank"
+                      class="lounge__map-link"
+                  >
+                    2GIS
+                  </a>
+                </div>
+                <!--              <button-->
+                <!--                  class="lounge__book-btn"-->
+                <!--              >-->
+                <!--                Посмотреть-->
+                <!--              </button>-->
               </div>
-              <div class="lounge__links">
-                <a
-                    v-if="(lounge.location || location).links?.ymaps"
-                    :href="(lounge.location || location).links.ymaps"
-                    target="_blank"
-                    class="lounge__map-link"
-                >
-                  Яндекс Карты
-                </a>
-                <a
-                    v-if="(lounge.location || location).links?.['2gis']"
-                    :href="(lounge.location || location).links['2gis']"
-                    target="_blank"
-                    class="lounge__map-link"
-                >
-                  2GIS
-                </a>
-              </div>
-<!--              <button-->
-<!--                  class="lounge__book-btn"-->
-<!--              >-->
-<!--                Посмотреть-->
-<!--              </button>-->
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
 
@@ -48,9 +49,9 @@
       <div class="gallery-modal__content" @click.stop>
         <button class="gallery-modal__close" @click="closeGallery">&times;</button>
         <swiper-container class="x"
-            :navigation="true"
-            thumbs-swiper=".lounge-thumbs"
-            :zoom="true"
+                          :navigation="true"
+                          thumbs-swiper=".lounge-thumbs"
+                          :zoom="true"
         >
           <swiper-slide
               v-for="(photo, index) in selectedLounge.photo"
@@ -120,6 +121,7 @@
 <script setup>
 import {ref} from 'vue';
 import {register} from "swiper/element/bundle";
+import axios, {HttpStatusCode} from "axios";
 
 register();
 
@@ -134,10 +136,31 @@ const props = defineProps({
   }
 });
 
+const vip = ref({});
+
 const selectedLounge = ref(null);
 
+const loadLounge = async (id) => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + `/vip/?id=${id}`);
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      if (resp.data.result.length === 0) {
+        throw new Error(`Не найден лаундж с id ${id}`);
+      }
+      vip.value[id] = resp.data.result[0];
+      selectedLounge.value = vip.value[id];
+    } else {
+      throw new Error(`Ошибка сервера`);
+    }
+  } catch (err) {
+    console.err(`Ошибка при получении лаунджа: ${err}`);
+  }
+}
+
 const openGallery = (lounge) => {
-  selectedLounge.value = lounge;
+  if (!(lounge.id in vip)) {
+    loadLounge(lounge.id);
+  }
   document.body.style.overflow = 'hidden';
 };
 
@@ -145,7 +168,6 @@ const closeGallery = () => {
   selectedLounge.value = null;
   document.body.style.overflow = '';
 };
-
 
 </script>
 
@@ -155,15 +177,21 @@ const closeGallery = () => {
   margin-top: 10px;
 }
 
+swiper-container {
+  --swiper-theme-color: #fff !important;
+}
+
 swiper-container * {
   border-radius: 20px;
 }
+
 swiper-container.x {
   margin-top: 20px;
   display: flex;
   justify-content: center;
   width: auto;
 }
+
 swiper-slide.thumbs-slide img {
   object-fit: cover;
   cursor: pointer;
@@ -256,6 +284,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   opacity: 1;
   text-decoration: underline;
 }
+
 .lounge__book-btn {
   background-color: #cf1034;
   color: #fff;

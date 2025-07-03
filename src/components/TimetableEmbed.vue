@@ -30,11 +30,13 @@ const loadTimetableScript = () => {
 };
 
 onMounted(() => {
-  loadTimetableScript();
+  // console.log("component mount");
+  // loadTimetableScript();
 });
 
 // Reload script when questIds change
 watch(() => props.questIds, () => {
+  console.log("quest ids");
   loadTimetableScript();
 });
 </script>

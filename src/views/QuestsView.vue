@@ -1,5 +1,5 @@
 <script setup>
-import {defineAsyncComponent, onMounted, onServerPrefetch, ref} from 'vue';
+import {defineAsyncComponent, onBeforeMount, onMounted, onServerPrefetch, ref} from 'vue';
 import axios from 'axios';
 
 import {useHead} from "@unhead/vue";
@@ -89,15 +89,12 @@ onServerPrefetch(async () => {
   await loadLounges();
 })
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await loadQuests('regular');
-  await loadLounges();
+})
 
-  // Load timetable script
-  const script = document.createElement('script');
-  script.src = import.meta.env.VITE_HOST + '/f/build/embed.js';
-  script.async = true;
-  document.body.appendChild(script);
+onMounted(async () => {
+  await loadLounges();
 
   setTimeout(() => { scrollToElem(route.hash) }, 800);
 });
