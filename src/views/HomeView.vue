@@ -19,7 +19,7 @@ import karaoke from '@/assets/images/party.jpg?w=300&format=webp';
 import korporativ_card from '@/assets/images/korporativ.jpg?w=300&format=webp';
 import children from '@/assets/images/children.jpg?w=300&format=webp';
 import {useHead} from "@unhead/vue";
-import {defineAsyncComponent, onMounted, onServerPrefetch, ref} from "vue";
+import {defineAsyncComponent, onMounted, onServerPrefetch, ref, onBeforeMount} from "vue";
 import axios, {HttpStatusCode} from "axios";
 
 useHead({
@@ -159,6 +159,9 @@ const loadVkSub = async () => {
 onMounted(async () => {
   await loadStat();
   await loadVkSub();
+})
+
+onBeforeMount(async () => {
   await loadPromo();
   await loadBanners();
 })
