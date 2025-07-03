@@ -276,24 +276,23 @@ const toggleMenu = () => {
 
 .navigation-item .dropdown-menu li {
   padding: 6px 20px;
-
 }
 
 .navigation-item .dropdown-menu li a {
-  display: block;
-  width: 100%;
+  min-width: 175px;
   color: #000;
-  font-size: 17px;
+  font-size: 16px;
   text-decoration: none;
   transition: background 0.2s;
   border-radius: 8px;
-  padding: 5px 10px;
+  padding: 5px 8px;
+  align-self: center;
 }
 
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  right: 0;
   background: #fff;
   list-style: none;
   margin: 0;
@@ -567,5 +566,6 @@ const toggleMenu = () => {
   .contacts-btn, .book-btn {
     width: 170px;
   }
+
 }
 </style>
