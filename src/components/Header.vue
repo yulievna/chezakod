@@ -292,7 +292,7 @@ const toggleMenu = () => {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   background: #fff;
   list-style: none;
   margin: 0;
@@ -532,7 +532,9 @@ const toggleMenu = () => {
   .logo-wrapper-mobile {
     display: block;
   }
-
+  .dropdown-menu{
+    right: 0;
+  }
   .dropdown-mobile {
     display: block;
   }
