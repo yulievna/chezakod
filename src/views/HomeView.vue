@@ -42,6 +42,43 @@ const imageUrls = [
   sl3,
 ];
 
+const promo = ref([]);
+const banners = ref([]);
+
+const loadBanners = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/banner/");
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      banners.value = resp.data.result.map((i) => ({
+        src: i.image,
+        alt: i.text,
+        id: i.id,
+        link: i.link
+      }));
+    } else {
+      throw new Error("Сервер вернул ошибку");
+    }
+  } catch (err) {
+    console.log(`Ошибка при получении баннеров: ${err}`);
+  }
+}
+
+const loadPromo = async () => {
+  try {
+    const resp = await axios.get(import.meta.env.VITE_API_URL + "/action/");
+    if (resp.status === HttpStatusCode.Ok && resp.data.status) {
+      promo.value = resp.data.result.map((i) => ({
+        src: i.image,
+        alt: i.name,
+        id: i.id
+      }));
+    } else {
+      throw new Error("Сервер вернул ошибку");
+    }
+  } catch (err) {
+    console.log(`Ошибка при получении акций: ${err}`);
+  }
+}
 
 const imagePrograms = [
   {
@@ -122,11 +159,15 @@ const loadVkSub = async () => {
 onMounted(async () => {
   await loadStat();
   await loadVkSub();
+  await loadPromo();
+  await loadBanners();
 })
 
 onServerPrefetch(async () => {
   await loadStat();
   await loadVkSub();
+  await loadPromo();
+  await loadBanners();
 })
 
 </script>
@@ -138,7 +179,7 @@ onServerPrefetch(async () => {
     <div class="container">
       <ul class="servises__list">
         <li class="main-slider">
-          <ImgSlider :images="imageUrls" :slide-by-hover="true"></ImgSlider>
+          <ImgSlider :images="banners" :slide-by-hover="true" :is-banner="true"></ImgSlider>
         </li>
         <router-link
             class="serviсes__el quests"
@@ -170,7 +211,7 @@ onServerPrefetch(async () => {
           <span class="overlay">Картинг</span>
         </a>
         <li class="programs">
-          <ImgSlider :images="imagePrograms" :is-promo-slider="true" :slide-by-hover="true"></ImgSlider>
+          <ImgSlider :images="promo" :is-promo-slider="true" :slide-by-hover="true"></ImgSlider>
         </li>
         <li class="serviсes__el kids-party" :style="{ backgroundImage: `url(${children})` }">
           <router-link class="overlay" to="/show-programs">Детские праздники</router-link>

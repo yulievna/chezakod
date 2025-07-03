@@ -1,16 +1,13 @@
 <template>
   <Header></Header>
+  <nav class="promotions__nav">
+    <ul class="promotions__nav-list">
+      <li v-for="action in actions" :key="`action-nav-${action.id}`">
+        <a :href="`#action-${action.id}`">{{ action.name }}</a>
+      </li>
+    </ul>
+  </nav>
   <div class="promotions">
-    <div class="container">
-    <div class="promotions__container">
-
-    <nav class="promotions__nav">
-      <ul class="promotions__nav-list">
-        <li v-for="action in actions" :key="`action-nav-${action.id}`">
-          <a :href="`#action-${action.id}`">{{ action.name }}</a>
-        </li>
-      </ul>
-    </nav>
     <div class="promotions__container">
       <div class="promotion-card"
            :id="`action-${action.id}`"
@@ -42,11 +39,13 @@
               {{ action.limit }}
             </p>
             <div class="promotion-card__contact" v-if="action.button">
-              <a :href="action.button.link.url" class="contact-button" v-if="action.button.link.is_out" :style="{ background: action.button.color}">
+              <a :href="action.button.link.url" class="contact-button" v-if="action.button.link.is_out"
+                 :style="{ background: action.button.color}">
                 <span class="contact-button__text">{{ action.button.main || 'Забронировать' }}</span>
                 <span class="contact-button__phone" v-if="action.button.second">{{ action.button.second }}</span>
               </a>
-              <router-link :to="action.button.link.url || '/timetable'" v-else :style="{ background: action.button.color}" class="contact-button">
+              <router-link :to="action.button.link.url || '/timetable'" v-else
+                           :style="{ background: action.button.color}" class="contact-button">
                 <span class="contact-button__text">{{ action.button.main || 'Забронировать' }}</span>
                 <span class="contact-button__phone" v-if="action.button.second">{{ action.button.second }}</span>
               </router-link>
@@ -57,18 +56,16 @@
     </div>
 
     <div class="promotions__note">
-      <p>Скидки и акции не суммируются. Все сертификаты/купоны/флаера/прочие рекламные и скидочные инструменты действуют
+      <p>Скидки и акции не суммируются. Все сертификаты/купоны/флаера/прочие рекламные и скидочные инструменты
+        действуют
         только при бронировании на официальном сайте chezakod.ru или по телефону +7 (391) 269-92-23</p>
-    </div>
-  </div>
-
     </div>
   </div>
   <Footer></Footer>
 </template>
 
 <script setup>
-import {onMounted, watch, onServerPrefetch, ref, defineAsyncComponent} from 'vue';
+import {defineAsyncComponent, onMounted, onServerPrefetch, ref, watch} from 'vue';
 import {useRoute} from 'vue-router';
 import {useHead} from "@unhead/vue";
 import axios, {HttpStatusCode} from "axios";
@@ -102,7 +99,7 @@ const scrollToPromotion = (hash) => {
     if (element) {
       const headerHeight = 200;
       const y = element.getBoundingClientRect().top + window.scrollY - headerHeight;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      window.scrollTo({top: y, behavior: 'smooth'});
     }
   }
 };
@@ -114,16 +111,16 @@ onMounted(async () => {
   scrollToPromotion(route.hash);
 
   document.querySelectorAll('.promotions__nav-list a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const targetId = this.getAttribute('href');
       const targetElement = document.querySelector(targetId);
 
       if (targetElement) {
-        const headerHeight = 200;
+        const headerHeight = 220;
         const y = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
 
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        window.scrollTo({top: y, behavior: 'smooth'});
       }
     });
   });
@@ -141,7 +138,7 @@ onMounted(async () => {
         });
       }
     });
-  }, { threshold: 0.5 });
+  }, {threshold: 0.5});
 
   document.querySelectorAll('.promotion-card').forEach(card => {
     observer.observe(card);
@@ -153,18 +150,88 @@ watch(() => route.hash, (newHash) => {
 });
 </script>
 
+<style>
+.promotion-card__description h3 {
+  color: #fff;
+  font-size: 1.3rem;
+  margin: 25px 0 15px;
+  position: relative;
+  padding-left: 15px;
+}
+
+.promotion-card__description h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 20px;
+  background: #cf1034;
+  border-radius: 3px;
+}
+
+.promotion-card__description ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+.promotion-card__description ul li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  padding-left: 25px;
+  position: relative;
+}
+
+.promotion-card__description ul li::before {
+  content: '•';
+  color: #cf1034;
+  position: absolute;
+  left: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+</style>
+
 <style scoped>
 .promotions__nav {
   width: 95vw;
-  max-width: 1200px;
+  max-width: 1500px;
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  position: fixed;
-  top: 130px;
-  margin: 0 auto;
+  padding: 15px;
+  top: 92px;
+  position: sticky;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
   z-index: 2;
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+@media (max-width: 1240px) {
+  .promotions__nav {
+    top: 125px;
+  }
+}
+
+@media (max-width: 1084px) {
+  .promotions__nav {
+    top: 105px;
+  }
+}
+
+.promotions__container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.promotions {
+  max-width: 1200px;
+  margin: 10px auto 0;
 }
 
 .promotions__nav-list {
@@ -177,10 +244,11 @@ watch(() => route.hash, (newHash) => {
 }
 
 .promotions__nav-list li a {
+  display: inline-block;
   color: #fff;
   font-weight: bold;
   text-decoration: none;
-  padding: 8px 12px;
+  padding: 5px 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   transition: all 0.3s ease;
@@ -190,12 +258,6 @@ watch(() => route.hash, (newHash) => {
 .promotions__nav-list li a.active {
   background: #cf1034;
   color: #fff;
-}
-
-.promotions {
-  padding-top: 120px;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .promotions__hero {
@@ -209,12 +271,6 @@ watch(() => route.hash, (newHash) => {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 2px;
-}
-
-.promotions__container {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
 }
 
 .promotion-card {
@@ -417,11 +473,13 @@ watch(() => route.hash, (newHash) => {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 @media (max-width: 1200px) {
-  .container{
+  .promotions__container {
     padding: 0 1rem;
   }
 }
+
 @media (max-width: 768px) {
   .promotions {
     padding: 0;

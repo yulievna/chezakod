@@ -4,7 +4,7 @@
         clickable: props.paginationClickable
       } : false"
       class="swiper-slider"
-      :zoom="true"
+      :zoom="!props.isPromoSlider"
       :loop="props.loop"
       :autoplay="props.autoplay ? {
         delay: props.autoplayDelay,
@@ -21,10 +21,48 @@
         :key="index"
         class="item"
     >
-      <div class="swiper-zoom-container">
+      <router-link v-if="props.isPromoSlider" :to="`/action#action-${image.id}`">
         <img
-            :src="isPromoSlider ? image.src : image"
-            :alt="isPromoSlider ? image.alt : 'Image' + (index + 1)"
+            :src="image.src"
+            :alt="image.alt"
+            style="cursor: pointer"
+            class="swiper-image"
+            loading="lazy"
+        >
+      </router-link>
+      <template v-else-if="props.isBanner">
+        <a :href="image.link.url" v-if="image.link.url && image.link.is_out" target="_blank">
+          <img
+              :src="image.src"
+              :alt="image.alt"
+              style="cursor: pointer"
+              class="swiper-image"
+              loading="lazy"
+          >
+        </a>
+        <router-link v-else-if="image.link.url" :to="image.link.url">
+          <img
+              :src="image.src"
+              :alt="image.alt"
+              style="cursor: pointer"
+              class="swiper-image"
+              loading="lazy"
+          >
+        </router-link>
+        <div v-else>
+          <img
+              :src="image.src"
+              :alt="image.alt"
+              style="cursor: pointer"
+              class="swiper-image"
+              loading="lazy"
+          >
+        </div>
+      </template>
+      <div class="swiper-zoom-container" v-else>
+        <img
+            :src="image"
+            :alt="'Image' + (index + 1)"
             style="cursor: pointer"
             class="swiper-image"
             loading="lazy"
@@ -74,6 +112,10 @@ const props = defineProps({
     default: true
   },
   slideByHover: {
+    type: Boolean,
+    default: false
+  },
+  isBanner: {
     type: Boolean,
     default: false
   }

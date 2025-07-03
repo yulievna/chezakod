@@ -221,6 +221,7 @@ const toggleMenu = () => {
 
 .logo-wrapper {
   display: block;
+  height: 62px;
 }
 
 .logo-wrapper .logo {
@@ -242,6 +243,12 @@ const toggleMenu = () => {
 @media (max-width: 500px) {
   .logo-wrapper-mobile {
     width: 60%;
+  }
+}
+
+@media (min-width: 500px) {
+  .logo-wrapper-mobile {
+    height: 75px;
   }
 }
 
@@ -504,6 +511,7 @@ const toggleMenu = () => {
     display: flex;
     flex-direction: column;
     align-items: end;
+    height: 95px;
   }
 
 }
