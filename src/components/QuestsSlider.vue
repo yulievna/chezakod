@@ -71,6 +71,7 @@ const handleMouseMove = (event) => {
 
 const resetImage = (event) => {
   idx.value = 0;
+  swiperEl.slideTo(0);
 }
 
 //

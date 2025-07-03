@@ -339,7 +339,6 @@ const prevPhoto = () => {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 16px;
   font-weight: 500;
 }
 
@@ -361,7 +360,6 @@ const prevPhoto = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 16px;
 }
 
 .char-item img {
@@ -521,7 +519,7 @@ const prevPhoto = () => {
 /* Расписание */
 .schedule {
   margin-top: 60px;
-  padding: 40px 0;
+  padding: 40px 0 0;
 }
 
 .schedule .title {
@@ -584,7 +582,6 @@ const prevPhoto = () => {
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
   transition: all 0.25s ease;
   border: 3px solid #cf1034;
 }

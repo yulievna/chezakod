@@ -12,6 +12,9 @@
         pauseOnMouseEnter: true
       } : false"
       :navigation="props.navigation"
+      @swiperinit="swiperInit"
+      @mousemove="props.slideByHover ? handleMouseMove($event) : null"
+      :speed="1000"
   >
     <swiper-slide
         v-for="(image, index) in images"
@@ -33,6 +36,7 @@
 
 <script setup>
 import {register} from "swiper/element/bundle";
+import {ref} from "vue";
 
 register();
 
@@ -68,8 +72,33 @@ const props = defineProps({
   paginationClickable: {
     type: Boolean,
     default: true
+  },
+  slideByHover: {
+    type: Boolean,
+    default: false
   }
 });
+
+let idx = ref(0);
+
+let swiperEl;
+
+const swiperInit = (event) => {
+  swiperEl = event.detail[0];
+}
+
+const handleMouseMove = (event) => {
+  const card = event.currentTarget;
+  const rect = card.getBoundingClientRect();
+  const x = event.clientX - rect.left; // Положение мыши внутри карточки
+  const width = rect.width;
+
+  const zone = Math.floor((x / width) * props.images.length);
+  if (idx.value !== zone) {
+    idx.value = zone;
+    swiperEl.slideTo(zone);
+  }
+}
 
 </script>
 

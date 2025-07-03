@@ -44,7 +44,7 @@ export const routes = [
     {
         path: '/action-games/:id',
         name: 'AboutActionGame',
-        component: () => import("@/views/AboutActionGame.vue"),
+        component: () => import("@/views/AboutQuest.vue"),
         props: true,
     },
     {

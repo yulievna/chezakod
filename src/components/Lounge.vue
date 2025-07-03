@@ -182,7 +182,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .lounge__list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 380px));
   gap: 30px;
   justify-content: center;
 }
@@ -233,7 +233,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 .lounge__address {
-  font-size: 16px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -249,7 +248,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 .lounge__map-link {
   color: #fff;
   text-decoration: none;
-  font-size: 14px;
   opacity: 0.8;
   transition: opacity 0.3s ease;
 }
@@ -312,10 +310,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
   .lounge__overlay {
     padding: 25px;
-  }
-
-  .lounge__address {
-    font-size: 15px;
   }
 }
 
@@ -417,13 +411,8 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
     transform: translateY(0);
   }
 
-  .lounge__address {
-    font-size: 14px;
-  }
-
   .lounge__book-btn {
     padding: 10px 20px;
-    font-size: 14px;
   }
 }
 
@@ -436,12 +425,8 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
     padding: 15px;
   }
 
-  .lounge__address {
-    font-size: 13px;
-  }
-
   .lounge__map-link {
-    font-size: 12px;
+    font-size: 0.9rem;
   }
 
   .lounge__book-btn {

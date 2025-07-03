@@ -25,8 +25,7 @@
             <h2 class="promotion-card__title">{{ action.name }}</h2>
             <div class="promotion-card__price" v-if="action.price">{{ action.price }}</div>
           </div>
-          <p class="promotion-card__description">
-            {{ action.text }}
+          <p class="promotion-card__description" v-html="action.text">
           </p>
           <div class="promotion-card__details">
             <div class="promotion-card__promo" v-if="action.promocode">
@@ -42,13 +41,13 @@
             <p class="promotion-card__note" v-if="action.limit">
               {{ action.limit }}
             </p>
-            <div class="promotion-card__contact" v-if="action.button.main">
+            <div class="promotion-card__contact" v-if="action.button">
               <a :href="action.button.link.url" class="contact-button" v-if="action.button.link.is_out" :style="{ background: action.button.color}">
-                <span class="contact-button__text">{{ action.button.main }}</span>
+                <span class="contact-button__text">{{ action.button.main || 'Забронировать' }}</span>
                 <span class="contact-button__phone" v-if="action.button.second">{{ action.button.second }}</span>
               </a>
-              <router-link :to="action.button.link.url" v-else :style="{ background: action.button.color}" class="contact-button">
-                <span class="contact-button__text">{{ action.button.main }}</span>
+              <router-link :to="action.button.link.url || '/timetable'" v-else :style="{ background: action.button.color}" class="contact-button">
+                <span class="contact-button__text">{{ action.button.main || 'Забронировать' }}</span>
                 <span class="contact-button__phone" v-if="action.button.second">{{ action.button.second }}</span>
               </router-link>
             </div>
@@ -181,7 +180,7 @@ watch(() => route.hash, (newHash) => {
   color: #fff;
   font-weight: bold;
   text-decoration: none;
-  padding: 4px 10px;
+  padding: 8px 12px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   transition: all 0.3s ease;
@@ -466,7 +465,6 @@ watch(() => route.hash, (newHash) => {
   .promotion-card__description,
   .promotion-card__subtitle,
   .promotion-card__note {
-    font-size: 14px;
   }
 
   .promotion-card__conditions,
@@ -474,7 +472,6 @@ watch(() => route.hash, (newHash) => {
   .promotion-card__bonus-list,
   .promotion-card__restrictions-list {
     padding-left: 20px;
-    font-size: 14px;
   }
 
   .contact-button {

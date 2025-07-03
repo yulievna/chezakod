@@ -135,7 +135,6 @@ const togglePopup = () => {
 }
 
 .contact-phone {
-  font-size: 16px;
   color: #fff;
   text-decoration: none;
 }
@@ -150,7 +149,6 @@ const togglePopup = () => {
 }
 
 .social-link {
-  font-size: 14px;
   color: #fff;
   text-decoration: none;
 }
@@ -160,7 +158,7 @@ const togglePopup = () => {
 }
 
 .book-btn {
-  font-size: 16px;
+  font-size: 18px;
   color: #fff;
   background-color: #cf1034;
   border: none;
@@ -176,7 +174,6 @@ const togglePopup = () => {
 .footer-copyright {
   text-align: center;
   margin-top: 40px;
-  font-size: 14px;
   color: #ccc;
 }
 

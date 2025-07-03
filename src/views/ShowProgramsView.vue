@@ -552,7 +552,6 @@ onMounted(loadShows);
   border-radius: 10px;
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
   transition: all 0.3s ease;
   border: 3px solid #cf1034;
 }
@@ -579,7 +578,6 @@ onMounted(loadShows);
 }
 
 .description-modal p {
-  font-size: 12pt;
   margin-bottom: 10px;
 }
 
@@ -598,7 +596,6 @@ onMounted(loadShows);
 .description-modal li {
   background: url('https://chezakod.ru/local/templates/main/img/show/star.png') no-repeat left center;
   padding-left: 30px;
-  font-size: 12pt;
 }
 
 .bolder {
@@ -617,7 +614,6 @@ onMounted(loadShows);
   display: inline-block;
   padding: 10px 30px;
   border-radius: 8px;
-  font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
@@ -745,7 +741,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .section-subtitle {
   text-align: center;
-  font-size: 14pt;
 }
 
 .mini-shows-grid {
@@ -1003,7 +998,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 }
 
 .show-description {
-  font-size: 15px;
   line-height: 1.5;
   color: #000;
   flex-grow: 1;
@@ -1022,8 +1016,8 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 .detail-row {
   display: flex;
   margin-bottom: 8px;
-  font-size: 14px;
   gap: 10px;
+  font-size: 0.9rem;
 }
 
 .detail-label {
@@ -1097,7 +1091,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   }
 
   .hero__duration {
-    font-size: 14pt;
   }
 
   .shows-grid {
@@ -1294,7 +1287,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 16px;
-  font-family: 'Rubik', sans-serif;
   transition: border-color 0.3s ease;
   width: 100%;
 }
@@ -1345,7 +1337,6 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
 
 .error-message {
   color: #ff4444;
-  font-size: 14px;
   margin-top: 4px;
 }
 
@@ -1412,7 +1403,6 @@ textarea.error {
   .form-group input,
   .form-group textarea {
     padding: 10px;
-    font-size: 14px;
   }
 
   .booking-modal__submit {
@@ -1434,12 +1424,10 @@ textarea.error {
   }
 
   .selected-show {
-    font-size: 14px;
     padding: 10px;
   }
 
   .form-group label {
-    font-size: 14px;
   }
 }
 </style>

@@ -398,7 +398,6 @@ const submitForm = async () => {
 
 .error-message {
   color: #ff4444;
-  font-size: 14px;
   margin-top: 4px;
 }
 
@@ -466,7 +465,6 @@ input.error {
   .form-group select,
   .form-group textarea {
     padding: 10px;
-    font-size: 14px;
   }
 
   .certificate-form__submit {
@@ -490,7 +488,6 @@ input.error {
   .form-group select,
   .form-group textarea {
     padding: 10px;
-    font-size: 14px;
   }
 
   .nominal-options {
@@ -499,7 +496,6 @@ input.error {
 
   .nominal-option {
     padding: 10px 15px;
-    font-size: 14px;
   }
 }
 </style>

@@ -207,7 +207,6 @@ onMounted(async () => {
 }
 
 .switch-btn {
-  font-size: 16px;
   padding: 7px 20px;
   border-radius: 8px;
   cursor: pointer;

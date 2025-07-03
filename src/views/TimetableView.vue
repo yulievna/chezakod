@@ -96,9 +96,9 @@ onMounted(async () => {
 }
 
 .timetable-page {
-  min-height: 100vh;
+  min-height: 85vh;
   color: #fff;
-  margin: 30px 0;
+  margin: 30px 0 0;
 }
 
 .container {

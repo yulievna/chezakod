@@ -122,10 +122,6 @@ const loadVkSub = async () => {
 onMounted(async () => {
   await loadStat();
   await loadVkSub();
-  ((r, u) => {
-      const l = document.getElementById(r);
-      l.contentWindow.document.open(), l.contentWindow.document.write(decodeURIComponent(escape(atob(u)))), l.contentWindow.document.close()
-    })("big_light_70000001079958008", "PGhlYWQ+PHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgogICAgd2luZG93Ll9fc2l6ZV9fPSdiaWcnOwogICAgd2luZG93Ll9fdGhlbWVfXz0nbGlnaHQnOwogICAgd2luZG93Ll9fYnJhbmNoSWRfXz0nNzAwMDAwMDEwNzk5NTgwMDgnCiAgICB3aW5kb3cuX19vcmdJZF9fPSc3MDAwMDAwMTA3OTk1ODAwNycKICAgPC9zY3JpcHQ+PHNjcmlwdCBjcm9zc29yaWdpbj0iYW5vbnltb3VzIiB0eXBlPSJtb2R1bGUiIHNyYz0iaHR0cHM6Ly9kaXNrLjJnaXMuY29tL3dpZGdldC1jb25zdHJ1Y3Rvci9hc3NldHMvaWZyYW1lLmpzIj48L3NjcmlwdD48bGluayByZWw9Im1vZHVsZXByZWxvYWQiIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiIGhyZWY9Imh0dHBzOi8vZGlzay4yZ2lzLmNvbS93aWRnZXQtY29uc3RydWN0b3IvYXNzZXRzL2RlZmF1bHRzLmpzIj48bGluayByZWw9InN0eWxlc2hlZXQiIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiIGhyZWY9Imh0dHBzOi8vZGlzay4yZ2lzLmNvbS93aWRnZXQtY29uc3RydWN0b3IvYXNzZXRzL2RlZmF1bHRzLmNzcyI+PC9oZWFkPjxib2R5PjxkaXYgaWQ9ImlmcmFtZSI+PC9kaXY+PC9ib2R5Pg==")
 })
 
 onServerPrefetch(async () => {
@@ -142,7 +138,7 @@ onServerPrefetch(async () => {
     <div class="container">
       <ul class="servises__list">
         <li class="main-slider">
-          <ImgSlider :images="imageUrls"></ImgSlider>
+          <ImgSlider :images="imageUrls" :slide-by-hover="true"></ImgSlider>
         </li>
         <router-link
             class="serviсes__el quests"
@@ -174,7 +170,7 @@ onServerPrefetch(async () => {
           <span class="overlay">Картинг</span>
         </a>
         <li class="programs">
-          <ImgSlider :images="imagePrograms" :is-promo-slider="true"></ImgSlider>
+          <ImgSlider :images="imagePrograms" :is-promo-slider="true" :slide-by-hover="true"></ImgSlider>
         </li>
         <li class="serviсes__el kids-party" :style="{ backgroundImage: `url(${children})` }">
           <router-link class="overlay" to="/show-programs">Детские праздники</router-link>
@@ -389,7 +385,6 @@ onServerPrefetch(async () => {
 }
 
 .stat-text {
-  font-size: 16px;
   color: #333;
 }
 

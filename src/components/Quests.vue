@@ -1,28 +1,27 @@
 <template>
   <section class="quests">
-    <div class="container">
-      <ul class="quests__list">
-        <li v-for="quest in quests" :key="quest.id" class="quests__el">
-          <router-link :to="getQuestPath(quest.slug)" class="quest_link">
-            <div class="age">{{ quest.age }}</div>
-            <QuestsSlider :images="quest.images"/>
-            <div class="quest_info">
-              <div class="quest_title">{{ quest.name }}</div>
-              <div class="quest_chars">
-                <div class="players">{{ quest.players }}</div>
-                <div class="time">{{ quest.time }}</div>
-              </div>
-              <div class="booking">
-                <button class="to_book" @click.prevent="goToAboutQuest(quest.slug)">Забронировать</button>
-                <div class="contacts">
-                  <div class="address">{{ quest.address }}</div>
-                </div>
+    <ul class="quests__list">
+      <li v-for="quest in quests" :key="quest.id" class="quests__el">
+        <router-link :to="getQuestPath(quest.slug)" class="quest_link">
+          <div class="age">{{ quest.age }}</div>
+          <QuestsSlider :images="quest.images"/>
+          <div class="quest_info">
+            <div class="quest_title">{{ quest.name }}</div>
+            <div class="quest_chars">
+              <div class="players small">{{ quest.players }}</div>
+              <div class="time small">{{ quest.time }}</div>
+              <div class="mobile-address small">{{ quest.address }}</div>
+            </div>
+            <div class="booking">
+              <button class="to_book" @click.prevent="goToAboutQuest(quest.slug)">Забронировать</button>
+              <div class="contacts">
+                <div class="address small">{{ quest.address }}</div>
               </div>
             </div>
-          </router-link>
-        </li>
-      </ul>
-    </div>
+          </div>
+        </router-link>
+      </li>
+    </ul>
   </section>
 </template>
 
@@ -55,6 +54,11 @@ const goToAboutQuest = (slug) => {
 </script>
 
 <style scoped>
+
+.small {
+  font-size: 0.9rem;
+}
+
 .quests__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -92,7 +96,6 @@ const goToAboutQuest = (slug) => {
   color: #fff;
   padding: 8px 20px;
   border-radius: 0 0 0 7.5px;
-  font-size: 14px;
   z-index: 2;
 }
 
@@ -120,15 +123,14 @@ const goToAboutQuest = (slug) => {
   flex-wrap: wrap;
 }
 
-.players, .time{
-  font-size: 14px;
+.players, .time, .mobile-address {
   opacity: 0.9;
 }
 
 .booking {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: center;
   margin-top: 10px;
 }
 
@@ -167,15 +169,15 @@ const goToAboutQuest = (slug) => {
 }
 
 .contacts {
-  position: absolute;
-  right: 10px;
   text-align: right;
 }
 
 .contact, .address {
-  font-size: 14px;
-  margin-bottom: 5px;
   max-width: 150px;
+}
+
+.mobile-address {
+  display: none;
 }
 
 /* Медиа-запросы для адаптивности */
@@ -184,6 +186,7 @@ const goToAboutQuest = (slug) => {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
 }
+
 @media (max-width: 1072px) {
   .to_book {
     width: 50%;
@@ -208,7 +211,6 @@ const goToAboutQuest = (slug) => {
 
   .to_book {
     padding: 8px 20px;
-    font-size: 14px;
     width: 60%;
   }
 }
@@ -232,26 +234,22 @@ const goToAboutQuest = (slug) => {
     margin-bottom: 10px;
   }
 
-  .players, .time, .difficulty {
-    font-size: 12px;
-  }
-
   .booking {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column-reverse;
+    align-items: flex-end;
     gap: 10px;
   }
 
   .contacts {
-    right: 10px;
-    bottom: 58px;
-    width: 150px;
-    text-align: right;
+    display: none;
+  }
+
+  .mobile-address {
+    display: block;
   }
 
   .contact, .address {
     max-width: none;
-    font-size: 12px;
   }
 
   .to_book {

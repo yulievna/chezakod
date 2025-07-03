@@ -224,7 +224,6 @@ swiper-slide.swiper-slide-active {
 
 .review-text {
   margin-top: 8px;
-  font-size: 14px;
   color: #fff;
   margin-bottom: 20px;
   overflow: auto;
@@ -252,7 +251,6 @@ swiper-slide.swiper-slide-active {
   .review-avatar {
     width: 30px;
     height: 30px;
-    font-size: 14px;
   }
 
   .review-name {

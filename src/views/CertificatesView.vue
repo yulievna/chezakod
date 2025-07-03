@@ -501,7 +501,6 @@ section {
 
   .condition-item {
     padding: 1rem 1rem 1rem 2rem;
-    font-size: 14px;
   }
 }
 </style>

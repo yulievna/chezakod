@@ -22,6 +22,11 @@ export const createApp = ViteSSG(
         base: import.meta.env.MODE === "production" ? "/yulya/" : "/"
     },
     (ctx) => {
+        if (!import.meta.env.SSR) {
+            ctx.router.afterEach((to, from) => {
+                document.body.style.overflowY = '';
+            });
+        }
         ctx.app.config.globalProperties.$router = ctx.router
         ctx.head.push({
             titleTemplate: "%s %sep %siteName",

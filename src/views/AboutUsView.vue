@@ -389,6 +389,12 @@ h2 {
   overflow: hidden;
 }
 
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 @media (max-width: 1200px) {
   .container {
     width: 90%;

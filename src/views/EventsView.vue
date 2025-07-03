@@ -317,27 +317,29 @@ import axios from 'axios';
 import {useHead} from "@unhead/vue";
 
 // Import images
-import korporativ from '@/assets/images/korporativ.jpg'
-import korporativ2 from '@/assets/images/korporativ2.jpg'
-import korporativ3 from '@/assets/images/korporativ4.jpg'
-import korporativ4 from '@/assets/images/korporativ5.jpg'
-import korporativ5 from '@/assets/images/korporativ6.jpg'
-import korporativ6 from '@/assets/images/korporativ7.jpg'
-import korporativ7 from '@/assets/images/korporativ3.jpg'
+import korporativ from '@/assets/images/korporativ.jpg?format=webp&width=800'
+import korporativ2 from '@/assets/images/korporativ2.jpg?format=webp&width=800'
+import korporativ3 from '@/assets/images/korporativ4.jpg?format=webp&width=800'
+import korporativ4 from '@/assets/images/korporativ5.jpg?format=webp&width=800'
+import korporativ5 from '@/assets/images/korporativ6.jpg?format=webp&width=800'
+import korporativ6 from '@/assets/images/korporativ7.jpg?format=webp&width=800'
+import korporativ7 from '@/assets/images/korporativ3.jpg?format=webp&width=800'
 
-import psychic from '@/assets/images/psychic.png'
-import brain from '@/assets/images/brain.png'
-import logic from '@/assets/images/logic.png'
-import microphone from '@/assets/images/microphone.png'
-import theater from '@/assets/images/theater.png'
-import wheel from '@/assets/images/wheel.png'
-import music from '@/assets/images/music.png'
-import race from '@/assets/images/race.png'
-import dance from '@/assets/images/dance.png'
+import psychic from '@/assets/images/psychic.png?format=webp&width=60'
+import brain from '@/assets/images/brain.png?format=webp&width=60'
+import logic from '@/assets/images/logic.png?format=webp&width=60'
+import microphone from '@/assets/images/microphone.png?format=webp&width=60'
+import theater from '@/assets/images/theater.png?format=webp&width=60'
+import wheel from '@/assets/images/wheel.png?format=webp&width=60'
+import music from '@/assets/images/music.png?format=webp&width=60'
+import race from '@/assets/images/race.png?format=webp&width=60'
+import dance from '@/assets/images/dance.png?format=webp&width=60'
 
-import questImage from '@/assets/images/quest__1.jpg'
-import actionImage from '@/assets/images/sl3.jpg'
-import showImage from '@/assets/images/showImage.png'
+import questImage from '@/assets/images/quest__1.jpg?format=webp&width=400'
+import actionImage from '@/assets/images/sl3.jpg?format=webp&width=400'
+import showImage from '@/assets/images/showImage.png?format=webp&width=400'
+import karaoke from "@/assets/images/party.jpg?format=webp&width=400";
+import karting from "@/assets/images/chego.jpg?format=webp&width=400";
 
 import photographer from '@/assets/images/photografer.png'
 import instructor from '@/assets/images/instructor.png'
@@ -467,7 +469,7 @@ const games = [
     id: 4,
     title: 'Картинг',
     description: 'Захватывающий дух скоростной электро-картинг с игровыми элементами',
-    image: showImage,
+    image: karting,
     link: 'https://kartingchego.ru',
     external: true
   },
@@ -475,7 +477,7 @@ const games = [
     id: 5,
     title: 'Лофт-караоке',
     description: 'Уютные залы в уникальном стиле с караоке-системой',
-    image: showImage,
+    image: karaoke,
     link: 'https://party-kod.ru',
     external: true
   }
@@ -697,6 +699,10 @@ onServerPrefetch(init);
   background-color: #fff;
 }
 
+.info-cards {
+  margin-top: 20px;
+}
+
 .show-card__icon {
   width: 50px;
   height: 50px;
@@ -714,7 +720,6 @@ onServerPrefetch(init);
   height: 100%;
 }
 .show-card__content h4 {
-  font-size: 16px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -723,9 +728,9 @@ onServerPrefetch(init);
 }
 
 .show-card__content p {
-  font-size: 14px;
   margin: 0;
   opacity: 0.8;
+  font-size: 0.9rem;
 }
 
 /* Process steps */
@@ -769,7 +774,6 @@ onServerPrefetch(init);
 }
 
 .step p {
-  font-size: 16px;
   line-height: 1.4;
   margin: 0;
   color: #333;
@@ -803,7 +807,6 @@ onServerPrefetch(init);
 }
 .highlight-text{
   margin-top: 20px;
-  font-size: 17px;
 }
 /* Pricing tabs */
 .pricing-tabs {
@@ -844,7 +847,6 @@ onServerPrefetch(init);
 }
 
 .price-note {
-  font-size: 14px;
   color: #666;
   margin-top: 10px;
 }
@@ -1046,7 +1048,7 @@ onServerPrefetch(init);
   .card {
     margin: 0 auto 20px;
     width: 100%;
-    padding: 10px;
+    padding: 20px;
   }
 }
 @media (max-width: 768px) {
@@ -1138,7 +1140,6 @@ onServerPrefetch(init);
   }
 
   .hero__subtitle {
-    font-size: 14px;
   }
 
   .slider-section {
@@ -1179,11 +1180,6 @@ onServerPrefetch(init);
   .step__number {
     width: 35px;
     height: 35px;
-    font-size: 14px;
-  }
-
-  .step p {
-    font-size: 14px;
   }
 
   .price {

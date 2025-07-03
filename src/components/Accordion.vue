@@ -102,7 +102,6 @@ button {
 }
 
 p {
-  font-size: 16px;
   color: #000;
   padding: 25px;
   border-radius: 5px;
@@ -131,13 +130,11 @@ p {
   }
 
   button {
-    font-size: 16px;
     padding: 10px 18px;
     line-height: 16px;
   }
 
   p {
-    font-size: 15px;
     padding: 12px 20px;
   }
 }
@@ -152,13 +149,11 @@ p {
 
   button {
     min-height: auto;
-    font-size: 16px;
     padding: 12px 15px;
     margin-bottom: 5px;
   }
 
   p {
-    font-size: 14px;
     padding: 12px 15px;
     margin: -5px 0 10px 0;
   }
@@ -172,7 +167,6 @@ p {
 /* Очень маленькие экраны */
 @media (max-width: 400px) {
   button {
-    font-size: 13px;
     padding: 5px 12px;
   }
 }

@@ -241,7 +241,6 @@ onServerPrefetch(init);
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 16px;
   font-weight: 500;
 }
 
@@ -259,7 +258,6 @@ onServerPrefetch(init);
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 16px;
 }
 
 .char-item img {
@@ -417,7 +415,6 @@ onServerPrefetch(init);
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
   transition: all 0.25s ease;
   border: 3px solid #cf1034;
 }

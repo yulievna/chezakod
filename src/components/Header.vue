@@ -193,9 +193,9 @@ const toggleMenu = () => {
 <style scoped>
 .header {
   background-color: #fff;
-  padding: 26px 0;
+  padding: 15px 0;
   position: sticky;
-  top: -1px;
+  top: 0;
   z-index: 100;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
@@ -222,6 +222,7 @@ const toggleMenu = () => {
 .logo-wrapper {
   display: block;
 }
+
 .logo-wrapper .logo {
   width: 240px;
   height: auto;
@@ -229,8 +230,21 @@ const toggleMenu = () => {
 
 .logo-wrapper-mobile {
   display: none;
-  width: 150px;
+  width: 300px;
 }
+
+@media (max-width: 350px) {
+  .logo-wrapper-mobile {
+    width: 55%;
+  }
+}
+
+@media (max-width: 500px) {
+  .logo-wrapper-mobile {
+    width: 60%;
+  }
+}
+
 .logo-wrapper-mobile .logo {
   width: 100%;
 }
@@ -262,7 +276,7 @@ const toggleMenu = () => {
   display: block;
   width: 100%;
   color: #000;
-  font-size: 15px;
+  font-size: 17px;
   text-decoration: none;
   transition: background 0.2s;
   border-radius: 8px;
@@ -304,15 +318,17 @@ const toggleMenu = () => {
 .dropdown-mobile {
   display: none;
 }
+
 .dropdown-mobile button {
   color: white;
   background: black;
-  font-size: 12px;
+  font-size: 16px;
   padding: 6px 12px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
+
 .dropdown-mobile .dropdown-menu {
   left: -100px;
 }
@@ -330,16 +346,18 @@ const toggleMenu = () => {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 18px;
   transition: background 0.3s ease;
 }
 
 .book-btn:hover {
   background: #333;
 }
+
 .contacts-btn {
   background: #cf1034;
 }
+
 .contacts-btn:hover {
   background: #a80e2b;
 }
@@ -389,25 +407,25 @@ const toggleMenu = () => {
 .burger.active .top {
   transform: translateY(8px) rotate(45deg);
 }
+
 .burger.active .bottom {
   transform: translateY(-8px) rotate(-45deg);
 }
+
 .burger.active .middle {
   opacity: 0;
   transform: scale(0) translateY(-50%);
 }
 
 .mobile-menu {
-  position: fixed;
-  top: 90px;
-  left: 0;
-  height: calc(100vh - 80px);
+  height: 100vh;
   width: 100%;
   background: #fff;
   z-index: 99;
-  padding: 0 20px;
+  padding: 20px;
   box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .mobile-menu-list {
@@ -472,14 +490,17 @@ const toggleMenu = () => {
   align-items: center;
   justify-content: center;
 }
+
 @media (max-width: 1240px) {
   .container {
     padding: 0 30px;
   }
+
   .navigation-item a {
     font-size: 1.1rem;
   }
-  .header-buttons{
+
+  .header-buttons {
     display: flex;
     flex-direction: column;
     align-items: end;
@@ -491,6 +512,7 @@ const toggleMenu = () => {
   .header-container {
     padding: 0 15px;
   }
+
   .header-buttons {
     flex-direction: column;
     align-items: center;
@@ -526,10 +548,16 @@ const toggleMenu = () => {
   .mobile-menu {
     display: none;
   }
+
   .contacts-btn, .book-btn {
-    width: 130px;
     text-align: center;
   }
 
+}
+
+@media (max-width: 1240px) and (min-width: 1084px) {
+  .contacts-btn, .book-btn {
+    width: 170px;
+  }
 }
 </style>

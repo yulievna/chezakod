@@ -412,6 +412,7 @@ onMounted(() => {
   margin: 0 auto;
   padding: 20px;
   z-index: 100;
+  font-size: 18px;
 }
 
 .question-card {
@@ -440,7 +441,7 @@ onMounted(() => {
 }
 
 .question-counter {
-  font-size: 14px;
+  font-size: 18px;
   color: #666;
 }
 
@@ -458,7 +459,7 @@ onMounted(() => {
 }
 
 h2 {
-  font-size: 16px;
+  font-size: 18px;
   color: #333;
   margin-bottom: 20px;
 }
@@ -511,7 +512,7 @@ h2 {
 .answer-list label {
   display: block;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 16px;
   color: #333;
 }
 
@@ -581,7 +582,7 @@ input.error {
 
 .error-message {
   color: #ff4444;
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 5px;
   margin-bottom: 15px;
 }
@@ -596,7 +597,7 @@ input.error {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -719,7 +720,6 @@ input.error {
 
   .nav-btn {
     padding: 8px 16px;
-    font-size: 14px;
   }
   .navigation-buttons{
     margin-top: 10px;
