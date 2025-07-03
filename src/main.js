@@ -19,7 +19,7 @@ export const createApp = ViteSSG(
                 }
             }
         },
-        base: import.meta.env.MODE === "production" ? "/yulya/" : "/"
+        base: "/"
     },
     (ctx) => {
         if (!import.meta.env.SSR) {

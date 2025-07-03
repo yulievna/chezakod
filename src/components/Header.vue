@@ -279,6 +279,7 @@ const toggleMenu = () => {
 }
 
 .navigation-item .dropdown-menu li a {
+  display: block;
   min-width: 175px;
   color: #000;
   font-size: 16px;

@@ -15,13 +15,13 @@ export const routes = [
         component: () => import("@/views/QuestsView.vue"),
     },
     {
-        path: '/quests/:id',
+        path: '/quest/:id',
         name: 'AboutQuest',
         component: () => import("@/views/AboutQuest.vue"),
         props: true,
     },
     {
-        path: '/child-quests/:id',
+        path: '/child-quest/:id',
         name: 'AboutChildQuest',
         component: () => import("@/views/AboutQuest.vue"),
         props: true,
@@ -42,7 +42,7 @@ export const routes = [
         component: () => import("@/views/ActionGames.vue"),
     },
     {
-        path: '/action-games/:id',
+        path: '/action-game/:id',
         name: 'AboutActionGame',
         component: () => import("@/views/AboutQuest.vue"),
         props: true,

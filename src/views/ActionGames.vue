@@ -3,7 +3,7 @@
   <section class="action-games">
     <div class="container">
       <h1 class="page-title">Экшн-Игры</h1>
-      <Quests :quests="actionGames" basePath="/action-games"/>
+      <Quests :quests="actionGames" basePath="/action-game"/>
     </div>
   </section>
   <section class="schedule">
