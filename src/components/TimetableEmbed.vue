@@ -31,7 +31,7 @@ const loadTimetableScript = () => {
 
 onMounted(() => {
   // console.log("component mount");
-  // loadTimetableScript();
+  loadTimetableScript();
 });
 
 // Reload script when questIds change

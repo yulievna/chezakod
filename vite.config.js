@@ -62,7 +62,8 @@ export default defineConfig(({ mode }) => {
                     '/action',
                     '/action-games',
                     '/events',
-                    '/show-programs'
+                    '/show-programs',
+                    '/timetable'
                 ];
                 const apiUrl = env.VITE_API_URL;
                 await fetch(apiUrl + "/quests/?category=child")
