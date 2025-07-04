@@ -16,7 +16,7 @@
           <div class="game-about">
             <div class="game-title-wrapper">
               <h1 class="name-game">{{ game.name }}</h1>
-              <button class="to-book">Забронировать</button>
+              <button class="to-book" @click="">Забронировать</button>
             </div>
             <div class="game-chars">
               <div class="char-item">
@@ -321,7 +321,10 @@ onServerPrefetch(init);
   background: #fff;
   border-radius: 5px;
 }
-
+.service-name{
+  display: inline;
+  width: fit-content;
+}
 .limits ul {
   list-style: none;
   padding: 0;
@@ -502,6 +505,7 @@ onServerPrefetch(init);
 .service-price {
   color: #CF1034;
   font-weight: 500;
+  width: 100%;
 }
 
 .location-link {
