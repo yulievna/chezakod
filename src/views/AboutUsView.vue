@@ -43,7 +43,7 @@
             <!-- <h3>Жмурки</h3> -->
             <p>Первая экшн-игра в полной темноте, которая влюбила в себя тысячи игроков.</p>
           </div>
-          <a href="https://zhmurki.ru" class="btn-primary" target="_blank">Перейти на сайт</a>
+          <a href="https://jmurki.com/" class="btn-primary" target="_blank">Перейти на сайт</a>
         </div>
 
         <div class="org-card" data-aos="fade-up" data-aos-delay="400">

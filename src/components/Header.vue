@@ -195,7 +195,7 @@ const toggleMenu = () => {
   background-color: #fff;
   padding: 15px 0;
   position: sticky;
-  top: 0;
+  top: -1px;
   z-index: 100;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
