@@ -110,7 +110,7 @@
                 </ul>
                 <p><span class="bolder">Ведущие: </span>{{ selectedShow.actor }}</p>
                 <p><span class="bolder">Продолжительность: </span>{{ selectedShow.duration }}</p>
-                <p><span class="bolder">Звуоковое сопровождение: </span>{{ selectedShow.music }}</p>
+                <p><span class="bolder">Звуковое сопровождение: </span>{{ selectedShow.music }}</p>
                 <p><span class="bolder">Адрес: </span>{{ selectedShow.location.address }}</p>
                 <div class="map-links">
                   <a
@@ -119,6 +119,7 @@
                       target="_blank"
                       class="map-link"
                   >
+                    <img src="@/assets/images/Yandex_Maps_icon.png" alt="yandex.maps" />
                     Яндекс.Карты
                   </a>
                   <a
@@ -127,6 +128,7 @@
                       target="_blank"
                       class="map-link"
                   >
+                    <img src="@/assets/images/2gis.png" alt="2gis">
                     2GIS
                   </a>
                 </div>
@@ -544,23 +546,27 @@ onMounted(loadShows);
 }
 
 .map-link {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 10px;
   color: #000000;
   padding: 10px 16px;
   border-radius: 10px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: 3px solid #cf1034;
 }
 
 .map-link:hover {
   background: var(--primary-color);
   color: #fff;
-}
 
+}
+.map-link img {
+  width: 40px;
+  border-radius: 8px;
+}
 .description-modal {
   background: white;
   padding: 30px;
@@ -599,8 +605,8 @@ onMounted(loadShows);
 }
 
 .bolder {
-  font-weight: bold;
-  font-size: larger;
+  font-weight: 500;
+  font-size: 20px;
 }
 
 .show-buttons {
@@ -612,11 +618,11 @@ onMounted(loadShows);
 
 .show-buttons button {
   display: inline-block;
-  padding: 10px 30px;
+  padding: 8px 20px;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
   transition: all 0.3s ease;
-  overflow: hidden;
   position: relative;
   border: none;
 }
@@ -696,7 +702,7 @@ swiper-slide.swiper-slide-thumb-active.thumbs-slide img {
   margin-top: 20px;
   font-size: 18pt;
   font-weight: bold;
-  text-decoration: underline;
+  color: #CF1034;
 }
 
 .mini-shows-grid {

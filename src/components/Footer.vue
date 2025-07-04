@@ -47,9 +47,9 @@
                 <a :href="`mailto:${contact.value}`"
                    v-else-if="contact.type === 'email'"
                    class="social-link">{{ contact.text ? contact.text : contact.value }}</a>
-                <a :href="contact.value" v-else class="social-link">{{
-                    contact.text ? contact.text : contact.value
-                  }}</a>
+                <a :href="contact.value" v-else class="social-link">
+                  <img :src="contact.path" :alt="contact.text" />
+                </a>
               </template>
             </template>
           </div>
@@ -130,13 +130,14 @@ const togglePopup = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 150px;
+  min-width: 160px;
   text-align: right;
 }
 
 .contact-phone {
   color: #fff;
   text-decoration: none;
+  min-width: fit-content;
 }
 
 .contact-phone:hover {
@@ -148,9 +149,13 @@ const togglePopup = () => {
   gap: 10px;
 }
 
-.social-link {
+.social-link img {
   color: #fff;
   text-decoration: none;
+  background-color: white;
+  width: 40px;
+  border-radius: 8px;
+  padding: 5px;
 }
 
 .social-link:hover {
@@ -185,11 +190,16 @@ const togglePopup = () => {
     align-items: center;
     text-align: center;
   }
-
+  .social-link img {
+    width: 60px;
+    padding: 10px;
+  }
   .footer-menu {
     justify-content: center;
   }
-
+  .contact-phone{
+    font-size: 24px;
+  }
   .contacts-info {
     align-items: center;
   }

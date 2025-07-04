@@ -90,15 +90,18 @@ button {
   background-color: #CF1034;
   margin-bottom: 10px;
   font-size: 20px;
-  text-align: left;
+  text-align: justify;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   border-radius: 5px;
-  padding: 10px 25px;
+  padding: 20px 25px;
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  line-height: 25px;
+  line-height: 18px;
 }
 
 p {
@@ -123,15 +126,26 @@ p {
 .arrow-down {
   transform: rotate(45deg);
 }
+@media (max-width: 992px) {
+  button {
+    padding: 10px 18px;
+    line-height: 1.2;
+    font-size: 16px;
+
+  }
+
+}
 
 @media (max-width: 768px) {
   .accordion-container {
-    gap: 15px;
+    gap: 10px;
   }
 
   button {
-    padding: 10px 18px;
-    line-height: 16px;
+    padding: 7px 18px;
+    font-size: 14px;
+    line-height: 1;
+
   }
 
   p {
@@ -143,12 +157,12 @@ p {
 @media (max-width: 600px) {
   .accordion-container {
     flex-direction: column;
-    gap: 0px;
+    gap: 0;
     margin-top: 20px;
   }
 
   button {
-    min-height: auto;
+    height: 50px;
     padding: 12px 15px;
     margin-bottom: 5px;
   }

@@ -478,6 +478,9 @@ watch(() => route.hash, (newHash) => {
   .promotions__container {
     padding: 0 1rem;
   }
+  .promotions__note {
+    margin: 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -520,11 +523,6 @@ watch(() => route.hash, (newHash) => {
     font-size: 16px;
   }
 
-  .promotion-card__description,
-  .promotion-card__subtitle,
-  .promotion-card__note {
-  }
-
   .promotion-card__conditions,
   .promotion-card__features,
   .promotion-card__bonus-list,
@@ -553,7 +551,6 @@ watch(() => route.hash, (newHash) => {
 
   .promotions__note {
     padding: 15px;
-    margin: 0 10px;
     font-size: 12px;
     text-align: center;
   }

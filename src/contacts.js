@@ -12,14 +12,18 @@ export default {
     },
     vk: {
         value: "https://vk.com/chezakod",
-        text: "ВК"
+        text: "ВК",
+        path:  "src/assets/images/vk-logo-svgrepo-com.svg"
     },
     tg: {
         value: "https://t.me/chezakod",
-        text: "Telegram"
+        text: "Telegram",
+        path: "src/assets/images/telegram-svgrepo-com.svg"
     },
     wa: {
         value: "https://wa.me/73919864241",
-        text: "WhatsApp"
+        text: "WhatsApp",
+        path: "src/assets/images/whats-app-svgrepo-com.svg"
+
     }
 }
