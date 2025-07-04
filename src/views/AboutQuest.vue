@@ -16,7 +16,7 @@
           <div class="quest-about">
             <div class="quest-title-wrapper">
               <h1 class="name-quest">{{ quest.name }}</h1>
-              <button class="to-book">Забронировать</button>
+              <button class="to-book" @click="scrollToSchedule">Забронировать</button>
             </div>
             <div class="quest-chars">
               <div v-if="quest.players" class="char-item">
@@ -111,7 +111,7 @@
         </div>
       </div>
 
-      <section v-if="quest.id" class="schedule">
+      <section v-if="quest.id" class="schedule" id="schedule">
           <h2 class="title">Расписание</h2>
           <TimetableEmbed :questIds="[quest.id]"/>
       </section>
@@ -266,6 +266,14 @@ const nextPhoto = () => {
 const prevPhoto = () => {
   if (selectedLounge.value && currentPhotoIndex.value > 0) {
     currentPhotoIndex.value--;
+  }
+};
+const scrollToSchedule = () => {
+  const scheduleSection = document.getElementById('schedule');
+  if (scheduleSection) {
+    scheduleSection.scrollIntoView({
+      behavior: 'smooth'
+    });
   }
 };
 </script>
