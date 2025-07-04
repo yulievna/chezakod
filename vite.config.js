@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
                 }
             })
         ],
-        base: mode === "production" ? "/yulya/" : "/",
+        base: "/",
         build: {
             outDir: "dist",
             assetsDir: "assets",
@@ -77,7 +77,7 @@ export default defineConfig(({ mode }) => {
                         if (data.result && Array.isArray(data.result)) {
                             data.result.forEach(item => {
                                 if (item.slug) {
-                                    routes.push(`/child-quests/${item.slug}`);
+                                    routes.push(`/child-quest/${item.slug}`);
                                 }
                             });
                         } else {
@@ -95,7 +95,7 @@ export default defineConfig(({ mode }) => {
                         if (data.result && Array.isArray(data.result)) {
                             data.result.forEach(item => {
                                 if (item.slug) {
-                                    routes.push(`/quests/${item.slug}`);
+                                    routes.push(`/quest/${item.slug}`);
                                 }
                             });
                         }
@@ -111,7 +111,7 @@ export default defineConfig(({ mode }) => {
                         if (data.result && Array.isArray(data.result)) {
                             data.result.forEach(item => {
                                 if (item.slug) {
-                                    routes.push(`/action-games/${item.slug}`);
+                                    routes.push(`/action-game/${item.slug}`);
                                 }
                             });
                         }

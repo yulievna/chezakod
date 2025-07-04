@@ -120,7 +120,7 @@ onMounted(async () => {
       </div>
       <Quests
           :quests="quests"
-          :basePath="activeCategory === 'child' ? '/child-quests' : '/quests'"
+          :basePath="activeCategory === 'child' ? '/child-quest' : '/quest'"
       />
     </div>
   </div>
