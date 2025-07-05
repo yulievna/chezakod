@@ -150,7 +150,6 @@ const handleMouseMove = (event) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-
 }
 
 swiper-container {

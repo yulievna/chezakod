@@ -39,7 +39,6 @@
 
         <!-- Контакты -->
         <div class="footer-contacts">
-          <div class="contacts-info">
             <template v-for="(contact, key, index) in contacts" :key="index">
               <template v-if="!contact.hide">
                 <a :href="`tel:${contact.value}`" v-if="contact.type === 'phone'"
@@ -47,17 +46,11 @@
                 <a :href="`mailto:${contact.value}`"
                    v-else-if="contact.type === 'email'"
                    class="social-link">{{ contact.text ? contact.text : contact.value }}</a>
-<!--                <a :href="contact.value" v-else class="social-link">-->
-<!--                  <img :src="contact.path" :alt="contact.text" />-->
-<!--                </a>-->
+                <a :href="contact.value" v-else class="social-link">
+                  <img :src="contact.path" :alt="contact.text" />
+                </a>
               </template>
             </template>
-            <div class="social-links">
-              <img src="@/assets/images/vk-logo-svgrepo-com.svg" class="social-link" alt="vk-icon">
-              <img src="@/assets/images/telegram-svgrepo-com.svg" class="social-link" alt="telegram-icon">
-              <img src="@/assets/images/whats-app-svgrepo-com.svg" class="social-link" alt="whatsapp-icon">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -127,38 +120,30 @@ const togglePopup = () => {
 
 .footer-contacts {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.contacts-info {
-  display: flex;
-  flex-direction: column;
+  justify-content: end;
+  flex-wrap: wrap;
   gap: 10px;
-  text-align: right;
+  min-width: 160px;
+  width: 160px;
 }
 
 .contact-phone {
-  color: #fff;
-  text-decoration: none;
-  min-width: 160px;
-}
-
-.contact-phone:hover {
-  color: #cf1034;
-}
-
-.social-links {
-  display: flex;
-  gap: 10px;
-  justify-content: right;
+  flex: 1 0 100%;
+  margin-bottom: 10px;
+  order: 1;
 }
 
 .social-link {
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
+  order: 2;
+}
+
+.social-link img {
   background-color: white;
   width: 40px;
+  height: 40px;
   border-radius: 8px;
   padding: 5px;
 }
@@ -195,8 +180,12 @@ const togglePopup = () => {
     align-items: center;
     text-align: center;
   }
+  .footer-contacts{
+    width: 220px;
+  }
   .social-link img {
     width: 60px;
+    height: 60px;
     padding: 10px;
   }
   .footer-menu {
