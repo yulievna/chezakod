@@ -47,11 +47,16 @@
                 <a :href="`mailto:${contact.value}`"
                    v-else-if="contact.type === 'email'"
                    class="social-link">{{ contact.text ? contact.text : contact.value }}</a>
-                <a :href="contact.value" v-else class="social-link">
-                  <img :src="contact.path" :alt="contact.text" />
-                </a>
+<!--                <a :href="contact.value" v-else class="social-link">-->
+<!--                  <img :src="contact.path" :alt="contact.text" />-->
+<!--                </a>-->
               </template>
             </template>
+            <div class="social-links">
+              <img src="@/assets/images/vk-logo-svgrepo-com.svg" class="social-link" alt="vk-icon">
+              <img src="@/assets/images/telegram-svgrepo-com.svg" class="social-link" alt="telegram-icon">
+              <img src="@/assets/images/whats-app-svgrepo-com.svg" class="social-link" alt="whatsapp-icon">
+            </div>
           </div>
         </div>
       </div>
@@ -130,14 +135,13 @@ const togglePopup = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 160px;
   text-align: right;
 }
 
 .contact-phone {
   color: #fff;
   text-decoration: none;
-  min-width: fit-content;
+  min-width: 160px;
 }
 
 .contact-phone:hover {
@@ -147,9 +151,10 @@ const togglePopup = () => {
 .social-links {
   display: flex;
   gap: 10px;
+  justify-content: right;
 }
 
-.social-link img {
+.social-link {
   color: #fff;
   text-decoration: none;
   background-color: white;
